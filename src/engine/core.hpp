@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 #include "entity.hpp"
 #include "state.hpp"
+#include "sprite.hpp"
 
 // Wrappers around core engine functionalities
 namespace Core {
@@ -23,6 +24,14 @@ namespace Core {
 
 	inline void update() {
 		Engine::get_instance().update();
+	}
+
+	inline int windowWidth() {
+		return Engine::get_instance().getWindowWidth();
+	}
+
+	inline int windowHeight() {
+		return Engine::get_instance().getWindowHeight();
 	}
 
 	// Wrappers around renderer functionalities

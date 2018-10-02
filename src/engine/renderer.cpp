@@ -68,17 +68,17 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 
 void Renderer::drawTexture(ScreenCoord v, int width, int height, const Texture & texture) {
 	float positions[16] = {
-		static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth()),
-		static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight()),
+		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		0.f, 0.f,
-		static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth()),
-		static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight()),
+		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		0.f, 1.f,
-		static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth()),
-		static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight()),
+		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		1.f, 0.f,
-		static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth()),
-		static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight()),
+		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		1.f, 1.f
 	};
 	VertexArray		va;

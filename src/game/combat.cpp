@@ -24,7 +24,9 @@ void Combat::render() {
 
 	// SAMPLE CODE
 	Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-	Texture texture("res/test.png");
-	Core::Renderer::drawTexture(ScreenCoord(500, 500), 100, 100, texture);
+	Sprite sprite("res/test.png");
+	sprite.setPos(100, 100);
+	sprite.setSize(100, 100);
+	sprite.render();
 
 }
