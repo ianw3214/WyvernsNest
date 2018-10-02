@@ -2,19 +2,23 @@
 
 #include <iostream>
 
-#include "engine/engine.hpp"
+#include "engine/core.hpp"
+#include "game/combat.hpp"
 
 int main(int argc, char* argv[]) {
 
 	// Initialize the engine
-	if (!Engine::get_instance().init("Wyverns Nest", 1280, 720)) {
-		std::cout << "Initialization failed\n";
+	if (!Core::init("Wyverns Nest", 1280, 720)) {
+		std::cerr << "Initialization failed\n";
 		return 1;
 	}
 
+	Combat * state = new Combat();
+	Core::setState(state);
+
 	// Main engine loop
-	while (Engine::get_instance().running()) {
-		Engine::get_instance().update();
+	while (Core::running()) {
+		Core::update();
 	}
 
 	return 0;

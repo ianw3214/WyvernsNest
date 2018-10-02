@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\ianw3214\workspace\WyvernsNest\libs\stb_image;C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2-2.0.8\include;C:\Users\ianw3214\workspace\WyvernsNest\libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2-2.0.8\lib\x86;C:\Users\ianw3214\workspace\WyvernsNest\libs\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -79,7 +79,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\ianw3214\workspace\WyvernsNest\libs\stb_image;C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2-2.0.8\include;C:\Users\ianw3214\workspace\WyvernsNest\libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -123,17 +123,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\engine.cpp" />
+    <ClCompile Include="src\engine\entity.cpp" />
     <ClCompile Include="src\engine\opengl\indexBuffer.cpp" />
     <ClCompile Include="src\engine\opengl\shader.cpp" />
     <ClCompile Include="src\engine\opengl\texture.cpp" />
     <ClCompile Include="src\engine\opengl\vertexArray.cpp" />
     <ClCompile Include="src\engine\opengl\vertexBuffer.cpp" />
     <ClCompile Include="src\engine\renderer.cpp" />
+    <ClCompile Include="src\engine\state.cpp" />
+    <ClCompile Include="src\game\combat.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\core.hpp" />
     <ClInclude Include="src\engine\engine.hpp" />
+    <ClInclude Include="src\engine\entity.hpp" />
     <ClInclude Include="src\engine\opengl\glwrappers.hpp" />
     <ClInclude Include="src\engine\opengl\indexBuffer.hpp" />
     <ClInclude Include="src\engine\opengl\shader.hpp" />
@@ -142,6 +147,8 @@
     <ClInclude Include="src\engine\opengl\vertexBuffer.hpp" />
     <ClInclude Include="src\engine\opengl\vertexBufferLayout.hpp" />
     <ClInclude Include="src\engine\renderer.hpp" />
+    <ClInclude Include="src\engine\state.hpp" />
+    <ClInclude Include="src\game\combat.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />

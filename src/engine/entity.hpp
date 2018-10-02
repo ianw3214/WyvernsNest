@@ -1,0 +1,21 @@
+#pragma once
+
+#include <SDL.h>
+
+class Entity {
+
+public:
+
+	Entity();
+	virtual ~Entity();
+
+	virtual void handleEvent(SDL_Event event);
+	virtual void update(int delta);
+	virtual void render();
+
+	void remove();
+	bool shouldRemove() const;
+
+protected:
+	bool m_remove;
+};

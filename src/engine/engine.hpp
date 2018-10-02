@@ -1,7 +1,11 @@
 #pragma once
 
 #include <SDL.h>
-#include "renderer.hpp"
+
+#define DEFAULT_TICK_RATE	30	// per second
+
+class Renderer;
+class State;
 
 class Engine {
 
@@ -25,6 +29,10 @@ public:
 	// Getter functions to make life easier
 	int getWindowWidth() const;
 	int getWindowHeight() const;
+	Renderer * getRenderer();
+
+	// State changing functions
+	void setState(State * state);
 
 protected:
 	Engine();
@@ -32,14 +40,23 @@ protected:
 
 private:
 	// System objects
-	Renderer * renderer;
+	Renderer * m_renderer;
 
+	// SDL/OpenGL specific objects
 	SDL_Window * m_window;
 	SDL_GLContext m_context;
 
+	// The current state
+	State * m_state;
+
+	// engine variables
 	bool m_running;
+	int m_delta;
+	int m_lastTick;
 
 	// Other configuration variables
 	int m_windowWidth;
 	int m_windowHeight;
+	int m_tickRate;
+	int m_msPerTick;
 };

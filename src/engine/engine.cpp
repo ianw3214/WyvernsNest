@@ -7,7 +7,9 @@
 // Std library includes
 #include <iostream>
 
+// Other project includes
 #include "renderer.hpp"
+#include "state.hpp"
 
 bool Engine::init(const char * name, int window_width, int window_height) {
 
@@ -47,14 +49,17 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	glewExperimental = GL_TRUE;
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK) {
-		std::cout << "Error initializing GLEW: "
+		std::cerr << "Error initializing GLEW: "
 			<< glewGetErrorString(glewError)
 			<< std::endl;
 		return false;
 	}
 
 	// Initialize the renderer after the OpenGL context is created
-	renderer = new Renderer();
+	m_renderer = new Renderer();
+
+	// reset m_lastTick for a more accurate first tick
+	m_lastTick = SDL_GetTicks();
 
 	return true;
 }
@@ -64,6 +69,13 @@ bool Engine::running() const {
 }
 
 void Engine::update() {
+
+	// Handle the delta time, only tick when the time threshold is reached
+	m_delta = SDL_GetTicks() - m_lastTick;
+	if (m_delta < m_msPerTick) return;
+	m_lastTick = SDL_GetTicks();
+
+	// Poll for events and update the state accordingly
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
@@ -74,12 +86,10 @@ void Engine::update() {
 				m_running = false;
 			}
 		}
+		if (m_state) m_state->handleEvent(event);
 	}
-
-	// TESTING CODE
-	renderer->drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-	Texture texture("res/test.png");
-	renderer->drawTexture(ScreenCoord(500, 500), 100, 100, texture);
+	if (m_state) m_state->update(0);
+	if (m_state) m_state->render();
 
 	SDL_GL_SwapWindow(m_window);
 }
@@ -93,15 +103,37 @@ int Engine::getWindowHeight() const
 	return m_windowHeight;
 }
 
-Engine::Engine() : m_running(true) {
+Renderer * Engine::getRenderer() {
+	return m_renderer;
+}
+
+void Engine::setState(State * state) {
+	if (m_state) delete m_state;
+	m_state = state;
+}
+
+Engine::Engine() :
+	m_running(true),
+	m_delta(0),
+	m_lastTick(0),
+	m_windowWidth(0),
+	m_windowHeight(0),
+	m_tickRate(DEFAULT_TICK_RATE),
+	m_msPerTick(0)
+{
 	// Intialize SDL
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
 		throw new std::exception("SDL failed to initialize");
 	}
+	// Calculate ms per tick depending on tick rate
+	m_msPerTick = static_cast<int>(1000.f / static_cast<float>(m_tickRate));
 }
 
 Engine::~Engine() {
+	delete m_state;
+
 	SDL_GL_DeleteContext(m_context);
+	SDL_DestroyWindow(m_window);
 	SDL_Quit();
 }
