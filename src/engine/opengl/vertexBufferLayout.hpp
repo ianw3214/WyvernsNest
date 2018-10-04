@@ -31,26 +31,18 @@ public:
 	inline const std::vector<VertexBufferLayoutElement> getElements() const { return elements; }
 	inline unsigned int getStride() const { return stride; }
 
-	// Templated function to add attributes to the layout
-	template<typename T>
-	void push(unsigned int count) {
-		static_assert(false);
-	}
-
-	template<>
-	void push<float>(unsigned int count) {
+	// Functions to add attributes to the layout
+	void pushFloat(unsigned int count) {
 		elements.push_back({ GL_FLOAT, count, GL_FALSE });
 		stride += VertexBufferLayoutElement::getSizeOfType(GL_FLOAT) * count;
 	}
 
-	template<>
-	void push<unsigned int>(unsigned int count) {
+	void pushUint(unsigned int count) {
 		elements.push_back({ GL_UNSIGNED_INT, count, GL_FALSE });
 		stride += VertexBufferLayoutElement::getSizeOfType(GL_UNSIGNED_INT) * count;
 	}
 
-	template<>
-	void push<unsigned char>(unsigned int count) {
+	void pushUchar(unsigned int count) {
 		elements.push_back({ GL_UNSIGNED_BYTE, count, GL_TRUE });
 		stride += VertexBufferLayoutElement::getSizeOfType(GL_UNSIGNED_BYTE) * count;
 	}

@@ -124,7 +124,7 @@ Engine::Engine() :
 	// Intialize SDL
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
-		throw new std::exception("SDL failed to initialize");
+		// throw new std::exception("SDL failed to initialize");
 	}
 	// Calculate ms per tick depending on tick rate
 	m_msPerTick = static_cast<int>(1000.f / static_cast<float>(m_tickRate));

@@ -58,7 +58,7 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 	IndexBuffer		ib(LINE_INDICES, 2);
 	// Specify the layout of the buffer data
 	VertexBufferLayout layout;
-	layout.push<float>(2);
+	layout.pushFloat(2);
 	va.addBuffer(vb, layout);
 
 	// Set the uniform to draw the right colour
@@ -86,8 +86,8 @@ void Renderer::drawTexture(ScreenCoord v, int width, int height, const Texture &
 	IndexBuffer		ib(SQUARE_INDICES, 6);
 	// Specify the layout of the buffer data
 	VertexBufferLayout layout;
-	layout.push<float>(2);
-	layout.push<float>(2);
+	layout.pushFloat(2);
+	layout.pushFloat(2);
 	va.addBuffer(vb, layout);
 
 	// Bind the texture and draw

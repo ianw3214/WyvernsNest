@@ -58,6 +58,7 @@ libs/
 
 # VScode folder
 .vs/
+.vscode/
 
 # DLL files
 *.dll
