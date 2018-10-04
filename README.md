@@ -16,6 +16,16 @@ Finally, move the two **dll** files from the libs folder into the root folder. (
 
 You should be able to build and run the project now.
 
+### Mac setup
+
+On mac, use [homebrew](https://brew.sh/) to get the needed library files.  
+Run the following commands to get SDL and GLEW setup on your local machine.
+
+> brew install sdl2  
+> brew install glew
+
+Once they are installed, the project should be able to compile just by typing **make** from the root directory of the project. You would still need to download the zip file containing the *libs* folder from the Windows step, since it contains the *stb_image* header.
+
 ## Engine Basics
 
 ### States and Entities
@@ -30,9 +40,9 @@ public:
     Combat();
     ~Combat();
 
-    void handleEvent(SDL_Event e);  // Handles incoming events
-    void update(int delta);         // Handles state logic
-    void render();                  // Handles entity rendering
+    void handleEvent(const SDL_Event& e);   // Handles incoming events
+    void update(int delta);                 // Handles state logic
+    void render();                          // Handles entity rendering
 
 private:
     // Other state specific variables/functions here
@@ -49,12 +59,12 @@ public:
     Entity();
     virtual ~Entity();
 
-    virtual void handleEvent(SDL_Event event);      // Handles incoming events
-    virtual void update(int delta);                 // Handles entity logic
-    virtual void render();                          // Handles entity rendering
+    virtual void handleEvent(const SDL_Event& event);   // Handles incoming events
+    virtual void update(int delta);                     // Handles entity logic
+    virtual void render();                              // Handles entity rendering
 
-    void remove();                                  // Marks the entity for removing
-    bool shouldRemove() const;                      // Getter for if the entity is removed
+    void remove();                                      // Marks the entity for removing
+    bool shouldRemove() const;                          // Getter for if the entity is removed
 };
 ```
 
@@ -95,3 +105,17 @@ void exampleDraw() {
 ```
 
 Other available function calls can be found in the [core.hpp header file](https://github.com/ianw3214/WyvernsNest/blob/master/src/engine/core.hpp).
+
+### Handling Events
+
+There is no real wrapper around the SDL events, so the SDL event interface will be used to handle user events. The documentation for SDL events can be found [here](https://wiki.libsdl.org/SDL_Event). Below is an example of handling a key input event:
+
+```c++
+void State::update(const SDL_Event& event) {
+    if (event.type == SDL_KEYUP) {
+        if (event.key.keysym.sym == SDLK_A) {
+            std::cout << "'A' key pressed!" << std::endl;
+        }
+    }
+}
+```

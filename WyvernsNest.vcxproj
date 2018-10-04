@@ -134,6 +134,7 @@
     <ClCompile Include="src\engine\state.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
     <ClCompile Include="src\game\customization.cpp" />
+    <ClCompile Include="src\game\cutscene.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="src\engine\state.hpp" />
     <ClInclude Include="src\game\combat.hpp" />
     <ClInclude Include="src\game\customization.hpp" />
+    <ClInclude Include="src\game\cutscene.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />

@@ -8,7 +8,7 @@ Customization::~Customization() {
 
 }
 
-void Customization::handleEvent(SDL_Event e) {
+void Customization::handleEvent(const SDL_Event& e) {
 
 }
 

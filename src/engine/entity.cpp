@@ -8,7 +8,7 @@ Entity::~Entity() {
 
 }
 
-void Entity::handleEvent(SDL_Event e) {
+void Entity::handleEvent(const SDL_Event& e) {
 
 }
 
