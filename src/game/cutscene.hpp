@@ -22,9 +22,9 @@ public:
 	Cutscene(State * state);
 	~Cutscene();
 
-	void handleEvent(SDL_Event e);
-	void update(int delta);
-	void render();
+	void handleEvent(const SDL_Event& e) override;
+	void update(int delta) override;
+	void render() override;
 
 private:
 

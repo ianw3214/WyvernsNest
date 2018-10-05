@@ -11,7 +11,7 @@ public:
 	State();
 	virtual ~State();
 
-	virtual void handleEvent(SDL_Event e);
+	virtual void handleEvent(const SDL_Event& e);
 	virtual void update(int delta);
 	virtual void render();
 

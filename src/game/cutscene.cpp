@@ -8,7 +8,7 @@ Cutscene::~Cutscene() {
 
 }
 
-void Cutscene::handleEvent(SDL_Event e) {
+void Cutscene::handleEvent(const SDL_Event& e) {
 
 }
 

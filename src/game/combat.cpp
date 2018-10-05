@@ -8,7 +8,7 @@ Combat::~Combat() {
 
 }
 
-void Combat::handleEvent(SDL_Event e) {
+void Combat::handleEvent(const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN) {
 		if (e.key.keysym.sym == SDLK_SPACE) {
 			// Do something when space is pressed

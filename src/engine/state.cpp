@@ -10,7 +10,7 @@ State::~State() {
 	for (Entity * e : entities) delete e;
 }
 
-void State::handleEvent(SDL_Event event) {
+void State::handleEvent(const SDL_Event& event) {
 	for (Entity * e : entities) e->handleEvent(event);
 }
 
