@@ -14,6 +14,8 @@ Download [this zip file](https://drive.google.com/file/d/1hAXUjqF0_p8v5UdK9ET0I-
 
 Finally, move the two **dll** files from the libs folder into the root folder. (*The root folder should contain the .sln file, the libs folder, SDL2.dll and glew32.dll*)
 
+Ensure Visual Studio's build configuration is set to x86(32-bit) by selecting Build->Configuration Manager...->Active solution platform:->x86.
+
 You should be able to build and run the project now.
 
 ### Mac setup
