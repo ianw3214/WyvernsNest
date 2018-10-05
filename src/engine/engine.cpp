@@ -88,7 +88,7 @@ void Engine::update() {
 		}
 		if (m_state) m_state->handleEvent(event);
 	}
-	if (m_state) m_state->update(0);
+	if (m_state) m_state->update(m_delta);
 	if (m_state) m_state->render();
 
 	SDL_GL_SwapWindow(m_window);
