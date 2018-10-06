@@ -21,7 +21,10 @@ struct Vec2 {
         return x + y;
     }
     T norm() {
-        return sqrt(this->m_values[0] ^ 2 + this->m_values[1] ^ 2);
+        T x = pow(this->m_values[0], 2);
+        T y = pow(this->m_values[1], 2);
+
+        return sqrt(x + y);
     }
     Vec2 normalized() {
         x = this->m_values[0] * abs(this->m_values[0]);
@@ -63,19 +66,23 @@ struct Vec3 {
 	operator T*() const { return this->m_values; }
 
     T dot(Vec3 v) {
-        x = this->m_values[0] * v->m_values[0];
-        y = this->m_values[1] * v->m_values[1];
-        z = this->m_values[2] * v->m_values[2];
+        T x = this->m_values[0] * v->m_values[0];
+        T y = this->m_values[1] * v->m_values[1];
+        T z = this->m_values[2] * v->m_values[2];
 
-        return x + y;
+        return x + y + z;
     }
     T norm() {
-        return sqrt(this->m_values[0] ^ 2 + this->m_values[1] ^ 2 + this->m_values[2] ^ 2);
+        T x = pow(this->m_values[0], 2);
+        T y = pow(this->m_values[1], 2);
+        T z = pow(this->m_values[2], 2);
+            
+        return sqrt(x + y + z);
     }
     Vec3 normalized() {
-        x = this->m_values[0] * abs(this->m_values[0]);
-        y = this->m_values[1] * abs(this->m_values[1]);
-        z = this->m_values[2] * abs(this->m_values[2]);
+        T x = this->m_values[0] * abs(this->m_values[0]);
+        T y = this->m_values[1] * abs(this->m_values[1]);
+        T z = this->m_values[2] * abs(this->m_values[2]);
         Vec3 n(x, y, z);
 
         return n;
