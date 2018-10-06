@@ -14,9 +14,22 @@ struct Vec2 {
 	T & operator [] (unsigned i) { return this->m_values[i]; }
 	operator T*() const { return this->m_values; }
 
-    T dot(Vec2 v);
-    T norm();
-    Vec2 normalized();
+    T dot(Vec2 v) {
+        x = this->m_values[0] * v->m_values[0];
+        y = this->m_values[1] * v->m_values[1];
+
+        return x + y;
+    }
+    T norm() {
+        return sqrt(this->m_values[0]^2 + this->m_values[1]);
+    }
+    Vec2 normalized() {
+        x = this->m_values[0] * abs(this->m_values[0]);
+        y = this->m_values[1] * abs(this->m_values[1]);
+        Vec2 n(x, y);
+
+        return n;
+    }
 
 	// Constructors
 	Vec2() {}
