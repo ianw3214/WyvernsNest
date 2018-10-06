@@ -14,6 +14,10 @@ struct Vec2 {
 	T & operator [] (unsigned i) { return this->m_values[i]; }
 	operator T*() const { return this->m_values; }
 
+    T dot(Vec2 v);
+    T norm();
+    Vec2 normalized();
+
 	// Constructors
 	Vec2() {}
 	Vec2(T v1, T v2) {
@@ -44,6 +48,10 @@ struct Vec3 {
 	T operator [] (unsigned i) const { return this->m_values[i]; }
 	T & operator [] (unsigned i) { return this->m_values[i]; }
 	operator T*() const { return this->m_values; }
+
+    T dot(Vec3 v);
+    T norm();
+    Vec3 normalized();
 
 	// Constructors
 	Vec3() {}
