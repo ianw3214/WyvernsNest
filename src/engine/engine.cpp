@@ -18,11 +18,10 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	m_windowHeight = window_height;
 
 	// Setup openGL attributes
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-	SDL_GL_SetSwapInterval(1);
 
 	// Create the window and setup an openGL context
 	m_window = SDL_CreateWindow(name,
@@ -40,6 +39,9 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 		SDL_Log("Unable to create openGL context: %s", SDL_GetError());
 		return false;
 	}
+
+	// Enable vsync
+	SDL_GL_SetSwapInterval(1);
 
 	// Setup blending
 	glEnable(GL_BLEND);
