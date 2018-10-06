@@ -33,6 +33,17 @@ struct Vec2 {
 		return *this;
 	}
 
+	Vec2<T>& operator/=(const T& rhs) {
+		(*this)[0] /= rhs;
+		(*this)[1] /= rhs;
+		return *this;
+	}
+
+	Vec2<T>& operator/(const T& rhs) {
+		*this /= rhs;
+		return *this;
+	}
+
 	Vec2<T>& operator+=(const Vec2<T>& rhs) {
 		(*this)[0] += rhs[0];
 		(*this)[1] += rhs[1];
@@ -107,6 +118,18 @@ struct Vec3 {
 
 	Vec3<T>& operator*(const T& rhs) {
 		*this *= rhs;
+		return *this;
+	}
+
+	Vec3<T>& operator/=(const T& rhs) {
+		(*this)[0] /= rhs;
+		(*this)[1] /= rhs;
+		(*this)[2] /= rhs;
+		return *this;
+	}
+
+	Vec3<T>& operator/(const T& rhs) {
+		*this /= rhs;
 		return *this;
 	}
 
