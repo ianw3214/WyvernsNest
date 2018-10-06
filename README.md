@@ -26,7 +26,8 @@ A 2D turn-based fantasy strategy game
     * The pull request will automatically update.
     * A sub-team lead will accept and merge the code into the main repository.
     
-If you are collaborating with a friend on a feature, ask your friend to clone and push to your fork ([your-name]/WyvernsNext). You can add your friend as a collaborator to your fork in the repo settings.
+* If you are collaborating with a friend on a feature, ask your friend to clone and push to your fork ([your-name]/WyvernsNext). You can add your friend as a collaborator to your fork in the repo settings.
+* If you want to get your personal fork up to date with the main project, make a pull request on your personal branch, but this time, merge the main project into yours!
 
 ## Project setup
 
