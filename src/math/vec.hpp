@@ -22,9 +22,52 @@ struct Vec2 {
 	T& operator [] (unsigned i) { return this->m_values[i]; }
 	T const * operator *() const { return this->m_values; } // Used to pass raw data
 
+	Vec2<T>& operator*=(const T& rhs) {
+		(*this)[0] *= rhs;
+		(*this)[1] *= rhs;
+		return *this;
+	}
+
+	Vec2<T>& operator*(const T& rhs) {
+		*this *= rhs;
+		return *this;
+	}
+
+	Vec2<T>& operator+=(const Vec2<T>& rhs) {
+		(*this)[0] += rhs[0];
+		(*this)[1] += rhs[1];
+		return *this;
+	}
+
+	Vec2<T>& operator-=(const Vec2<T>& rhs) {
+		(*this)[0] -= rhs[0];
+		(*this)[1] -= rhs[1];
+		return *this;
+	}
+
+
 private:
 	T m_values[2];
 };
+
+// These must be defined in the header file: https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl
+template<typename T>
+inline Vec2<T> operator*(const T& lhs, Vec2<T> rhs) {
+	rhs *= lhs;
+	return rhs;
+}
+
+template<typename T>
+inline Vec2<T> operator+(Vec2<T> lhs, const Vec2<T>& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+template<typename T>
+inline Vec2<T> operator-(Vec2<T> lhs, const Vec2<T>& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
 
 // Templated vec3 data type
 template<typename T>
@@ -55,10 +98,56 @@ struct Vec3 {
 	T& operator [] (unsigned i) { return this->m_values[i]; }
 	T const * operator *() const { return this->m_values; }	// Used to pass raw data
 
+	Vec3<T>& operator*=(const T& rhs) {
+		(*this)[0] *= rhs;
+		(*this)[1] *= rhs;
+		(*this)[2] *= rhs;
+		return *this;
+	}
+
+	Vec3<T>& operator*(const T& rhs) {
+		*this *= rhs;
+		return *this;
+	}
+
+	Vec3<T>& operator+=(const Vec3<T>& rhs) {
+		(*this)[0] += rhs[0];
+		(*this)[1] += rhs[1];
+		(*this)[2] += rhs[2];
+		return *this;
+	}
+
+	Vec3<T>& operator-=(const Vec3<T>& rhs) {
+		(*this)[0] -= rhs[0];
+		(*this)[1] -= rhs[1];
+		(*this)[2] -= rhs[2];
+		return *this;
+	}
+
+
 private:
 	T m_values[3];
 
 };
+
+// These must be defined in the header file: https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl
+template<typename T>
+inline Vec3<T> operator*(const T& lhs, Vec3<T> rhs) {
+	rhs *= lhs;
+	return rhs;
+}
+
+template<typename T>
+inline Vec3<T> operator+(Vec3<T> lhs, const Vec3<T>& rhs) {
+	lhs += rhs;
+	return lhs;
+}
+
+template<typename T>
+inline Vec3<T> operator-(Vec3<T> lhs, const Vec3<T>& rhs) {
+	lhs -= rhs;
+	return lhs;
+}
 
 // Common aliases for vector types
 using Colour = Vec3<float>;
