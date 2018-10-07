@@ -33,6 +33,7 @@ public:
 
 	// State changing functions
 	void setState(State * state);
+	SDL_Window * m_window;
 
 protected:
 	Engine();
@@ -43,7 +44,6 @@ private:
 	Renderer * m_renderer;
 
 	// SDL/OpenGL specific objects
-	SDL_Window * m_window;
 	SDL_GLContext m_context;
 
 	// The current state
@@ -59,4 +59,7 @@ private:
 	int m_windowHeight;
 	int m_tickRate;
 	int m_msPerTick;
+
+	// macOS fix
+	int mac_fix;
 };
