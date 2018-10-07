@@ -44,6 +44,7 @@ private:
 	Renderer * m_renderer;
 
 	// SDL/OpenGL specific objects
+	SDL_Window * m_window;
 	SDL_GLContext m_context;
 
 	// The current state
