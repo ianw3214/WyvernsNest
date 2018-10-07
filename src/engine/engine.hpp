@@ -33,7 +33,6 @@ public:
 
 	// State changing functions
 	void setState(State * state);
-	SDL_Window * m_window;
 
 protected:
 	Engine();
