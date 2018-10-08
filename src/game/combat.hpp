@@ -2,6 +2,8 @@
 
 #include "../engine/core.hpp"
 
+#include "../engine/text/text.hpp"
+
 class Combat : public State {
 
 public:
@@ -14,5 +16,5 @@ public:
 	void render() override;
 
 private:
-
+	Text text;
 };
