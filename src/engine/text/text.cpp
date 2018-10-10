@@ -52,11 +52,11 @@ void Text::render() {
     GLfloat x = 0;
 
     for(Character ch: m_text) {
-        GLfloat xpos = x + ch.bearing.x();
-        GLfloat ypos = ch.bearing.y() - ch.size.y();
+        GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x());
+        GLfloat ypos = static_cast<GLfloat>(ch.bearing.y() - ch.size.y());
 
-        GLfloat w = ch.size.x();
-        GLfloat h = ch.size.y();
+        GLfloat w = static_cast<GLfloat>(ch.size.x());
+        GLfloat h = static_cast<GLfloat>(ch.size.y());
         // Update VBO for each character
         GLfloat vertices[] = {
              xpos,     ypos + h + (720 - h),   0.0, 0.0 ,            
