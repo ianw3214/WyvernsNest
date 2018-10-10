@@ -2,6 +2,8 @@
 
 #include "../engine/core.hpp"
 
+#include "unitData.hpp"
+
 class Customization : public State {
 
 public:
@@ -14,5 +16,7 @@ public:
 	void render() override;
 
 private:
+
+	void displayUnitData(const UnitData& data);
 
 };

@@ -59,4 +59,7 @@ private:
 	int m_windowHeight;
 	int m_tickRate;
 	int m_msPerTick;
+
+	// macOS fix
+	int mac_fix;
 };
