@@ -34,7 +34,7 @@ Text::Text(const std::string& text, const std::string& fontPath, int fontSize, V
 
 #include <iostream>
 
-void Text::render(Vec3<float> colour) {
+void Text::render(Vec3<float> colour, TextAlignment alignment) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -47,9 +47,19 @@ void Text::render(Vec3<float> colour) {
     GLfloat XcursorPosition = 0, YcursorPosition = 0;
     int lineHeight = 0;
     for(std::vector<Character> line: m_lines) {
+        int Xoffset = 0;
+        switch(alignment) {
+            case left:
+                break;
+            case center:
+                Xoffset = (m_containerSize.x() - getWidthOfLine(line)) / 2.0f;
+                break;
+            case right:
+                Xoffset = (m_containerSize.x() - getWidthOfLine(line));
+                break;
+        }
         for(Character ch: line) {
-            GLfloat xpos = XcursorPosition + ch.bearing.x();
-            // this may have to be ch.bearing.y() - ch.size.y() - YcursorPosition;
+            GLfloat xpos = Xoffset + XcursorPosition + ch.bearing.x();
             GLfloat ypos =  ch.bearing.y() - ch.size.y() - YcursorPosition;
 
             lineHeight = ch.size.y();
@@ -131,4 +141,12 @@ void Text::initializeOpenGLObjects() {
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);  
+}
+
+int Text::getWidthOfLine(const std::vector<Character>& line) {
+    int total = 0;
+    for(Character c: line) {
+        total += (c.advance >> 6);
+    }
+    return total;
 }
