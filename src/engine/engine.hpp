@@ -37,7 +37,7 @@ public:
 protected:
 	Engine();
 	~Engine();
-
+ 
 private:
 	// System objects
 	Renderer * m_renderer;
