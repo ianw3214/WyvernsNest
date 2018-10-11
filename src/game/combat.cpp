@@ -1,6 +1,6 @@
 #include "combat.hpp"
 
-Combat::Combat(): text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "res/test_font.ttf", 48) {
+Combat::Combat(): text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "res/test_font.ttf", 48, Vec2<int>(Core::windowWidth(), Core::windowHeight())) {
 }
 
 Combat::~Combat() {
@@ -28,5 +28,5 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	text.render();
+	text.render(Vec3<float>(1, 1, 1));
 }
