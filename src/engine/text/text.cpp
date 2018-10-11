@@ -105,9 +105,9 @@ void Text::initializeCharacters(Font& font, const std::string& text) {
         }
 
         Character character = font.generateCharacter(c);
-        if(character.size.x() + currentLineWidth > m_containerSize.x() / 1.07f) {
+        int advance = (character.advance >> 6);
+        if(advance + currentLineWidth > m_containerSize.x()) {
             // we need a new line
-
             currentLineWidth = 0;
 
             m_lines.push_back(currentLine);
@@ -115,7 +115,7 @@ void Text::initializeCharacters(Font& font, const std::string& text) {
         }
 
         currentLine.push_back(character);
-        currentLineWidth += character.size.x();
+        currentLineWidth += advance;
     }
 
     m_lines.push_back(currentLine);
