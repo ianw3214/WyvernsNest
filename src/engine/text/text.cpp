@@ -32,9 +32,7 @@ Text::Text(const std::string& text, const std::string& fontPath, int fontSize, V
     initializeOpenGLObjects();    
 }
 
-#include <iostream>
-
-void Text::render(Vec3<float> colour, TextAlignment alignment) {
+void Text::render(Vec3<float> colour, TextAlignment alignment, ScreenCoord location) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -59,8 +57,8 @@ void Text::render(Vec3<float> colour, TextAlignment alignment) {
                 break;
         }
         for(Character ch: line) {
-            GLfloat xpos = Xoffset + XcursorPosition + ch.bearing.x();
-            GLfloat ypos =  ch.bearing.y() - ch.size.y() - YcursorPosition;
+            GLfloat xpos = location.x() + Xoffset + XcursorPosition + ch.bearing.x();
+            GLfloat ypos =  ch.bearing.y() - ch.size.y() - YcursorPosition - location.y();
 
             lineHeight = ch.size.y();
 
