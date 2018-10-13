@@ -63,6 +63,8 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	// reset m_lastTick for a more accurate first tick
 	m_lastTick = SDL_GetTicks();
 
+	mac_fix = 0;
+
 	return true;
 }
 
@@ -71,6 +73,18 @@ bool Engine::running() const {
 }
 
 void Engine::update() {
+	#ifdef __APPLE__
+	// 200 is an arbitrary number but it consistently works for me
+	if(mac_fix < 200) {
+		mac_fix += 1;
+		SDL_SetWindowSize(m_window, 1279, 720);
+	}	
+		
+	if(mac_fix == 200) {
+		SDL_SetWindowSize(m_window, 1280, 720);
+		mac_fix += 1;
+	}
+	#endif
 
 	// Handle the delta time, only tick when the time threshold is reached
 	m_delta = SDL_GetTicks() - m_lastTick;
@@ -90,6 +104,8 @@ void Engine::update() {
 		}
 		if (m_state) m_state->handleEvent(event);
 	}
+
+	getRenderer()->clear();
 	if (m_state) m_state->update(m_delta);
 	if (m_state) m_state->render();
 
