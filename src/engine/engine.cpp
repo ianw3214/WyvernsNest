@@ -10,6 +10,7 @@
 // Other project includes
 #include "renderer.hpp"
 #include "state.hpp"
+#include "resourceEngine.hpp"
 
 bool Engine::init(const char * name, int window_width, int window_height) {
 
@@ -64,6 +65,9 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	m_lastTick = SDL_GetTicks();
 
 	mac_fix = 0;
+
+	// Initialize the resource engine singleton
+	ResourceEngine::init();
 
 	return true;
 }
