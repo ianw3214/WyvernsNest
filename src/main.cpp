@@ -1,6 +1,7 @@
 #define SDL_MAIN_HANDLED
 
 #include <iostream>
+#include <exception>
 
 #include "engine/core.hpp"
 #include "game/combat.hpp"
@@ -18,7 +19,13 @@ int main(int argc, char* argv[]) {
 
 	// Main engine loop
 	while (Core::running()) {
-		Core::update();
+		try {
+			Core::update();
+		}
+		catch(const std::exception& e) {
+			std::cerr << e.what() << std::endl;
+			throw;
+		}
 	}
 
 	return 0;

@@ -9,19 +9,12 @@ public:
 	Sprite(const std::string& path);
 	~Sprite();
 
-	void render();
-
-	// Sprite position
-	int x, y;
-	// Sprite size
-	int w, h;
-
-	// helper methods to make life easier
-	void setPos(int x, int y);
-	void setSize(int w, int h);
+	void render(int x, int y);
+	void render(int x, int y, int w, int h);
 
 private:
-
+	// Sprite size
+	int w, h;
 	Texture texture;
 
 };

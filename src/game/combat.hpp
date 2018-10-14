@@ -24,5 +24,5 @@ public:
 	//Player selected = Player(1);
 
 private:
-
+	Sprite* m_testSprite;
 };

@@ -3,7 +3,7 @@
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
 
-class Player {
+class Player : public Entity{
 
 public:
 
@@ -24,5 +24,6 @@ public:
 	bool selected = false;
 
 private:
-
+	Sprite* m_test4;
+	Sprite* m_test5;
 };

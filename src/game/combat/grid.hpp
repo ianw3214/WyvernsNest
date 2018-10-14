@@ -40,5 +40,8 @@ public:
 	ScreenCoord mousePos;
 
 private:
+	Sprite *m_test1;
+	Sprite *m_test2;
+	Sprite *m_test3;
 
 };

@@ -2,6 +2,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <iostream>
 
 Texture::Texture(const std::string & path)
 	: textureID(0), filePath(path), localBuffer(nullptr),
@@ -9,6 +10,9 @@ Texture::Texture(const std::string & path)
 {
 	stbi_set_flip_vertically_on_load(1);
 	localBuffer = stbi_load(path.c_str(), &width, &height, &bitsPerPixel, 4);
+	if (localBuffer == nullptr) {
+		std::cerr << "File: \"" << path << "\" could not be loaded." << std::endl;
+	}
 
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
