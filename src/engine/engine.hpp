@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include "resourceEngine.hpp"
 
 #define DEFAULT_TICK_RATE	30	// per second
 
@@ -30,6 +31,7 @@ public:
 	int getWindowWidth() const;
 	int getWindowHeight() const;
 	Renderer * getRenderer();
+	ResourceEngine * getResourceEngine();
 
 	// State changing functions
 	void setState(State * state);
@@ -41,6 +43,7 @@ protected:
 private:
 	// System objects
 	Renderer * m_renderer;
+	ResourceEngine * m_resourceEngine;
 
 	// SDL/OpenGL specific objects
 	SDL_Window * m_window;

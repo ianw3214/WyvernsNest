@@ -1,7 +1,8 @@
 #include "combat.hpp"
+#include "../engine/core.hpp"
 
 Combat::Combat() {
-	m_testSprite = ResourceEngine::getSprite("test");
+	m_testSprite = Core::Resources::getEngine()->getSprite("test");
 	m_testSprite->setPos(100, 100);
 	m_testSprite->setSize(200, 200);
 }

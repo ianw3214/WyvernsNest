@@ -66,8 +66,8 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 
 	mac_fix = 0;
 
-	// Initialize the resource engine singleton
-	ResourceEngine::init();
+	// Initialize the resource engine
+	m_resourceEngine = new ResourceEngine();
 
 	return true;
 }
@@ -129,6 +129,10 @@ Renderer * Engine::getRenderer() {
 	return m_renderer;
 }
 
+ResourceEngine * Engine::getResourceEngine() {
+	return m_resourceEngine;
+}
+
 void Engine::setState(State * state) {
 	if (m_state) delete m_state;
 	m_state = state;
@@ -154,6 +158,8 @@ Engine::Engine() :
 
 Engine::~Engine() {
 	delete m_state;
+	delete m_renderer;
+	delete m_resourceEngine;
 
 	SDL_GL_DeleteContext(m_context);
 	SDL_DestroyWindow(m_window);

@@ -3,6 +3,7 @@
 // Includes of core classes
 #include "engine.hpp"
 #include "renderer.hpp"
+#include "resourceEngine.hpp"
 #include "entity.hpp"
 #include "state.hpp"
 #include "sprite.hpp"
@@ -45,6 +46,14 @@ namespace Core {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
 		}
 
+	}
+
+	// Wrappers around resource functionalities
+	namespace Resources {
+
+		inline ResourceEngine* getEngine() {
+			return Engine::get_instance().getResourceEngine();
+		}
 	}
 
 }
