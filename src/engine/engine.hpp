@@ -37,7 +37,7 @@ public:
 protected:
 	Engine();
 	~Engine();
-
+ 
 private:
 	// System objects
 	Renderer * m_renderer;
@@ -59,4 +59,7 @@ private:
 	int m_windowHeight;
 	int m_tickRate;
 	int m_msPerTick;
+
+	// macOS fix
+	int mac_fix;
 };

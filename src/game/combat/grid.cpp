@@ -1,7 +1,9 @@
 #include "grid.hpp"
 
 Grid::Grid() {
-
+	m_test1 = ResourceEngine::getSprite("test1");
+	m_test2 = ResourceEngine::getSprite("test2");
+	m_test3 = ResourceEngine::getSprite("test3");
 }
 
 Grid::~Grid() {
@@ -17,8 +19,8 @@ void Grid::update()
 
 ScreenCoord Grid::getMouseToGrid()
 {
-	int x = floor(mouseX / 110);
-	int y = floor(mouseY / 110);
+	int x = static_cast<int>(floor(mouseX / 110));
+	int y = static_cast<int>(floor(mouseY / 110));
 
 	return ScreenCoord(x,y);
 }
@@ -39,24 +41,15 @@ void Grid::render()
 		for (int x = 0; x < x_; x++) {
 			if (array[y][x] == 1) {
 
-				Sprite sprite("res/test.png");
-				sprite.setPos(100 * x + (x+1) * spacing, 620 - 100 * y - (y + 1) * spacing);
-				sprite.setSize(width, height);
-				sprite.render();
+				m_test1->render(100 * x + (x+1) * spacing, 620 - 100 * y - (y + 1) * spacing, width, height);
 			}
 			else {
-				Sprite sprite("res/test2.png");
-				sprite.setPos(100 * x + (x + 1) * spacing, 620 - 100 * y - (y + 1) * spacing);
-				sprite.setSize(width, height);
-				sprite.render();
+				m_test2->render(100 * x + (x + 1) * spacing, 620 - 100 * y - (y + 1) * spacing, width, height);
 			}
 
 			//selected square
 			if (y == mousePos.y() && x == mousePos.x()) {
-				Sprite sprite("res/test3.png");
-				sprite.setPos(100 * x + (x + 1) * spacing, 620 - 100 * y - (y + 1) * spacing);
-				sprite.setSize(width, height);
-				sprite.render();
+				m_test3->render(100 * x + (x + 1) * spacing, 620 - 100 * y - (y + 1) * spacing, width, height);
 			}
 		}
 	}

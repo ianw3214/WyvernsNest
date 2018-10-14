@@ -55,6 +55,4 @@ void Combat::render() {
 
 	}
 	// SAMPLE CODE
-
-
 }
