@@ -1,7 +1,7 @@
 #include "cutscene.hpp"
 
 Cutscene::Cutscene(State * state) {
-
+	nextState = state;
 }
 
 Cutscene::~Cutscene() {

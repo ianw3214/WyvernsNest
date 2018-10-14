@@ -16,6 +16,9 @@
 
 class Cutscene : public State {
 
+std::list<Sprite> sprites;
+State * nextState;
+
 public:
 
 	// The constructor takes the next State to transition to as input
