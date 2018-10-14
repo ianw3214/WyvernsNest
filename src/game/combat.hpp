@@ -14,5 +14,5 @@ public:
 	void render() override;
 
 private:
-
+	Sprite* m_testSprite;
 };

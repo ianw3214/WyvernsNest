@@ -1,7 +1,9 @@
 #include "combat.hpp"
 
 Combat::Combat() {
-
+	m_testSprite = ResourceEngine::getSprite("test");
+	m_testSprite->setPos(100, 100);
+	m_testSprite->setSize(200, 200);
 }
 
 Combat::~Combat() {
@@ -23,10 +25,6 @@ void Combat::update(int delta) {
 void Combat::render() {
 
 	// SAMPLE CODE
-	Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-	Sprite sprite("res/test.png");
-	sprite.setPos(100, 100);
-	sprite.setSize(100, 100);
-	sprite.render();
-
+	Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(0.0, 1.0, 0.0));
+	m_testSprite->render();
 }
