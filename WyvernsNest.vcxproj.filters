@@ -60,6 +60,12 @@
     <ClCompile Include="src\game\cutscene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\combat\grid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\combat\player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\engine.hpp">
@@ -119,7 +125,10 @@
     <ClInclude Include="src\game\cutscene.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\game\unitData.hpp">
+    <ClInclude Include="src\game\combat\grid.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\combat\player.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
