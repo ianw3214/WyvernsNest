@@ -3,6 +3,7 @@
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
 
+// TODO: update player so that the positions are calculated from the grid
 class Player {
 
 public:
