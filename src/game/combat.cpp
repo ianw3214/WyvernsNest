@@ -1,7 +1,7 @@
 #include "combat.hpp"
 
 Combat::Combat() {
-
+	player.setTileSize(grid.tile_width, grid.tile_height);
 }
 
 Combat::~Combat() {
