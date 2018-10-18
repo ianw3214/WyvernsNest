@@ -71,9 +71,8 @@ struct Vec2 {
     Vec2 normalized() {
         T x = this->m_values[0] * abs(this->m_values[0]);
         T y = this->m_values[1] * abs(this->m_values[1]);
-        Vec2 n(x, y);
-
-        return n;
+        
+        return Vec2(x, y);
     }
 
 
@@ -187,9 +186,8 @@ struct Vec3 {
         T x = this->m_values[0] * abs(this->m_values[0]);
         T y = this->m_values[1] * abs(this->m_values[1]);
         T z = this->m_values[2] * abs(this->m_values[2]);
-        Vec3 n(x, y, z);
-
-        return n;
+        
+        return Vec3(x, y, z);;
     }
 
 
