@@ -22,6 +22,20 @@ private:
 };
 
 
+
+
+struct node{ 
+    int data; 
+	int id;
+    struct node *left; 
+    struct node *right; 
+};
+typedef node Node;
+
+
+
+
+/* OLD DEFINITION OF TREE
 //Data structure to hold a tree
 typedef struct {
 	int id;
@@ -39,3 +53,5 @@ typedef struct {
   int number_of_nodes;
   int number_of_edges;
 } Skill_tree;
+
+*/
