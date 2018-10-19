@@ -61,4 +61,4 @@ libs/
 .vscode/
 
 # DLL files
-*.dll
+*.dll.DS_Store
