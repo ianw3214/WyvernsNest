@@ -26,9 +26,9 @@ private:
 
 struct node{ 
     int data; 
-	int id;
-    struct node *left; 
-    struct node *right; 
+    int id;
+    int children_count;
+    struct node *children; 
 };
 typedef node Node;
 

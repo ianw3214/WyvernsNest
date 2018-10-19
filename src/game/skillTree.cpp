@@ -1,42 +1,53 @@
 #include "skillTree.hpp"
-#include <algorithm> 
-using std::max; 
+
 
 Node * example_tree;
 
 
 //creates a new node
-Node* newNode(int data, int id) { 
-  // Allocate memory for new node  
-  Node* node = (Node*)malloc(sizeof(Node)); 
-  
-  // Assign data to this node 
-  node->data = data; 
-  node->id = id;
+Node* newNode(int data, int id, int children_count, Node *children) { 
+	// Allocate memory for new node  
+	Node* node = (Node*)malloc(sizeof(Node)); 
 
-  // Initialize left and right children as NULL 
-  node->left = NULL; 
-  node->right = NULL; 
-  return(node); 
+	// Assign data to this node 
+	node->data = data; 
+	node->id = id;
+	node->children_count=children_count;
+	// Initialize left and right children as NULL 
+	node->children = children; 
+	return(node); 
 } 
 
-//returns the height of a tree
+
+
+//returns the height of a tree. The heigh of a 1 node tree is 0.
 int treeHeight(Node * node) {
     if (!node) return -1;
+	int max = -1;
 
-    return 1 + max(treeHeight(node->left), treeHeight(node->right));
+	//iterate through 
+	
+	for(size_t i = 0; i < node->children_count; i++)
+	{
+		if(treeHeight((node->children)+i)>max){
+			max = treeHeight((node->children)+i);
+		}
+	}
+	
+    return 1 + max;
 }
 
 SkillTree::SkillTree() {
 
-	example_tree = newNode(1, 1);
-	Node *n1 = newNode(1, 2);   
-	Node *n2 = newNode(1, 3);   
-	Node *n3 = newNode(1, 4);      
-
-	example_tree->left = n1;
-	example_tree->right = n2;
-	n2->left = n3;
+	//example of how to make a tree (example_tree)
+	Node *n3 = newNode(1, 4,0, NULL);   
+	Node *n1 = newNode(1, 2, 1, n3);   
+	Node *n2 = newNode(1, 3,0, NULL);   
+	
+	Node * children = (Node *) malloc(sizeof(Node)*2);
+	children[0]=*n1;
+	children[1]=*n2;
+	example_tree = newNode(1, 1 , 2, children);
 	
 
 	//EXAMPLE OF HOW TO SET UP A TREE 
@@ -93,7 +104,9 @@ int fakeFunction(){
 }
 
 
-
+void renderNode(int depth){
+	
+}
 
 void SkillTree::render() {
 
