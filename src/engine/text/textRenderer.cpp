@@ -41,11 +41,11 @@ TextRenderer::TextRenderer(const std::string& fontPath, int size, Vec2<int> wind
     glBindVertexArray(0);
 }
 
-void TextRenderer::render(std::string s, ScreenCoord pos, Vec3<float> colour, TextRenderer::hAlign ah, TextRenderer::vAlign av) {
-	renderLine(s, pos, colour, ah, av);	// Will add multiline support in future
+void TextRenderer::render(std::string s, ScreenCoord pos, float scale) {
+	renderLine(s, pos, scale, m_colour, m_ha, m_va);
 }
 
-void TextRenderer::renderLine(std::string s, ScreenCoord pos, Vec3<float> colour, TextRenderer::hAlign ah, TextRenderer::vAlign av) {
+void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colour colour, TextRenderer::hAlign ha, TextRenderer::vAlign va) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -56,7 +56,7 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, Vec3<float> colour
 
 	Vec2<int> sSize = computeLineSize(s);
 	GLfloat x_begin;
-	switch (ah) {
+	switch (ha) {
 	case TextRenderer::hAlign::left:
 		x_begin = pos.x();
 		break;
@@ -69,7 +69,7 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, Vec3<float> colour
 	}
 	
 	GLfloat y_begin;
-	switch (av) {
+	switch (va) {
 	case TextRenderer::vAlign::top:
 		y_begin = pos.y();
 		break;

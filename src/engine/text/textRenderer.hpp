@@ -41,10 +41,13 @@ public:
 
     TextRenderer(const std::string& fontPath, int size, Vec2<int> windowSize);
 
-    void render(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1,0,1), hAlign ha = hAlign::left, vAlign va = vAlign::top);
+	void render(std::string s, ScreenCoord pos, float scale = 1.f);
+	inline void setAlignment(hAlign ha, vAlign va) { m_ha = ha; m_va = va; }
+	inline void setColour(Colour colour) { m_colour = colour; }
+
 private:
 
-	void renderLine(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1, 0, 1), hAlign ha = hAlign::left, vAlign va = vAlign::top);
+	void renderLine(std::string s, ScreenCoord pos, float scale, Colour colour = Colour(0, 0, 0), hAlign ha = hAlign::left, vAlign va = vAlign::top);
     std::vector<Character> m_text;
 	Vec2<int> computeLineSize(std::string s);
 
@@ -52,4 +55,8 @@ private:
 	Vec2<int> m_windowSize;
     Shader m_shader;
     GLuint VAO, VBO;
+
+	hAlign m_ha = hAlign::left;
+	vAlign m_va = vAlign::top;
+	Colour m_colour = Colour(0,0,0);
 };

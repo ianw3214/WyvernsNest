@@ -59,9 +59,15 @@ namespace Core {
 	// Wrappers around text renderer functionalities
 	namespace Text_Renderer {
 
-		inline void render(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1, 0, 1), 
-			TextRenderer::hAlign ha = TextRenderer::hAlign::left, TextRenderer::vAlign va = TextRenderer::vAlign::top) {
-			Engine::get_instance().getTextRenderer()->render(s, pos, colour, ha, va);
+		inline void render(std::string s, ScreenCoord pos, float scale = 1.f) {
+			Engine::get_instance().getTextRenderer()->render(s, pos, scale);
+		}
+
+		inline void setAlignment(TextRenderer::hAlign ha, TextRenderer::vAlign va) {
+			Engine::get_instance().getTextRenderer()->setAlignment(ha, va);
+		}
+		inline void setColour(Colour colour) { 
+			Engine::get_instance().getTextRenderer()->setColour(colour); 
 		}
 
 	}
