@@ -37,24 +37,18 @@ enum TextAlignment { left, center, right };
 
 class Text {
 public:
-    Text(const std::string& text, const std::string& fontPath, int size, Vec2<int> containerSize);
 
-    void render(Vec3<float> colour, TextAlignment alignment, ScreenCoord location);
+	enum hAlign { left, centre, right };
+	enum vAlign { top, middle, bottom };
+
+    Text(const std::string& fontPath, int size);
+
+    void render(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1,0,1), hAlign ha = hAlign::left, vAlign va = vAlign::top);
 private:
-    // The characters making up the text
-    std::vector<std::vector<Character>> m_lines;
+    std::vector<Character> m_text;
+	Vec2<int> computeLineSize(std::string s);
 
-    // The dimensions of the space in which this text will be rendered
-    Vec2<int> m_containerSize;
-
-    int m_lineCount;
-
-    // Rendering
-    Shader m_shader;
-    GLuint m_vao, m_vbo;
-
-    void initializeCharacters(Font& font, const std::string& text);
-    void initializeOpenGLObjects();
-
-    int getWidthOfLine(const std::vector<Character>& line);
+	int fontSize;
+    Shader shader;
+    GLuint VAO, VBO;
 };

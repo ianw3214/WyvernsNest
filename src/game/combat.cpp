@@ -1,7 +1,6 @@
 #include "combat.hpp"
 
-Combat::Combat(): text("this is some text", "res/test_font.ttf", 48, Vec2<int>(Core::windowWidth(), Core::windowHeight())) {
-}
+Combat::Combat(): text("res/test_font.ttf", 48, Vec2<int>(Core::windowWidth(), Core::windowHeight())) { }
 
 Combat::~Combat() {
 
@@ -28,5 +27,5 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	text.render(Vec3<float>(1, 1, 1), TextAlignment::center, ScreenCoord(150,0));
+	text.render("hello world", ScreenCoord(50,50), Vec3<float>(1, 1, 1), Text::hAlign::left, Text::vAlign::bottom);
 }
