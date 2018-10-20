@@ -1,11 +1,10 @@
 #include "text.hpp"
 
-#include <iostream>
-
 const char* text_vertex =
     "#version 330 core\n"
-	"layout(location = 0) in vec4 position;"
+	"layout(location = 0) in vec4 position; /* vec2 position, vec2 texCoord */"
     "out vec2 texCoord;"
+    "uniform vec2 containerSize; /* width, height */"
     "mat4 ortho(float left, float right, float bottom, float top) {"
     "return mat4(vec4(2.0 / (right - left), 0, 0, 0), vec4(0, 2.0 / top - bottom, 0, 0), vec4(0, 0, -1, 0), vec4(-(right + left) / (right - left), -(top + bottom) / (top - bottom), 0, 1));}"
 	"void main() {"
@@ -17,10 +16,10 @@ const char* text_fragment =
     "#version 330 core\n"
     "in vec2 texCoord;"
 	"out vec4 colour;"
-    "uniform sampler2D text;"
+    "uniform sampler2D textTexture;"
     "uniform vec3 textColour;"
 	"void main() {"
-		"colour = vec4(textColour, 1.0) * vec4(1.0, 1.0, 1.0, texture(text, texCoord).r);"
+		"colour = vec4(textColour, 1.0) * vec4(1.0, 1.0, 1.0, texture(textTexture, texCoord).r);"
 	"}";
 
 Text::Text(const std::string& fontPath, int size) :
@@ -43,12 +42,13 @@ Text::Text(const std::string& fontPath, int size) :
     glBindVertexArray(0);
 }
 
-void Text::render(std::string s, ScreenCoord pos, Text::hAlign ah, Text::vAlign av) {
+void Text::render(std::string s, ScreenCoord pos, Vec3<float> colour, Text::hAlign ah, Text::vAlign av) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    shader.bind();
-    shader.setUniform3f("textColour", 1, 0, 1);
+    m_shader.bind();
+    m_shader.setUniform2i("containerSize", m_containerSize.x(), m_containerSize.y());
+    m_shader.setUniform3f("textColour", colour.r(), colour.g(), colour.b());
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
@@ -117,7 +117,7 @@ void Text::render(std::string s, ScreenCoord pos, Text::hAlign ah, Text::vAlign 
     shader.unbind();
 }
 
-Vec2<int> Text::stringSize(std::string s) {
+Vec2<int> Text::computeLineSize(std::string s) {
 	int x = 0;
 	for (char c : s) {
 		Character ch = m_text[c];

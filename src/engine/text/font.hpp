@@ -11,11 +11,16 @@
 #include "../../math/vec.hpp"
 
 struct Character {
-    char       character;  // The character represented by this Character
-    GLuint     textureID;  // ID handle of the glyph texture
-    Vec2<int>  size;       // Size of glyph
-    Vec2<int>  bearing;    // Offset from baseline to left/top of glyph
-    GLuint     advance;    // Offset to advance to next glyph
+    // The character represented by this Character
+    char character;
+    // ID handle of the glyph texture
+    GLuint textureID;
+    // Size of glyph (width, height)
+    Vec2<int> size;
+    // Offset from baseline to left/top of glyph (left, top)
+    Vec2<int> bearing;
+    // Offset to advance to next glyph
+    GLuint advance;
 };
 
 class Font {
