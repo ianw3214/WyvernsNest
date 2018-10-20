@@ -60,15 +60,12 @@ Character Font::generateCharacter(const char character) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-        if(m_textHeight == 0) {
-            m_textHeight = m_fontFace->glyph->bitmap.rows;
-        }
 
         // Store the character.
         Character characterObj = {
             character,
             texture,
-            Vec2<int>(m_fontFace->glyph->bitmap.width, m_textHeight),
+            Vec2<int>(m_fontFace->glyph->bitmap.width, m_fontFace->glyph->bitmap.rows),
             Vec2<int>(m_fontFace->glyph->bitmap_left, m_fontFace->glyph->bitmap_top),
             static_cast<GLuint>(m_fontFace->glyph->advance.x)
         };

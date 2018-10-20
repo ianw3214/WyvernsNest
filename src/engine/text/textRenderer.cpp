@@ -88,7 +88,7 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, Vec3<float> colour
     for(char c : s) {
 		Character ch = m_text[c];
         GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x());
-        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y() - ch.size.y());
+        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y() - m_fontSize);
 
         GLfloat w = static_cast<GLfloat>(ch.size.x());
         GLfloat h = static_cast<GLfloat>(ch.size.y());
