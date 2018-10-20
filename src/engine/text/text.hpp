@@ -10,9 +10,9 @@
 
 class Text {
 public:
-    Text(const std::string& text, const std::string& fontPath, int size);
+    Text(const std::string& fontPath, int size);
 
-    void render();
+    void render(std::string s, ScreenCoord pos);
 private:
     std::vector<Character> m_text;
 

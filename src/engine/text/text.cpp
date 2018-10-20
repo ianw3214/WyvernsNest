@@ -23,12 +23,14 @@ const char* text_fragment =
 		"colour = vec4(textColour, 1.0) * vec4(1.0, 1.0, 1.0, texture(text, texCoord).r);"
 	"}";
 
-Text::Text(const std::string& text, const std::string& fontPath, int size) :
+Text::Text(const std::string& fontPath, int size) :
     shader(text_vertex, text_fragment) {
     Font font(fontPath, size);
-    for(const char& c: text) {
-        m_text.push_back(font.generateCharacter(c));
-    }
+
+	m_text.resize(128);
+	for (char c = 0; c < 127; ++c) {
+		m_text[c] = font.generateCharacter(c);
+	}
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -41,7 +43,7 @@ Text::Text(const std::string& text, const std::string& fontPath, int size) :
     glBindVertexArray(0);      
 }
 
-void Text::render() {
+void Text::render(std::string s, ScreenCoord pos) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -49,11 +51,13 @@ void Text::render() {
     shader.setUniform3f("textColour", 1, 0, 1);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
-    GLfloat x = 0;
+    GLfloat x = static_cast<GLfloat>(pos.x());
+	GLfloat y = -static_cast<GLfloat>(pos.y());	// Sign error somewhere below...
 
-    for(Character ch: m_text) {
+    for(char c : s) {
+		Character ch = m_text[c];
         GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x());
-        GLfloat ypos = static_cast<GLfloat>(ch.bearing.y() - ch.size.y());
+        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y() - ch.size.y());
 
         GLfloat w = static_cast<GLfloat>(ch.size.x());
         GLfloat h = static_cast<GLfloat>(ch.size.y());

@@ -1,6 +1,6 @@
 #include "combat.hpp"
 
-Combat::Combat(): text("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "res/test_font.ttf", 48) {
+Combat::Combat(): text("res/test_font.ttf", 48) {
 }
 
 Combat::~Combat() {
@@ -28,5 +28,5 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	text.render();
+	text.render("hello there this is nice", ScreenCoord(50,5));
 }
