@@ -17,6 +17,12 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	m_windowWidth = window_width;
 	m_windowHeight = window_height;
 
+	// Setup openGL attributes
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
 	// Create the window and setup an openGL context
 	m_window = SDL_CreateWindow(name,
 		SDL_WINDOWPOS_UNDEFINED,
@@ -34,11 +40,7 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 		return false;
 	}
 
-	// Setup openGL attributes
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+	// Enable vsync
 	SDL_GL_SetSwapInterval(1);
 
 	// Setup blending
@@ -61,6 +63,8 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	// reset m_lastTick for a more accurate first tick
 	m_lastTick = SDL_GetTicks();
 
+	mac_fix = 0;
+
 	return true;
 }
 
@@ -69,6 +73,18 @@ bool Engine::running() const {
 }
 
 void Engine::update() {
+	#ifdef __APPLE__
+	// 200 is an arbitrary number but it consistently works for me
+	if(mac_fix < 200) {
+		mac_fix += 1;
+		SDL_SetWindowSize(m_window, 1279, 720);
+	}	
+		
+	if(mac_fix == 200) {
+		SDL_SetWindowSize(m_window, 1280, 720);
+		mac_fix += 1;
+	}
+	#endif
 
 	// Handle the delta time, only tick when the time threshold is reached
 	m_delta = SDL_GetTicks() - m_lastTick;
@@ -88,6 +104,8 @@ void Engine::update() {
 		}
 		if (m_state) m_state->handleEvent(event);
 	}
+
+	getRenderer()->clear();
 	if (m_state) m_state->update(m_delta);
 	if (m_state) m_state->render();
 
