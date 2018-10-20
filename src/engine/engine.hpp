@@ -5,6 +5,7 @@
 #define DEFAULT_TICK_RATE	30	// per second
 
 class Renderer;
+class TextRenderer;
 class State;
 
 class Engine {
@@ -30,6 +31,7 @@ public:
 	int getWindowWidth() const;
 	int getWindowHeight() const;
 	Renderer * getRenderer();
+	TextRenderer * getTextRenderer();
 
 	// State changing functions
 	void setState(State * state);
@@ -41,6 +43,7 @@ protected:
 private:
 	// System objects
 	Renderer * m_renderer;
+	TextRenderer * m_textRenderer;
 
 	// SDL/OpenGL specific objects
 	SDL_Window * m_window;

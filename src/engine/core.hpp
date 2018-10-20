@@ -3,6 +3,7 @@
 // Includes of core classes
 #include "engine.hpp"
 #include "renderer.hpp"
+#include "text/textRenderer.hpp"
 #include "entity.hpp"
 #include "state.hpp"
 #include "sprite.hpp"
@@ -43,6 +44,16 @@ namespace Core {
 
 		inline void drawTexture(ScreenCoord v, int width, int height, const Texture& texture) {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
+		}
+
+	}
+
+	// Wrappers around text renderer functionalities
+	namespace Text_Renderer {
+
+		inline void render(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1, 0, 1), 
+			TextRenderer::hAlign ha = TextRenderer::hAlign::left, TextRenderer::vAlign va = TextRenderer::vAlign::top) {
+			Engine::get_instance().getTextRenderer()->render(s, pos, colour, ha, va);
 		}
 
 	}
