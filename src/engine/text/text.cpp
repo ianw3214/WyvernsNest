@@ -24,7 +24,7 @@ const char* text_fragment =
 	"}";
 
 Text::Text(const std::string& fontPath, int size) :
-    shader(text_vertex, text_fragment) {
+    shader(text_vertex, text_fragment), fontSize(size) {
     Font font(fontPath, size);
 
 	m_text.resize(128);
@@ -40,10 +40,10 @@ Text::Text(const std::string& fontPath, int size) :
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);      
+    glBindVertexArray(0);
 }
 
-void Text::render(std::string s, ScreenCoord pos) {
+void Text::render(std::string s, ScreenCoord pos, Text::hAlign ah, Text::vAlign av) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -51,8 +51,37 @@ void Text::render(std::string s, ScreenCoord pos) {
     shader.setUniform3f("textColour", 1, 0, 1);
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
-    GLfloat x = static_cast<GLfloat>(pos.x());
-	GLfloat y = -static_cast<GLfloat>(pos.y());	// Sign error somewhere below...
+
+	Vec2<int> sSize = stringSize(s);
+	GLfloat x_begin;
+	switch (ah) {
+	case Text::hAlign::left:
+		x_begin = pos.x();
+		break;
+	case Text::hAlign::centre:
+		x_begin = pos.x() - sSize.x() / 2;
+		break;
+	case Text::hAlign::right:
+		x_begin = pos.x() - sSize.x();
+		break;
+	}
+	
+	GLfloat y_begin;
+	switch (av) {
+	case Text::vAlign::top:
+		y_begin = pos.y();
+		break;
+	case Text::vAlign::middle:
+		y_begin = pos.y() - sSize.y() / 2;
+		break;
+	case Text::vAlign::bottom:
+		y_begin = pos.y() - sSize.y();
+		break;
+	}
+
+	GLfloat x = static_cast<GLfloat>(x_begin);
+	GLfloat y = -static_cast<GLfloat>(y_begin);	// Sign error somewhere below...
+	
 
     for(char c : s) {
 		Character ch = m_text[c];
@@ -86,4 +115,15 @@ void Text::render(std::string s, ScreenCoord pos) {
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     shader.unbind();
+}
+
+Vec2<int> Text::stringSize(std::string s) {
+	int x = 0;
+	for (char c : s) {
+		Character ch = m_text[c];
+		x += (ch.advance >> 6);	// Bitshift by 6 to get value in pixels (2^6 = 64)
+	}
+
+	int y = fontSize;
+	return Vec2<int>(x, y);
 }

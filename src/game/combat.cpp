@@ -28,5 +28,5 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	text.render("hello there this is nice", ScreenCoord(50,5));
+	text.render("hello world", ScreenCoord(50,50), Text::hAlign::left, Text::vAlign::bottom);
 }
