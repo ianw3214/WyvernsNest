@@ -41,14 +41,17 @@ public:
 	enum hAlign { left, centre, right };
 	enum vAlign { top, middle, bottom };
 
-    Text(const std::string& fontPath, int size);
+    Text(const std::string& fontPath, int size, Vec2<int> windowSize);
 
     void render(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1,0,1), hAlign ha = hAlign::left, vAlign va = vAlign::top);
 private:
+
+	void renderLine(std::string s, ScreenCoord pos, Vec3<float> colour = Vec3<float>(1, 0, 1), hAlign ha = hAlign::left, vAlign va = vAlign::top);
     std::vector<Character> m_text;
 	Vec2<int> computeLineSize(std::string s);
 
-	int fontSize;
-    Shader shader;
+	int m_fontSize;
+	Vec2<int> m_windowSize;
+    Shader m_shader;
     GLuint VAO, VBO;
 };

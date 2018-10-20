@@ -4,7 +4,6 @@ const char* text_vertex =
     "#version 330 core\n"
 	"layout(location = 0) in vec4 position; /* vec2 position, vec2 texCoord */"
     "out vec2 texCoord;"
-    "uniform vec2 containerSize; /* width, height */"
     "mat4 ortho(float left, float right, float bottom, float top) {"
     "return mat4(vec4(2.0 / (right - left), 0, 0, 0), vec4(0, 2.0 / top - bottom, 0, 0), vec4(0, 0, -1, 0), vec4(-(right + left) / (right - left), -(top + bottom) / (top - bottom), 0, 1));}"
 	"void main() {"
@@ -22,8 +21,8 @@ const char* text_fragment =
 		"colour = vec4(textColour, 1.0) * vec4(1.0, 1.0, 1.0, texture(textTexture, texCoord).r);"
 	"}";
 
-Text::Text(const std::string& fontPath, int size) :
-    shader(text_vertex, text_fragment), fontSize(size) {
+Text::Text(const std::string& fontPath, int size, Vec2<int> windowSize) :
+    m_shader(text_vertex, text_fragment), m_fontSize(size), m_windowSize(windowSize){
     Font font(fontPath, size);
 
 	m_text.resize(128);
@@ -47,12 +46,11 @@ void Text::render(std::string s, ScreenCoord pos, Vec3<float> colour, Text::hAli
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     m_shader.bind();
-    m_shader.setUniform2i("containerSize", m_containerSize.x(), m_containerSize.y());
     m_shader.setUniform3f("textColour", colour.r(), colour.g(), colour.b());
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
-	Vec2<int> sSize = stringSize(s);
+	Vec2<int> sSize = computeLineSize(s);
 	GLfloat x_begin;
 	switch (ah) {
 	case Text::hAlign::left:
@@ -90,15 +88,18 @@ void Text::render(std::string s, ScreenCoord pos, Vec3<float> colour, Text::hAli
 
         GLfloat w = static_cast<GLfloat>(ch.size.x());
         GLfloat h = static_cast<GLfloat>(ch.size.y());
+			
+		int winHeight = m_windowSize.y();
         // Update VBO for each character
         GLfloat vertices[] = {
-             xpos,     ypos + h + (720 - h),   0.0, 0.0 ,            
-             xpos,     ypos + (720 - h),       0.0, 1.0 ,
-             xpos + w, ypos + (720 - h),       1.0, 1.0 ,
+			// (winHeight - h) makes the text start from the top left corner 
+             xpos,     ypos + h + (winHeight - h),   0.0, 0.0 ,
+             xpos,     ypos + (winHeight - h),       0.0, 1.0 ,
+             xpos + w, ypos + (winHeight - h),       1.0, 1.0 ,
 
-             xpos,     ypos + h + (720 - h),   0.0, 0.0 ,
-             xpos + w, ypos + (720 - h),       1.0, 1.0 ,
-             xpos + w, ypos + h + (720 - h),   1.0, 0.0            
+             xpos,     ypos + h + (winHeight - h),   0.0, 0.0 ,
+             xpos + w, ypos + (winHeight - h),       1.0, 1.0 ,
+             xpos + w, ypos + h + (winHeight - h),   1.0, 0.0
         };
 
         // Render glyph texture over quad
@@ -114,7 +115,7 @@ void Text::render(std::string s, ScreenCoord pos, Vec3<float> colour, Text::hAli
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    shader.unbind();
+    m_shader.unbind();
 }
 
 Vec2<int> Text::computeLineSize(std::string s) {
@@ -124,6 +125,6 @@ Vec2<int> Text::computeLineSize(std::string s) {
 		x += (ch.advance >> 6);	// Bitshift by 6 to get value in pixels (2^6 = 64)
 	}
 
-	int y = fontSize;
+	int y = m_fontSize;
 	return Vec2<int>(x, y);
 }
