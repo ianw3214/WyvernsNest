@@ -35,6 +35,10 @@ namespace Core {
 		return Engine::get_instance().getWindowHeight();
 	}
 
+	inline float getSeconds() {
+		return Engine::get_instance().getTicks()/1000.0;
+	}
+
 	inline void setDebugMode(bool mode) {
 		Engine::get_instance().setDebugMode(mode);
 	}

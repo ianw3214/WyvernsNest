@@ -54,7 +54,7 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
-	Vec2<int> sSize = computeLineSize(s);
+	Vec2<int> sSize = computeLineSize(s, scale);
 	GLfloat x_begin;
 	switch (ha) {
 	case TextRenderer::hAlign::left:
@@ -87,11 +87,11 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
 
     for(char c : s) {
 		Character ch = m_text[c];
-        GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x());
-        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y() - m_fontSize);
+        GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x()*scale);
+        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y()*scale - sSize.y());
 
-        GLfloat w = static_cast<GLfloat>(ch.size.x());
-        GLfloat h = static_cast<GLfloat>(ch.size.y());
+        GLfloat w = static_cast<GLfloat>(ch.size.x()) * scale;
+        GLfloat h = static_cast<GLfloat>(ch.size.y()) * scale;
 			
 		int winHeight = m_windowSize.y();
         // Update VBO for each character
@@ -115,14 +115,14 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
         // Render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.advance >> 6); // Bitshift by 6 to get value in pixels (2^6 = 64)
+        x += (ch.advance >> 6)*scale; // Bitshift by 6 to get value in pixels (2^6 = 64)
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     m_shader.unbind();
 }
 
-Vec2<int> TextRenderer::computeLineSize(std::string s) {
+Vec2<int> TextRenderer::computeLineSize(std::string s, float scale) {
 	int x = 0;
 	for (char c : s) {
 		Character ch = m_text[c];
@@ -130,5 +130,5 @@ Vec2<int> TextRenderer::computeLineSize(std::string s) {
 	}
 
 	int y = m_fontSize;
-	return Vec2<int>(x, y);
+	return Vec2<int>(x, y)*scale;
 }

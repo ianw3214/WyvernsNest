@@ -27,5 +27,16 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	Core::Text_Renderer::render("Hello. 123: 987!", ScreenCoord(100,100));
+	std::string s;
+	for (int c = 0; c < 20; ++c) {
+
+		s.push_back(char(rand() % 127));
+	}
+
+	for (int i = 1; i < 25; ++i) {
+		for (int j = 0; j < 4; ++j) {
+			Core::Text_Renderer::render(s, ScreenCoord(j*300, i * 30));
+		}
+	}
+
 }

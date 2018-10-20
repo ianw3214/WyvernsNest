@@ -49,7 +49,7 @@ private:
 
 	void renderLine(std::string s, ScreenCoord pos, float scale, Colour colour = Colour(0, 0, 0), hAlign ha = hAlign::left, vAlign va = vAlign::top);
     std::vector<Character> m_text;
-	Vec2<int> computeLineSize(std::string s);
+	Vec2<int> computeLineSize(std::string s, float scale);
 
 	int m_fontSize;
 	Vec2<int> m_windowSize;

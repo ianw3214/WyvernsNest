@@ -38,6 +38,7 @@ public:
 
 	inline void setDebugMode(bool mode) { m_debugMode = mode; }
 	inline bool getDebugMode() { return m_debugMode; }
+	inline int getTicks() { return m_lastTick; }
 
 
 protected:
