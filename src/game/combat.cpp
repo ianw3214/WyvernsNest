@@ -27,5 +27,5 @@ void Combat::render() {
 	sprite.setSize(200, 200);
 	sprite.render();
 
-	Core::Text_Renderer::render("hello world", ScreenCoord(50,50), Vec3<float>(1, 1, 1), TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+	Core::Text_Renderer::render("hello: world.", ScreenCoord(50,50), Vec3<float>(1, 1, 1), TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 }

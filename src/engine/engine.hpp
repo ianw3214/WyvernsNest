@@ -36,6 +36,10 @@ public:
 	// State changing functions
 	void setState(State * state);
 
+	inline void setDebugMode(bool mode) { m_debugMode = mode; }
+	inline bool getDebugMode() { return m_debugMode; }
+
+
 protected:
 	Engine();
 	~Engine();
@@ -65,4 +69,7 @@ private:
 
 	// macOS fix
 	int mac_fix;
+
+	// debug mode
+	bool m_debugMode = false;
 };

@@ -112,7 +112,9 @@ void Engine::update() {
 	getRenderer()->clear();
 	if (m_state) m_state->update(m_delta);
 	if (m_state) m_state->render();
-
+	if (getDebugMode()) {
+		getTextRenderer()->render("FPS: " + std::to_string(round(1000.0 / m_delta)), ScreenCoord(0, 0), Colour(0, 0, 0));
+	}
 	SDL_GL_SwapWindow(m_window);
 }
 
