@@ -54,8 +54,7 @@ ipch/
 *.VC.VC.opendb
 
 # Library directory
-/libs/*
-!/libs/freetype/
+libs/
 
 # VScode folder
 .vs/
@@ -63,4 +62,3 @@ ipch/
 
 # DLL files
 *.dll
-!freetype.dll

@@ -146,6 +146,3 @@ void State::update(const SDL_Event& event) {
     }
 }
 ```
-
-
-This project uses the [FreeType text rendering library](https://www.freetype.org/).
