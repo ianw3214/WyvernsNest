@@ -36,7 +36,7 @@ namespace Core {
 	}
 
 	inline float getSeconds() {
-		return Engine::get_instance().getTicks()/1000.0;
+		return Engine::get_instance().getTicks()/1000.0f;
 	}
 
 	inline void setDebugMode(bool mode) {

@@ -54,30 +54,30 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(VAO);
 
-	Vec2<int> sSize = computeLineSize(s, scale);
+	Vec2<float> sSize = computeLineSize(s, scale);
 	GLfloat x_begin;
 	switch (ha) {
 	case TextRenderer::hAlign::left:
-		x_begin = pos.x();
+		x_begin = static_cast<GLfloat>(pos.x());
 		break;
 	case TextRenderer::hAlign::centre:
-		x_begin = pos.x() - sSize.x() / 2;
+		x_begin = static_cast<GLfloat>(pos.x() - sSize.x() / 2.f);
 		break;
 	case TextRenderer::hAlign::right:
-		x_begin = pos.x() - sSize.x();
+		x_begin = static_cast<GLfloat>(pos.x() - sSize.x());
 		break;
 	}
 	
 	GLfloat y_begin;
 	switch (va) {
 	case TextRenderer::vAlign::top:
-		y_begin = pos.y();
+		y_begin = static_cast<GLfloat>(pos.y());
 		break;
 	case TextRenderer::vAlign::middle:
-		y_begin = pos.y() - sSize.y() / 2;
+		y_begin = static_cast<GLfloat>(pos.y() - sSize.y() / 2.f);
 		break;
 	case TextRenderer::vAlign::bottom:
-		y_begin = pos.y() - sSize.y();
+		y_begin = static_cast<GLfloat>(pos.y() - sSize.y());
 		break;
 	}
 
@@ -122,7 +122,7 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
     m_shader.unbind();
 }
 
-Vec2<int> TextRenderer::computeLineSize(std::string s, float scale) {
+Vec2<float> TextRenderer::computeLineSize(std::string s, float scale) {
 	int x = 0;
 	for (char c : s) {
 		Character ch = m_text[c];
@@ -130,5 +130,5 @@ Vec2<int> TextRenderer::computeLineSize(std::string s, float scale) {
 	}
 
 	int y = m_fontSize;
-	return Vec2<int>(x, y)*scale;
+	return Vec2<float>(float(x), float(y))*scale;
 }
