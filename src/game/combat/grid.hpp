@@ -2,6 +2,9 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "player.hpp"
+#include "enemy.hpp"
+
 
 #define TILE_WIDTH 100
 #define TILE_HEIGHT 100
@@ -22,9 +25,14 @@ public:
 	Grid();
 	~Grid();
 
+	Grid(std::vector<Player>* players, std::vector<Enemy>* enemies);
+
+
 	void render();
 	void update();
 	ScreenCoord getMouseToGrid();
+
+	void getPlayerPositions();
 
 	bool isMousePosValid();
 
@@ -39,6 +47,10 @@ public:
 	int mouseY;
 
 	ScreenCoord mousePos;
+
+	std::vector<Player>* players;
+
+	std::vector<Enemy>* enemies;
 
 private:
 

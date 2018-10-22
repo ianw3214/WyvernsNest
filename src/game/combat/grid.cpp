@@ -23,6 +23,26 @@ Grid::~Grid() {
 
 }
 
+Grid::Grid(std::vector<Player>* p, std::vector<Enemy>* e) :
+	tilemap(DEFAULT_TILEMAP),
+	map_width(DEFAULT_MAP_WIDTH),
+	map_height(DEFAULT_MAP_HEIGHT),
+	tile1("res/test.png"),
+	tile2("res/test2.png"),
+	selected("res/test3.png")
+{
+	// Calculate the tile size based on the screen size
+	tile_width = Core::windowWidth() / map_width;
+	tile_height = Core::windowHeight() / map_height;
+	// Initialize the tile sprites to the tile width/height
+	tile1.setSize(tile_width, tile_height);
+	tile2.setSize(tile_width, tile_height);
+	selected.setSize(tile_width, tile_height);
+
+	players = p;
+	enemies = e;
+}
+
 void Grid::update()
 {
 	//mouseOn = GetCursorPos(&mouse);
@@ -37,6 +57,12 @@ ScreenCoord Grid::getMouseToGrid()
 	int y = static_cast<int>(floor(mouseY / tile_height));
 
 	return ScreenCoord(x,y);
+}
+
+void Grid::getPlayerPositions()
+{
+	//Player test = (*players)[0];
+	return;
 }
 
 bool Grid::isMousePosValid()

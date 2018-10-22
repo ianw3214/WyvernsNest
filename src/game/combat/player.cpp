@@ -8,27 +8,56 @@ Player::Player() :
 	idle.setSize(sprite_width, sprite_height);
 }
 
+Player::Player(int x, int y) :
+	sprite_width(DEFAULT_SPRITE_WIDTH),
+	sprite_height(DEFAULT_SPRITE_HEIGHT),
+	idle("res/assets/HeroF_Sprite.png")
+{
+	idle.setSize(sprite_width, sprite_height);
+	position.x() = x;
+	position.y() = y;
+}
+
 Player::~Player()
 {
 }
 
 void Player::render()
 {
-	if (selected) {
-		Sprite sprite("res/test5.png");
+	if (!selected) {
+		Sprite sprite("res/assets/HeroF_Sprite.png");
 		sprite.setPos(screenPosition.x(), screenPosition.y());
 		sprite.setSize(sprite_width, sprite_height);
 		sprite.render();
 	}
 	else {
-		idle.setPos(screenPosition.x(), screenPosition.y());
-		idle.render();
+		Sprite sprite("res/test5.png");
+		sprite.setPos(screenPosition.x(), screenPosition.y());
+		sprite.setSize(sprite_width, sprite_height);
+		sprite.render();
 	}
+
+	//TODO doesnt work if we have two players in a vector
+
+	//if (!selected) {
+	//	Sprite sprite("res/test5.png");
+	//	sprite.setPos(screenPosition.x(), screenPosition.y());
+	//	sprite.setSize(sprite_width, sprite_height);
+	//	sprite.render();
+	//}
+	//else {
+	//	idle.setPos(screenPosition.x(), screenPosition.y());
+	//	idle.render();
+	//}
 
 
 }
 
-void Player::update()
+void Player::handleEvent(const SDL_Event & event)
+{
+}
+
+void Player::update(int delta)
 {
 }
 
