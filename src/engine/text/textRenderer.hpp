@@ -9,7 +9,7 @@
 #include "../opengl/glwrappers.hpp"
 
 /**
- * Basic usage of Text
+ * Basic usage of Text (OUTDATED. See Core implementation)
  * 
  * Create a Text object with the following parameters:
  *  - text: The text that will be rendered

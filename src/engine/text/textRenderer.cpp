@@ -1,4 +1,5 @@
 #include "textRenderer.hpp"
+#include <algorithm>
 
 const char* text_vertex =
     "#version 330 core\n"
@@ -61,34 +62,34 @@ void TextRenderer::renderLine(std::string s, ScreenCoord pos, float scale, Colou
 		x_begin = static_cast<GLfloat>(pos.x());
 		break;
 	case TextRenderer::hAlign::centre:
-		x_begin = static_cast<GLfloat>(pos.x() - sSize.x() / 2.f);
+		x_begin = static_cast<GLfloat>(pos.x() - scale*sSize.x() / 2.f);
 		break;
 	case TextRenderer::hAlign::right:
-		x_begin = static_cast<GLfloat>(pos.x() - sSize.x());
+		x_begin = static_cast<GLfloat>(pos.x() - scale*sSize.x());
 		break;
 	}
 	
 	GLfloat y_begin;
 	switch (va) {
-	case TextRenderer::vAlign::top:
+	case TextRenderer::vAlign::bottom:
 		y_begin = static_cast<GLfloat>(pos.y());
 		break;
 	case TextRenderer::vAlign::middle:
-		y_begin = static_cast<GLfloat>(pos.y() - sSize.y() / 2.f);
+		y_begin = static_cast<GLfloat>(pos.y() + scale*sSize.y() / 2.f);
 		break;
-	case TextRenderer::vAlign::bottom:
-		y_begin = static_cast<GLfloat>(pos.y() - sSize.y());
+	case TextRenderer::vAlign::top:
+		y_begin = static_cast<GLfloat>(pos.y() + scale*sSize.y());
 		break;
 	}
 
 	GLfloat x = static_cast<GLfloat>(x_begin);
-	GLfloat y = -static_cast<GLfloat>(y_begin);	// Sign error somewhere below...
+	GLfloat y = -static_cast<GLfloat>(y_begin);	// Sign error somewhere below perhaps.
 	
 
     for(char c : s) {
 		Character ch = m_text[c];
         GLfloat xpos = static_cast<GLfloat>(x + ch.bearing.x()*scale);
-        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y()*scale - sSize.y());
+        GLfloat ypos = static_cast<GLfloat>(y + ch.bearing.y()*scale);
 
         GLfloat w = static_cast<GLfloat>(ch.size.x()) * scale;
         GLfloat h = static_cast<GLfloat>(ch.size.y()) * scale;
@@ -130,5 +131,5 @@ Vec2<float> TextRenderer::computeLineSize(std::string s, float scale) {
 	}
 
 	int y = m_fontSize;
-	return Vec2<float>(float(x), float(y))*scale;
+	return Vec2<float>(float(x), float(y));
 }
