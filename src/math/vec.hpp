@@ -69,10 +69,7 @@ struct Vec2 {
         return sqrt(x + y);
     }
     Vec2 normalized() {
-        T x = this->m_values[0] * abs(this->m_values[0]);
-        T y = this->m_values[1] * abs(this->m_values[1]);
-        
-        return Vec2(x, y);
+        return *this / norm();
     }
 
 
@@ -183,11 +180,7 @@ struct Vec3 {
     }
 
     Vec3 normalized() {
-        T x = this->m_values[0] * abs(this->m_values[0]);
-        T y = this->m_values[1] * abs(this->m_values[1]);
-        T z = this->m_values[2] * abs(this->m_values[2]);
-        
-        return Vec3(x, y, z);;
+        return *this / norm();
     }
 
 
