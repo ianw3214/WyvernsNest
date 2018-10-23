@@ -70,12 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -83,10 +83,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -105,12 +105,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,6 +138,8 @@
     <ClCompile Include="src\engine\renderer.cpp" />
     <ClCompile Include="src\engine\sprite.cpp" />
     <ClCompile Include="src\engine\state.cpp" />
+    <ClCompile Include="src\engine\text\font.cpp" />
+    <ClCompile Include="src\engine\text\textRenderer.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
     <ClCompile Include="src\game\customization.cpp" />
     <ClCompile Include="src\game\cutscene.cpp" />
@@ -158,6 +160,8 @@
     <ClInclude Include="src\engine\renderer.hpp" />
     <ClInclude Include="src\engine\sprite.hpp" />
     <ClInclude Include="src\engine\state.hpp" />
+    <ClInclude Include="src\engine\text\font.hpp" />
+    <ClInclude Include="src\engine\text\textRenderer.hpp" />
     <ClInclude Include="src\game\combat.hpp" />
     <ClInclude Include="src\game\customization.hpp" />
     <ClInclude Include="src\game\cutscene.hpp" />

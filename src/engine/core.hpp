@@ -3,6 +3,7 @@
 // Includes of core classes
 #include "engine.hpp"
 #include "renderer.hpp"
+#include "text/textRenderer.hpp"
 #include "entity.hpp"
 #include "state.hpp"
 #include "sprite.hpp"
@@ -34,6 +35,18 @@ namespace Core {
 		return Engine::get_instance().getWindowHeight();
 	}
 
+	inline float getSeconds() {
+		return Engine::get_instance().getTicks()/1000.0f;
+	}
+
+	inline void setDebugMode(bool mode) {
+		Engine::get_instance().setDebugMode(mode);
+	}
+
+	inline bool getdebugMode(bool mode) {
+		return Engine::get_instance().getDebugMode();
+	}
+
 	// Wrappers around renderer functionalities
 	namespace Renderer {
 
@@ -43,6 +56,22 @@ namespace Core {
 
 		inline void drawTexture(ScreenCoord v, int width, int height, const Texture& texture) {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
+		}
+
+	}
+
+	// Wrappers around text renderer functionalities
+	namespace Text_Renderer {
+
+		inline void render(std::string s, ScreenCoord pos, float scale = 1.f) {
+			Engine::get_instance().getTextRenderer()->render(s, pos, scale);
+		}
+
+		inline void setAlignment(TextRenderer::hAlign ha, TextRenderer::vAlign va) {
+			Engine::get_instance().getTextRenderer()->setAlignment(ha, va);
+		}
+		inline void setColour(Colour colour) { 
+			Engine::get_instance().getTextRenderer()->setColour(colour); 
 		}
 
 	}
