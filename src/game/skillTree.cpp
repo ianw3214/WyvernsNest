@@ -66,15 +66,25 @@ int numberOfNodesAt(Node * tree, int targetDepth, int currentDepth){
 SkillTree::SkillTree() {
 
 	//example of how to make a tree (example_tree)
-	Node *n3 = newNode(1, 4,0, NULL);   
-	Node *n4 = newNode(1, 5,0, NULL);   
-	Node *n1 = newNode(1, 2, 1, n3);   
-	Node *n2 = newNode(1, 3,1, n4);   
+	Node *n5 = newNode(1, 5, 0, NULL);   
+	Node *n6 = newNode(1, 6, 0, NULL);   
+	Node *n7 = newNode(1, 7, 0, NULL);   
+	Node *n8 = newNode(1, 8, 0, NULL);   
+
+	Node * children2 = (Node *) malloc(sizeof(Node)*4);
+	children2[0]=*n5;
+	children2[1]=*n6;
+	children2[2]=*n7;
+	children2[3]=*n8;
+	Node *n3 = newNode(1, 3, 4, children2);   
+	Node *n4 = newNode(1, 4, 0, NULL);   
+	Node *n1 = newNode(1, 1, 1, n3);   
+	Node *n2 = newNode(1, 2, 1, n4);   
 	
-	Node * children = (Node *) malloc(sizeof(Node)*2);
-	children[0]=*n1;
-	children[1]=*n2;
-	example_tree = newNode(1, 1 , 2, children);
+	Node * children1 = (Node *) malloc(sizeof(Node)*2);
+	children1[0]=*n1;
+	children1[1]=*n2;
+	example_tree = newNode(1, 0 , 2, children1);
 
 }
 
@@ -96,7 +106,7 @@ int fakeFunction(){
 }
 
 
-void renderNode(Node *tree, int * already_rendered, int * nodes_per_depth,int screenWidth, int screenHeight, int currentDepth){
+void renderNode(Node *tree, int * already_rendered, int * nodes_per_depth,int screenWidth, int screenHeight, int currentDepth,int parentX, int parentY){
 	int node_offset = screenWidth/(nodes_per_depth[currentDepth]+1);//The horizontal distance between nodes
 
 	int x_position = (already_rendered[currentDepth]+1)*node_offset;
@@ -109,10 +119,14 @@ void renderNode(Node *tree, int * already_rendered, int * nodes_per_depth,int sc
 	sprite.setPos(x_position, y_position);
 	sprite.render();
 
+	//render line
+	Core::Renderer::drawLine(ScreenCoord(parentX, parentY), ScreenCoord(x_position, y_position), Colour(1.0, 1.0, 1.0));
+
+
 	//render children nodes
 	for(size_t i = 0; i < tree->children_count; i++)
 	{
-		renderNode(tree->children+i,already_rendered,nodes_per_depth,screenWidth,screenHeight,currentDepth+1);
+		renderNode(tree->children+i,already_rendered,nodes_per_depth,screenWidth,screenHeight,currentDepth+1,x_position,y_position);
 	}
 
 }
@@ -134,7 +148,7 @@ void SkillTree::render() {
 		already_rendered[i]=0;
 		nodes_per_depth[i]=numberOfNodesAt(example_tree, i, 0);
 	}
-	renderNode(example_tree,already_rendered, nodes_per_depth,screenWidth,screenHeight,0);
+	renderNode(example_tree,already_rendered, nodes_per_depth,screenWidth,screenHeight,0,screenWidth/2,0);
 	
 // SAMPLE CODE
 	// Core::Renderer::clear();
