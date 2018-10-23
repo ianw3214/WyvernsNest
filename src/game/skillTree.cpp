@@ -3,6 +3,7 @@
 
 Node * example_tree;
 
+//###TREE FUNCTIONS####
 
 //creates a new node
 Node* newNode(int data, int id, int children_count, Node *children) { 
@@ -37,52 +38,43 @@ int treeHeight(Node * node) {
     return 1 + max;
 }
 
+//returns the number of nodes of a tree at targetDepth. Always call it with currentDepth = 0
+//First node of tree is 0
+int numberOfNodesAt(Node * tree, int targetDepth, int currentDepth){
+	//searches the tree recursively and adds +1 every time it finds a node with
+		//currentdepth=targetdepth
+	int numberOfNodes=0;
+	
+	if (currentDepth==targetDepth){
+		return 1;
+	}
+	else if (currentDepth>targetDepth){
+		return 0;
+	}
+	
+	for(size_t i = 0; i < tree->children_count; i++) 
+	{
+			numberOfNodes+=numberOfNodesAt((tree->children + i),targetDepth,currentDepth+1);
+	}
+
+	return numberOfNodes;
+	
+
+}
+
+
 SkillTree::SkillTree() {
 
 	//example of how to make a tree (example_tree)
 	Node *n3 = newNode(1, 4,0, NULL);   
+	Node *n4 = newNode(1, 5,0, NULL);   
 	Node *n1 = newNode(1, 2, 1, n3);   
-	Node *n2 = newNode(1, 3,0, NULL);   
+	Node *n2 = newNode(1, 3,1, n4);   
 	
 	Node * children = (Node *) malloc(sizeof(Node)*2);
 	children[0]=*n1;
 	children[1]=*n2;
 	example_tree = newNode(1, 1 , 2, children);
-	
-
-	//EXAMPLE OF HOW TO SET UP A TREE 
-	//the information to actually set it up will be read from a file in the future
-	//The file will hold a list of nodes and a list of links between nodes
-	//A function will parse this file and convert it into a tree [using a generalization of the following example]
-	
-	
-	/* OLD IMPLEMENTATION OF TREE
-	example_tree = (Skill_tree *) malloc(sizeof(Skill_tree));
-
-	//nodes
-	char * content_example = (char *) malloc(sizeof(char)*5);
-	strcpy(content_example,"test\0");
-
-	Tree_node * nodes = (Tree_node *) malloc(sizeof(Tree_node)*3);
-	nodes[0].id=1;
-	nodes[0].content=content_example;
-	nodes[1].id=2;
-	nodes[1].content=content_example;
-	nodes[2].id=3;
-	nodes[2].content=content_example;
-
-	Tree_edge * edges = (Tree_edge *) malloc(sizeof(Tree_node)*2);
-	edges[0].from=1;
-	edges[0].to=2;
-	edges[1].from=1;
-	edges[1].to=3;
-
-	example_tree->nodes=nodes;
-	example_tree->nodes=nodes;
-	example_tree->number_of_edges=2;
-	example_tree->number_of_nodes=3;
-
-	*/
 
 }
 
@@ -104,21 +96,45 @@ int fakeFunction(){
 }
 
 
-void renderNode(int depth){
-	
+void renderNode(Node *tree, int * already_rendered, int * nodes_per_depth,int screenWidth, int screenHeight, int currentDepth){
+	int node_offset = screenWidth/(nodes_per_depth[currentDepth]+1);//The horizontal distance between nodes
+
+	int x_position = (already_rendered[currentDepth]+1)*node_offset;
+	int y_position = (currentDepth+1)*100;
+	already_rendered[currentDepth]++;
+
+	//render node
+	Sprite sprite("res/test.png");
+	sprite.setSize(100, 30);
+	sprite.setPos(x_position, y_position);
+	sprite.render();
+
+	//render children nodes
+	for(size_t i = 0; i < tree->children_count; i++)
+	{
+		renderNode(tree->children+i,already_rendered,nodes_per_depth,screenWidth,screenHeight,currentDepth+1);
+	}
+
 }
 
+
+
 void SkillTree::render() {
+	
+	int screenWidth = 1280;
+	int screenHeight = 720;
+	
 
+	int height = treeHeight(example_tree);
+	int already_rendered[height+1]; //holds the number of nodes already render at each depth 
+	int nodes_per_depth[height+1]; //holds the total number of nodes at each depth
 
-	Sprite sprite("res/test.png");
-	sprite.setSize(100, 100);
-		
-	for(size_t i = 0; i < treeHeight(example_tree); i++)
-	{
-		sprite.setPos(100*i, 100*i);
-		sprite.render();
+	//inits already_render and ndoes_per_depth
+	for(size_t i = 0; i <= height; i++){
+		already_rendered[i]=0;
+		nodes_per_depth[i]=numberOfNodesAt(example_tree, i, 0);
 	}
+	renderNode(example_tree,already_rendered, nodes_per_depth,screenWidth,screenHeight,0);
 	
 // SAMPLE CODE
 	// Core::Renderer::clear();
