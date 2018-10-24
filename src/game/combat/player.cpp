@@ -50,7 +50,6 @@ void Player::render()
 	//	idle.render();
 	//}
 
-
 }
 
 void Player::handleEvent(const SDL_Event & event)
@@ -74,6 +73,26 @@ void Player::handleEvent(const SDL_Event & event)
 
 void Player::update(int delta)
 {
+	if (state != 0) {
+		switch (state)
+		{
+		case MOVE_STATE: 
+			if (state_counter < 100) {
+				state_counter++;
+
+				calculateScreenPositionMovement();
+			}
+			else {
+				state_counter = 0;
+				state = 0;
+				position = moveTarget;
+				calculateScreenPosition();
+			}
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Player::setTileSize(int width, int height) {
@@ -85,8 +104,12 @@ void Player::setTileSize(int width, int height) {
 ScreenCoord Player::move(Vec2<int> to)
 {
 	if (attackIndex == 0) {
-		position = to;
-		calculateScreenPosition();
+
+		//position = to;
+
+		moveTarget = to;
+		moveDiff = position - to;
+		state = MOVE_STATE;
 	}
 	else {
 		switch (attackIndex)
@@ -109,4 +132,10 @@ void Player::calculateScreenPosition() {
 	screenPosition.y() = Core::windowHeight() - (position.y() + 1) * tile_height;
 	screenPosition.x() += (tile_width - sprite_width) / 2;
 	screenPosition.y() += (tile_height - sprite_height) / 2;
+}
+
+void Player::calculateScreenPositionMovement() {
+	screenPosition.x() -= moveDiff.x() * 2.13f;
+	screenPosition.y() += moveDiff.y() * 1.8f;
+
 }

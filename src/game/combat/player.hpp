@@ -7,6 +7,8 @@
 #define DEFAULT_SPRITE_WIDTH 100
 #define DEFAULT_SPRITE_HEIGHT 100
 
+#define MOVE_STATE 1
+
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Entity {
 
@@ -29,8 +31,14 @@ public:
 	bool selected = false;
 
 	Melee attack1;
-
 	int attackIndex = 0;
+
+	int state = 0;
+	int state_counter = 0;
+
+	ScreenCoord moveTarget;
+	ScreenCoord moveDiff;
+
 
 private:
 
@@ -41,6 +49,8 @@ private:
 	// Store both grid position and screen position to avoid recalculating every frame
 	ScreenCoord screenPosition;
 	void calculateScreenPosition();
+
+	void calculateScreenPositionMovement();
 
 	Sprite idle;
 

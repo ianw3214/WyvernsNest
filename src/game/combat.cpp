@@ -16,35 +16,40 @@ Combat::~Combat() {
 }
 
 void Combat::handleEvent(const SDL_Event& e) {
-	for (Entity * entity : entities) entity->handleEvent(e);
 
-	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		if (grid.isMousePosValid()) {
+	if (selectedInt == -1 || (selectedInt != -1 && ((Player *)entities[selectedInt])->state == 0)) {
 
+		for (Entity * entity : entities) entity->handleEvent(e);
 
-			int previous = selectedInt;
-
-			selectedInt = getIndexAt(grid.mousePos);
+		if (e.type == SDL_MOUSEBUTTONDOWN) {
+			if (grid.isMousePosValid()) {
 
 
-			if (selectedInt != -1 && selectedInt != previous && previous != -1) {
-				((Player *)entities[previous])->selected = false;
-				//selectedInt = -1;
+				int previous = selectedInt;
+
+				selectedInt = getIndexAt(grid.mousePos);
+
+
+				if (selectedInt != -1 && selectedInt != previous && previous != -1) {
+					((Player *)entities[previous])->selected = false;
+					//selectedInt = -1;
+				}
+				else if (selectedInt == -1 && previous != -1) {
+					ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);
+					((Player *)entities[previous])->selected = false;
+
+					selectedInt = previous;
+					//TODO do something with the target
+				}
+
+				//if (selectedPlayer != nullptr) {
+				//	selectedPlayer->selected = false;
+				//	selectedPlayer = nullptr;
+				//}
+				//selectedPlayer = &(getPlayerAt(grid.mousePos));
+
 			}
-			else if (selectedInt == -1 && previous != -1) {
-				ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);
-				((Player *)entities[previous])->selected = false;
-
-				//TODO do something with the target
-			}
-
-			//if (selectedPlayer != nullptr) {
-			//	selectedPlayer->selected = false;
-			//	selectedPlayer = nullptr;
-			//}
-			//selectedPlayer = &(getPlayerAt(grid.mousePos));
-
-		}		
+		}
 	}
 }
 
