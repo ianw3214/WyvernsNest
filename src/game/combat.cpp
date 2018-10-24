@@ -32,7 +32,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 
 				if (selectedInt != -1 && selectedInt != previous && previous != -1) {
 					((Player *)entities[previous])->selected = false;
-					//selectedInt = -1;
+					//TODO turn off attacks
 				}
 				else if (selectedInt == -1 && previous != -1) {
 					ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);

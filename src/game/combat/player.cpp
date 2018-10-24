@@ -31,7 +31,7 @@ void Player::render()
 		sprite.render();
 	}
 	else {
-		Sprite sprite("res/test5.png");
+		Sprite sprite("res/HeroF_Sprite_Selected.png");
 		sprite.setPos(screenPosition.x(), screenPosition.y());
 		sprite.setSize(sprite_width, sprite_height);
 		sprite.render();
@@ -58,9 +58,11 @@ void Player::handleEvent(const SDL_Event & event)
 		SDL_KeyboardEvent test = event.key;
 		if (event.type == SDL_KEYDOWN) {
 			if (event.key.keysym.sym == 1073741913) {
+				attack1.playerPos = position;
 				attack1.toggleRender();
 
 				if (attackIndex == 1) {
+
 					attackIndex = 0;
 				}
 				else {
