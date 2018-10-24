@@ -86,8 +86,8 @@ void Grid::render()
 
 			//selected square
 			if (y == mousePos.y() && x == mousePos.x()) {
-				selected.setPos(tile_width * x , Core::windowHeight() - tile_height * (y + 1));
-				selected.render();
+				//selected.setPos(tile_width * x , Core::windowHeight() - tile_height * (y + 1));
+				//selected.render();
 			}
 		}
 	}

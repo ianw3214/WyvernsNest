@@ -16,6 +16,8 @@ Combat::~Combat() {
 }
 
 void Combat::handleEvent(const SDL_Event& e) {
+	for (Entity * entity : entities) entity->handleEvent(e);
+
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (grid.isMousePosValid()) {
 
@@ -30,8 +32,10 @@ void Combat::handleEvent(const SDL_Event& e) {
 				//selectedInt = -1;
 			}
 			else if (selectedInt == -1 && previous != -1) {
-				((Player *)entities[previous])->move(grid.mousePos);
+				ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);
 				((Player *)entities[previous])->selected = false;
+
+				//TODO do something with the target
 			}
 
 			//if (selectedPlayer != nullptr) {
@@ -47,6 +51,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 void Combat::update(int delta) {
 	// Update shit here
 	grid.update();
+	for (Entity * e : entities) e->update(delta);
 }
 
 void Combat::render() {
@@ -58,9 +63,12 @@ void Combat::render() {
 	//	player.render();
 		//player.render();
 		//player2.render();
+
 		for (Entity * e : entities) {
+
 			if (dynamic_cast<Player*>(e) != nullptr) {
 				//std::string test = typeid(e).name();
+				((Player *)e)->attack1.render(grid.mousePos);
 				e->render();
 
 			}

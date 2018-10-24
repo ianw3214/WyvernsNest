@@ -55,6 +55,21 @@ void Player::render()
 
 void Player::handleEvent(const SDL_Event & event)
 {
+	if (selected) {
+		SDL_KeyboardEvent test = event.key;
+		if (event.type == SDL_KEYDOWN) {
+			if (event.key.keysym.sym == 1073741913) {
+				attack1.toggleRender();
+
+				if (attackIndex == 1) {
+					attackIndex = 0;
+				}
+				else {
+					attackIndex = 1;
+				}
+			}
+		}
+	}
 }
 
 void Player::update(int delta)
@@ -67,10 +82,26 @@ void Player::setTileSize(int width, int height) {
 	calculateScreenPosition();
 }
 
-void Player::move(Vec2<int> to)
+ScreenCoord Player::move(Vec2<int> to)
 {
-	position = to;
-	calculateScreenPosition();
+	if (attackIndex == 0) {
+		position = to;
+		calculateScreenPosition();
+	}
+	else {
+		switch (attackIndex)
+		{
+		case 1: 
+			attackIndex = 0;
+			return attack1.attack(to);
+		default:
+			break;
+		}
+	}
+
+
+	return to;
+
 }
 
 void Player::calculateScreenPosition() {

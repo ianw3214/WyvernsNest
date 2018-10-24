@@ -2,6 +2,7 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "attack.hpp"
 
 #define DEFAULT_SPRITE_WIDTH 100
 #define DEFAULT_SPRITE_HEIGHT 100
@@ -20,12 +21,16 @@ public:
 	void render();
 
 	void setTileSize(int width, int height);
-	void move(Vec2<int> to);
+	ScreenCoord move(Vec2<int> to);
 
 	int id;
 
 	Vec2<int> position;
 	bool selected = false;
+
+	Melee attack1;
+
+	int attackIndex = 0;
 
 private:
 
