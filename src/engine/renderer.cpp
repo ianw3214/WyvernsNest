@@ -49,9 +49,9 @@ void Renderer::clear() const {
 void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 	float positions[4] = {
 		lerp(-1.f, 1.f, static_cast<float>(v1.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v1.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(1.f, -1.f, static_cast<float>(v1.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		lerp(-1.f, 1.f, static_cast<float>(v2.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v2.y()) / static_cast<float>(Engine::get_instance().getWindowHeight()))
+		lerp(1.f, -1.f, static_cast<float>(v2.y()) / static_cast<float>(Engine::get_instance().getWindowHeight()))
 	};
 	VertexArray		va;
 	VertexBuffer	vb(positions, sizeof(float) * 4);
@@ -69,17 +69,17 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 void Renderer::drawTexture(ScreenCoord v, int width, int height, const Texture & texture) {
 	float positions[16] = {
 		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
-		0.f, 0.f,
-		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(1.f, -1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
 		0.f, 1.f,
+		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(1.f, -1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		0.f, 0.f,
 		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
-		1.f, 0.f,
+		lerp(1.f, -1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		1.f, 1.f,
 		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
-		lerp(-1.f, 1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
-		1.f, 1.f
+		lerp(1.f, -1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		1.f, 0.f
 	};
 	VertexArray		va;
 	VertexBuffer	vb(positions, sizeof(float) * 16);

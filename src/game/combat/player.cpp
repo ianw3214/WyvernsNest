@@ -86,9 +86,13 @@ void Player::update(int delta)
 			}
 			else {
 				state_counter = 0;
-				state = 0;
-				position = moveTarget;
-				calculateScreenPosition();
+				incrementMovement();
+
+				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
+					state = 0;
+					position = moveTarget;
+					calculateScreenPosition();
+				}
 			}
 			break;
 		default:
@@ -110,7 +114,8 @@ ScreenCoord Player::move(Vec2<int> to)
 		//position = to;
 
 		moveTarget = to;
-		moveDiff = position - to;
+		moveNext = ScreenCoord(0, 0);
+		incrementMovement();
 		state = MOVE_STATE;
 	}
 	else {
@@ -131,13 +136,37 @@ ScreenCoord Player::move(Vec2<int> to)
 
 void Player::calculateScreenPosition() {
 	screenPosition.x() = position.x() * tile_width;
-	screenPosition.y() = Core::windowHeight() - (position.y() + 1) * tile_height;
+	//screenPosition.y() = Core::windowHeight() - (position.y() + 1) * tile_height;
+	screenPosition.y() =  position.y() * tile_height;
 	screenPosition.x() += (tile_width - sprite_width) / 2;
 	screenPosition.y() += (tile_height - sprite_height) / 2;
 }
 
 void Player::calculateScreenPositionMovement() {
-	screenPosition.x() -= moveDiff.x() * 2.13f;
-	screenPosition.y() += moveDiff.y() * 1.8f;
+		screenPosition.x() += moveNext.x() * 230 / 100;
+		screenPosition.y() += moveNext.y() * 200 / 100;
+}
 
+void Player::incrementMovement() {
+
+	position += moveNext;
+
+	calculateScreenPosition();
+
+	if (position.x() != moveTarget.x()) {
+		if (position.x() < moveTarget.x()) {
+			moveNext = ScreenCoord(1, 0);
+		}
+		else {
+			moveNext = ScreenCoord(-1, 0);
+		}
+	}
+	else if (position.y() != moveTarget.y()) {
+		if (position.y() < moveTarget.y()) {
+			moveNext = ScreenCoord(0, 1);
+		}
+		else {
+			moveNext = ScreenCoord(0, -1);
+		}
+	}
 }

@@ -58,14 +58,14 @@ public:
 			if (isValid(pos)) {
 				Sprite sprite("res/test6.png");
 				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, Core::windowHeight() - pos.y() * 180 - 100 - 80);
+				sprite.setPos(pos.x() * 213, pos.y() * 180);
 				sprite.setSize(213, 180);
 				sprite.render();
 			}
 			else {
 				Sprite sprite("res/test7.png");
 				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, Core::windowHeight() - pos.y() * 180 - 100 - 80);
+				sprite.setPos(pos.x() * 213, pos.y() * 180);
 				sprite.setSize(213, 180);
 				sprite.render();
 			}

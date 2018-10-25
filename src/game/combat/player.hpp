@@ -38,6 +38,7 @@ public:
 
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
+	ScreenCoord moveNext;
 
 
 private:
@@ -51,6 +52,7 @@ private:
 	void calculateScreenPosition();
 
 	void calculateScreenPositionMovement();
+	void incrementMovement();
 
 	Sprite idle;
 

@@ -76,11 +76,11 @@ void Grid::render()
 		for (int x = 0; x < map_width; x++) {
 			if (tilemap[TILE_INDEX(x, y)] == 1) {
 
-				tile1.setPos(tile_width * x, Core::windowHeight() - tile_height * (y + 1));
+				tile1.setPos(tile_width * x, tile_height * (y));
 				tile1.render();
 			}
 			else {
-				tile2.setPos(tile_width * x, Core::windowHeight() - tile_height * (y + 1));
+				tile2.setPos(tile_width * x, tile_height * (y));
 				tile2.render();
 			}
 
