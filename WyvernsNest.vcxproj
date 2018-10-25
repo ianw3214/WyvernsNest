@@ -141,8 +141,11 @@
     <ClCompile Include="src\engine\text\font.cpp" />
     <ClCompile Include="src\engine\text\textRenderer.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
+    <ClCompile Include="src\game\combat\enemy.cpp" />
+    <ClCompile Include="src\game\combat\player.cpp" />
     <ClCompile Include="src\game\customization.cpp" />
     <ClCompile Include="src\game\cutscene.cpp" />
+    <ClCompile Include="src\game\combat\grid.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
@@ -163,9 +166,12 @@
     <ClInclude Include="src\engine\text\font.hpp" />
     <ClInclude Include="src\engine\text\textRenderer.hpp" />
     <ClInclude Include="src\game\combat.hpp" />
+    <ClInclude Include="src\game\combat\attack.hpp" />
+    <ClInclude Include="src\game\combat\enemy.hpp" />
+    <ClInclude Include="src\game\combat\player.hpp" />
     <ClInclude Include="src\game\customization.hpp" />
     <ClInclude Include="src\game\cutscene.hpp" />
-    <ClInclude Include="src\game\unitData.hpp" />
+    <ClInclude Include="src\game\combat\grid.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />

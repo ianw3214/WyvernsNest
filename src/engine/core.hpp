@@ -58,6 +58,11 @@ namespace Core {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
 		}
 
+		inline void clear() {
+			Engine::get_instance().getRenderer()->clear();
+
+		}
+
 	}
 
 	// Wrappers around text renderer functionalities
