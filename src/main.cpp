@@ -4,6 +4,8 @@
 
 #include "engine/core.hpp"
 #include "game/combat.hpp"
+#include "game/skillTree.hpp"
+
 
 int main(int argc, char* argv[]) {
 
@@ -13,7 +15,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Combat * state = new Combat();
+	SkillTree * state = new SkillTree();
 	Core::setState(state);
 
 	// Main engine loop
