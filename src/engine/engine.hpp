@@ -6,6 +6,7 @@
 #define DEFAULT_TICK_RATE	30	// per second
 
 class Renderer;
+class TextRenderer;
 class State;
 
 class Engine {
@@ -32,9 +33,15 @@ public:
 	int getWindowHeight() const;
 	Renderer * getRenderer();
 	ResourceEngine * getResourceEngine();
+	TextRenderer * getTextRenderer();
 
 	// State changing functions
 	void setState(State * state);
+
+	inline void setDebugMode(bool mode) { m_debugMode = mode; }
+	inline bool getDebugMode() { return m_debugMode; }
+	inline int getTicks() { return m_lastTick; }
+
 
 protected:
 	Engine();
@@ -44,6 +51,7 @@ private:
 	// System objects
 	Renderer * m_renderer;
 	ResourceEngine * m_resourceEngine;
+	TextRenderer * m_textRenderer;
 
 	// SDL/OpenGL specific objects
 	SDL_Window * m_window;
@@ -65,4 +73,7 @@ private:
 
 	// macOS fix
 	int mac_fix;
+
+	// debug mode
+	bool m_debugMode = false;
 };

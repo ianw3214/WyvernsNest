@@ -14,6 +14,8 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
+	Core::setDebugMode(true);
+
 	Combat * state = new Combat();
 	Core::setState(state);
 

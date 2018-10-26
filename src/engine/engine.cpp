@@ -9,6 +9,7 @@
 
 // Other project includes
 #include "renderer.hpp"
+#include "text/textRenderer.hpp"
 #include "state.hpp"
 #include "resourceEngine.hpp"
 
@@ -61,6 +62,9 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 	// Initialize the renderer after the OpenGL context is created
 	m_renderer = new Renderer();
 
+	// Initialize the text renderer after the OpenGL context is created
+	m_textRenderer = new TextRenderer("res/test_font.ttf", 32, Vec2<int>(m_windowWidth, m_windowHeight));
+
 	// reset m_lastTick for a more accurate first tick
 	m_lastTick = SDL_GetTicks();
 
@@ -112,7 +116,9 @@ void Engine::update() {
 	getRenderer()->clear();
 	if (m_state) m_state->update(m_delta);
 	if (m_state) m_state->render();
-
+	if (getDebugMode()) {
+		getTextRenderer()->render("FPS: " + std::to_string(round(1000.0 / m_delta)), ScreenCoord(0, 0));
+	}
 	SDL_GL_SwapWindow(m_window);
 }
 
@@ -131,6 +137,9 @@ Renderer * Engine::getRenderer() {
 
 ResourceEngine * Engine::getResourceEngine() {
 	return m_resourceEngine;
+}
+TextRenderer * Engine::getTextRenderer() {
+	return m_textRenderer;
 }
 
 void Engine::setState(State * state) {
