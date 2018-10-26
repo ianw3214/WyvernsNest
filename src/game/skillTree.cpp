@@ -10,6 +10,8 @@ int screenHeight = 720;
 int height;
 int *already_rendered; //holds the number of nodes already render at each depth 
 int *nodes_per_depth; //holds the total number of nodes at each depth
+int node_height = 30;
+int node_width = 100;
 
 //###TREE FUNCTIONS####
 //creates a new node
@@ -74,7 +76,7 @@ Node *clickedNode(Node * tree, int x, int y){
 	Node *clicked_node=NULL;
 	//iterate down the tree
 	//checks if click happened next to current node
-	if(abs(x-tree->x_pos)<50 && abs(y-tree->y_pos)<15){
+	if(x-tree->x_pos<node_width && x-tree->x_pos>0 && y-tree->y_pos<node_height && y-tree->y_pos>0){
 		return tree;
 	}else if(tree->children!=NULL){
 		
@@ -92,26 +94,34 @@ Node *clickedNode(Node * tree, int x, int y){
 SkillTree::SkillTree() {
 	//example of how to make a tree (example_tree)
 	//note: it needs to be made bottom up
+
+	//depth4
+	Node *n11 = newNode(1, 11, 0, NULL,Unvisited);  
+	//depth3
 	Node *n5 = newNode(1, 5, 0, NULL,Unvisited);   
 	Node *n6 = newNode(1, 6, 0, NULL,Unvisited);   
-	Node *n7 = newNode(1, 7, 0, NULL,Visited);   
+	Node *n7 = newNode(1, 7, 1, n11,Unvisited);   
 	Node *n8 = newNode(1, 8, 0, NULL,Unvisited);   
-
-	Node * children2 = (Node *) malloc(sizeof(Node)*4);
-	children2[0]=*n5;
-	children2[1]=*n6;
-	children2[2]=*n7;
-	children2[3]=*n8;
-
-	Node *n3 = newNode(1, 3, 4, children2,Visited);   
-	Node *n4 = newNode(1, 4, 0, NULL,Unvisited);   
-	Node *n1 = newNode(1, 1, 1, n3,Visited);   
-	Node *n2 = newNode(1, 2, 1, n4,Unvisited);   
-	
+	Node * children3 = (Node *) malloc(sizeof(Node)*4);
+	children3[0]=*n5;
+	children3[1]=*n6;
+	children3[2]=*n7;
+	children3[3]=*n8;
+	//depth2
+	Node *n9 = newNode(1, 9, 4, children3,Unvisited);   
+	Node *n10 = newNode(1, 10, 0, NULL,Unvisited);   
+	Node * children2 = (Node *) malloc(sizeof(Node)*2);
+	children2[0]=*n9;
+	children2[1]=*n10;
+	Node *n3 = newNode(1, 3, 0, NULL,Unvisited);
+	//depth1
+	Node *n1 = newNode(1, 1, 1, n3,Unvisited);   
+	Node *n2 = newNode(1, 2, 2, children2,Unvisited);   
 	Node * children1 = (Node *) malloc(sizeof(Node)*2);
 	children1[0]=*n1;
 	children1[1]=*n2;
-	example_tree = newNode(1, 0 , 2, children1,Visited);
+	//depth 0
+	example_tree = newNode(1, 0 , 2, children1,Reachable);
 
 
 	//init local variables
@@ -125,6 +135,21 @@ SkillTree::~SkillTree() {
 
 }
 
+//if node is reachable then update it to visited and change child nodes to be reachable
+void updateNodeState(Node * node){
+	if(node->state==Reachable){
+		node->state=Visited;
+		
+		for(size_t i = 0; i < node->children_count; i++)
+		{
+			node->children[i].state=Reachable;
+		}
+		
+	}else{
+		printf("Node is either unreachable or already visited\n");
+	}
+}
+
 void SkillTree::handleEvent(const SDL_Event& e) {
 
 	//check if node clicked 
@@ -134,11 +159,9 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 	SDL_GetMouseState(&mouseX, &mouseY);
 	Node * clicked_node=clickedNode(example_tree, mouseX,mouseY);
 	if(clicked_node!=NULL){
-	printf("id: %d\n",clicked_node->id);
+	updateNodeState(clicked_node);
 	}
 	}
-
-
 }
 
 void SkillTree::update(int delta) {
@@ -152,15 +175,22 @@ void renderNode(Node *node, int parent_x,int parent_y,int node_x,int node_y){
 	node->y_pos=node_y;
 
 	if(node->state==Unvisited){
-		Core::Renderer::drawLine(ScreenCoord(parent_x, parent_y), ScreenCoord(node_x, node_y), Colour(1.0, 1.0, 1.0));
+		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
+			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));
 		Sprite sprite("res/test.png");
-		sprite.setSize(100, 30);
+		sprite.setSize(node_width, node_height);
 		sprite.setPos(node_x, node_y);
 		sprite.render();
 	}else if(node->state == Visited){
-		Core::Renderer::drawLine(ScreenCoord(parent_x, parent_y), ScreenCoord(node_x, node_y), Colour(0.0, 0.0, 1.0));
-		Sprite sprite("res/visited.png");
-		sprite.setSize(100, 30);
+		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
+			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		Sprite sprite("res/visited.png");
+		sprite.setSize(node_width, node_height);
+		sprite.setPos(node_x, node_y);
+		sprite.render();
+	}else if(node->state == Reachable){
+		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
+			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		Sprite sprite("res/reachable.png");
+		sprite.setSize(node_width, node_height);
 		sprite.setPos(node_x, node_y);
 		sprite.render();
 	}
