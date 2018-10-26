@@ -17,10 +17,12 @@ public:
 
 private:
 
-	void displayUnitData(const UnitData& data);
 
 };
-enum NodeStates { Visited,Reachable,Unvisited}; //reachable nodes can be selected from the user to add them to the visited set
+
+//reachable nodes can be selected by the user in order to add them to the visited set
+enum NodeStates { Visited,Reachable,Unvisited}; 
+
 struct node{ 
 	enum NodeStates state;
     int data; 
