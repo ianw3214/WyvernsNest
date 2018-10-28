@@ -2,22 +2,28 @@
 
 Player::Player() :
 	Unit(UnitType::PLAYER),
+	current_action(PlayerAction::NONE),
 	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	idle("res/assets/HeroF_Sprite.png")
+	sprite_idle("res/assets/HeroF_Sprite.png"),
+	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
-	idle.setSize(sprite_width, sprite_height);
+	sprite_idle.setSize(sprite_width, sprite_height);
+	sprite_selected.setSize(sprite_width, sprite_height);
 }
 
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
+	current_action(PlayerAction::NONE),
 	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	idle("res/assets/HeroF_Sprite.png")
+	sprite_idle("res/assets/HeroF_Sprite.png"),
+	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
-	idle.setSize(sprite_width, sprite_height);
+	sprite_idle.setSize(sprite_width, sprite_height);
+	sprite_selected.setSize(sprite_width, sprite_height);
 	position.x() = x;
 	position.y() = y;
 }
@@ -28,50 +34,31 @@ Player::~Player()
 
 void Player::render()
 {
-	if (!selected) {
-		Sprite sprite("res/assets/HeroF_Sprite.png");
-		sprite.setPos(screenPosition.x(), screenPosition.y());
-		sprite.setSize(sprite_width, sprite_height);
-		sprite.render();
+	if (selected) {
+		sprite_selected.setPos(screenPosition.x(), screenPosition.y());
+		sprite_selected.render();
 	}
 	else {
-		Sprite sprite("res/HeroF_Sprite_Selected.png");
-		sprite.setPos(screenPosition.x(), screenPosition.y());
-		sprite.setSize(sprite_width, sprite_height);
-		sprite.render();
+		sprite_idle.setPos(screenPosition.x(), screenPosition.y());
+		sprite_idle.render();
 	}
 
-	//TODO doesnt work if we have two players in a vector
-
-	//if (!selected) {
-	//	Sprite sprite("res/test5.png");
-	//	sprite.setPos(screenPosition.x(), screenPosition.y());
-	//	sprite.setSize(sprite_width, sprite_height);
-	//	sprite.render();
-	//}
-	//else {
-	//	idle.setPos(screenPosition.x(), screenPosition.y());
-	//	idle.render();
-	//}
-
 }
-
 void Player::handleEvent(const SDL_Event & event)
 {
+	// Only handle events for the entity if it is selected
 	if (selected) {
-		SDL_KeyboardEvent test = event.key;
 		if (event.type == SDL_KEYDOWN) {
-			if (event.key.keysym.sym == 1073741913) {
+			// Move Key
+			if (event.key.keysym.sym == SDLK_KP_1) {
+				current_action = PlayerAction::MOVE;
+			}
+			// Attack key
+			if (event.key.keysym.sym == SDLK_KP_2) {
+
 				attack1.playerPos = position;
 				attack1.toggleRender();
-
-				if (attackIndex == 1) {
-
-					attackIndex = 0;
-				}
-				else {
-					attackIndex = 1;
-				}
+				current_action = PlayerAction::ATTACK_1;
 			}
 		}
 	}
@@ -113,28 +100,25 @@ void Player::setTileSize(int width, int height) {
 	calculateScreenPosition();
 }
 
-ScreenCoord Player::move(Vec2<int> to)
+void Player::click(Vec2<int> to)
 {
-	if (attackIndex == 0) {
-		moveTarget = to;
-		moveNext = ScreenCoord(0, 0);
-		incrementMovement();
-		state = UnitState::MOVE;
+	switch (current_action) {
+		case PlayerAction::NONE: {
+			// do nothing
+		} break;
+		case PlayerAction::MOVE: {
+			moveTarget = to;
+			moveNext = ScreenCoord(0, 0);
+			incrementMovement();
+			state = UnitState::MOVE;
+		} break;
+		case PlayerAction::ATTACK_1: {
+			// do the action here
+		} break;
+		default: {
+			// do nothing
+		} break;
 	}
-	else {
-		switch (attackIndex)
-		{
-		case 1: 
-			attackIndex = 0;
-			return attack1.attack(to);
-		default:
-			break;
-		}
-	}
-
-
-	return to;
-
 }
 
 void Player::calculateScreenPosition() {

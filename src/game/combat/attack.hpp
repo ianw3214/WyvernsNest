@@ -3,11 +3,18 @@
 #include <string>
 #include "../../math/vec.hpp"
 
+// Enumeration for all attack types
+enum class AttackType {
+	MELEE
+};
+
 class Attack {
 
 public:
-	// pure virtual function providing interface framework.
+	Attack() {}
+	Attack(AttackType type) : type(type) {}
 
+	// Pure virtual function providing interface framework
 	virtual ScreenCoord attack(ScreenCoord pos) = 0;
 	virtual void showValidGrid(ScreenCoord playerPos, ScreenCoord grid) = 0;
 
@@ -20,16 +27,21 @@ public:
 
 	ScreenCoord playerPos;
 
+	inline AttackType getType() const { return type; }
+
 protected:
 	std::string name;
 	int damage;
-	//int AOE[10];
+	
+private:
+	AttackType type;
 
 };
 
 
 class Melee : public Attack {
 public:
+	Melee() : Attack(AttackType::MELEE) {}
 
 	ScreenCoord attack(ScreenCoord pos) {
 		//TODO returns all the positions hit by the attack

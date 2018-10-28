@@ -41,7 +41,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 				else if (current) {
 					if (current->getType() == UnitType::PLAYER) {
 						Player * player = dynamic_cast<Player*>(current);
-						ScreenCoord target = player->move(grid.mousePos);
+						player->click(grid.mousePos);
 						player->selected = false;
 
 						current = player;

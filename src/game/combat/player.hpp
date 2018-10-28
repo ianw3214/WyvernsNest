@@ -8,6 +8,12 @@
 #define DEFAULT_SPRITE_WIDTH 100
 #define DEFAULT_SPRITE_HEIGHT 100
 
+enum class PlayerAction {
+	NONE,
+	MOVE,
+	ATTACK_1
+};
+
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Unit {
 
@@ -22,10 +28,11 @@ public:
 	void render();
 
 	void setTileSize(int width, int height);
-	ScreenCoord move(Vec2<int> to);
+	void click(Vec2<int> to);
 
 	int id;
 
+	PlayerAction current_action;
 	Melee attack1;
 	int attackIndex = 0;
 
@@ -39,6 +46,7 @@ private:
 	// State variables of the player
 	int state_counter;
 
+	// Variables needed for proper sprite rendering
 	int sprite_width;
 	int sprite_height;
 	int tile_width, tile_height;
@@ -50,6 +58,8 @@ private:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
-	Sprite idle;
+	// Player sprites
+	Sprite sprite_idle;
+	Sprite sprite_selected;
 
 };
