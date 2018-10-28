@@ -7,7 +7,11 @@
 #define DEFAULT_SPRITE_WIDTH 100
 #define DEFAULT_SPRITE_HEIGHT 100
 
-#define MOVE_STATE 1
+// Enumeration of all player states
+enum class PlayerState {
+	IDLE,
+	MOVE
+};
 
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Entity {
@@ -22,6 +26,8 @@ public:
 	void update(int delta);
 	void render();
 
+	inline PlayerState getState() const { return state; }
+
 	void setTileSize(int width, int height);
 	ScreenCoord move(Vec2<int> to);
 
@@ -33,15 +39,16 @@ public:
 	Melee attack1;
 	int attackIndex = 0;
 
-	int state = 0;
-	int state_counter = 0;
-
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
 
 
 private:
+
+	// State variables of the player
+	PlayerState state;
+	int state_counter;
 
 	int sprite_width;
 	int sprite_height;

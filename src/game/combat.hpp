@@ -20,27 +20,14 @@ public:
 	Player getPlayerAt(ScreenCoord at);
 	int getIndexAt(ScreenCoord at);
 
-
 	bool playerTurn = true;
 
 	Grid grid;
-
-	Player player1 = Player();
-	Player player2 = Player(1,2);
 
 	std::vector<Enemy> enemies;
 
 	Player * selectedPlayer = nullptr;
 	int selectedInt = -1;
-	//Player players[1] = {
-	//	Player()
-	//};
-
-	//Grid grid = Grid(&players, &enemies);
-
-
-
-	//Player selected = Player(1);
 
 private:
 

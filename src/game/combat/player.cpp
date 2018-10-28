@@ -1,6 +1,8 @@
 #include "player.hpp"
 
 Player::Player() :
+	state(PlayerState::IDLE),
+	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	idle("res/assets/HeroF_Sprite.png")
@@ -9,6 +11,8 @@ Player::Player() :
 }
 
 Player::Player(int x, int y) :
+	state(PlayerState::IDLE),
+	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	idle("res/assets/HeroF_Sprite.png")
@@ -75,29 +79,31 @@ void Player::handleEvent(const SDL_Event & event)
 
 void Player::update(int delta)
 {
-	if (state != 0) {
-		switch (state)
-		{
-		case MOVE_STATE: 
+	// Update the player based on its current state	
+	switch (state) {
+		case PlayerState::IDLE: {
+			// Do nothing when idling
+		} break;
+		case PlayerState::MOVE: {
+			// Move the player towards its destination
 			if (state_counter < 100) {
 				state_counter++;
-
 				calculateScreenPositionMovement();
 			}
 			else {
 				state_counter = 0;
 				incrementMovement();
-
+				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
-					state = 0;
+					state = PlayerState::IDLE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}
 			}
-			break;
-		default:
-			break;
-		}
+		} break;
+		default: {
+			// Do nothing by default
+		} break;
 	}
 }
 
@@ -110,13 +116,10 @@ void Player::setTileSize(int width, int height) {
 ScreenCoord Player::move(Vec2<int> to)
 {
 	if (attackIndex == 0) {
-
-		//position = to;
-
 		moveTarget = to;
 		moveNext = ScreenCoord(0, 0);
 		incrementMovement();
-		state = MOVE_STATE;
+		state = PlayerState::MOVE;
 	}
 	else {
 		switch (attackIndex)

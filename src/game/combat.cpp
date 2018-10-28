@@ -1,13 +1,14 @@
 #include "combat.hpp"
 
 Combat::Combat() {
-	//players.push_back(Player());
+	Player * player1 = new Player();
+	Player * player2 = new Player(1, 2);
 
-	player1.setTileSize(grid.tile_width, grid.tile_height);
-	player2.setTileSize(grid.tile_width, grid.tile_height);
+	player1->setTileSize(grid.tile_width, grid.tile_height);
+	player2->setTileSize(grid.tile_width, grid.tile_height);
 
-	entities.push_back(&player1);
-	entities.push_back(&player2);
+	entities.push_back(player1);
+	entities.push_back(player2);
 
 }
 
@@ -17,7 +18,7 @@ Combat::~Combat() {
 
 void Combat::handleEvent(const SDL_Event& e) {
 
-	if (selectedInt == -1 || (selectedInt != -1 && ((Player *)entities[selectedInt])->state == 0)) {
+	if (selectedInt == -1 || (selectedInt != -1 && ((Player *)entities[selectedInt])->getState() == PlayerState::IDLE)) {
 
 		for (Entity * entity : entities) entity->handleEvent(e);
 
@@ -65,10 +66,6 @@ void Combat::render() {
 
 	if (playerTurn) {
 		grid.render();
-	//	player.render();
-		//player.render();
-		//player2.render();
-
 		for (Entity * e : entities) {
 
 			if (dynamic_cast<Player*>(e) != nullptr) {
@@ -89,14 +86,12 @@ void Combat::render() {
 		Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
 
 	}
-	// SAMPLE CODE
 
 
 }
 
 Player Combat::getPlayerAt(ScreenCoord at)
 {
-	int test3 = 0;
 	for (Entity * e : entities) {
 		if (dynamic_cast<Player*>(e) != nullptr) {
 			if (((Player *) e)->position.x() == grid.mousePos.x() && ((Player *)e)->position.y() == grid.mousePos.y()) {
