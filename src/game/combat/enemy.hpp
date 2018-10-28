@@ -2,8 +2,9 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "unit.hpp"
 
-class Enemy {
+class Enemy : public Unit {
 
 public:
 

@@ -1,54 +1,53 @@
 #include "combat.hpp"
 
-Combat::Combat() {
+Combat::Combat() :
+	current(nullptr)
+{
 	Player * player1 = new Player();
 	Player * player2 = new Player(1, 2);
 
 	player1->setTileSize(grid.tile_width, grid.tile_height);
 	player2->setTileSize(grid.tile_width, grid.tile_height);
 
-	entities.push_back(player1);
-	entities.push_back(player2);
+	addEntity(player1);
+	addEntity(player2);
 
+	units.push_back(player1);
+	units.push_back(player2);
 }
 
 Combat::~Combat() {
 
 }
 
+#include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
 
-	if (selectedInt == -1 || (selectedInt != -1 && ((Player *)entities[selectedInt])->getState() == PlayerState::IDLE)) {
-
+	// Only handle events if there is no selected unit or if the selected unit is idle
+	if (current == nullptr || current->getState() == UnitState::IDLE) {
 		for (Entity * entity : entities) entity->handleEvent(e);
 
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
+			// Movement handling logic
 			if (grid.isMousePosValid()) {
-
-
-				int previous = selectedInt;
-
-				selectedInt = getIndexAt(grid.mousePos);
-
-
-				if (selectedInt != -1 && selectedInt != previous && previous != -1) {
-					((Player *)entities[previous])->selected = false;
-					//TODO turn off attacks
+				Unit * selected = getUnitAt(grid.mousePos);
+				// If the selected unit is different from the current one, change it
+				if (selected && selected != current) {
+					if (current) current->selected = false;
+					current = selected;
+					// TODO: turn off attacks
 				}
-				else if (selectedInt == -1 && previous != -1) {
-					ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);
-					((Player *)entities[previous])->selected = false;
+				// Otherwise if there is a current unit, move it
+				else if (current) {
+					if (current->getType() == UnitType::PLAYER) {
+						Player * player = dynamic_cast<Player*>(current);
+						ScreenCoord target = player->move(grid.mousePos);
+						player->selected = false;
 
-					selectedInt = previous;
-					//TODO do something with the target
+						current = player;
+					}
+					// TODO: do something with the target
 				}
-
-				//if (selectedPlayer != nullptr) {
-				//	selectedPlayer->selected = false;
-				//	selectedPlayer = nullptr;
-				//}
-				//selectedPlayer = &(getPlayerAt(grid.mousePos));
-
 			}
 		}
 	}
@@ -90,28 +89,13 @@ void Combat::render() {
 
 }
 
-Player Combat::getPlayerAt(ScreenCoord at)
+Unit * Combat::getUnitAt(ScreenCoord at)
 {
-	for (Entity * e : entities) {
-		if (dynamic_cast<Player*>(e) != nullptr) {
-			if (((Player *) e)->position.x() == grid.mousePos.x() && ((Player *)e)->position.y() == grid.mousePos.y()) {
-				((Player *) e)->selected = !((Player *)e)->selected;
-				return *((Player *)e);
-			}
+	for (Unit * unit : units) {
+		if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
+			unit->selected = !unit->selected;
+			return unit;
 		}
 	}
-}
-
-int Combat::getIndexAt(ScreenCoord at)
-{
-	for (int i = 0; i < entities.size(); i ++) {
-		Entity *  e = entities[i];
-		if (dynamic_cast<Player*>(e) != nullptr) {
-			if (((Player *)e)->position.x() == grid.mousePos.x() && ((Player *)e)->position.y() == grid.mousePos.y()) {
-				((Player *)e)->selected = !((Player *)e)->selected;
-				return i;
-			}
-		}
-	}
-	return -1;
+	return nullptr;
 }

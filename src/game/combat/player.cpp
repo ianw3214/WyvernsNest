@@ -1,7 +1,7 @@
 #include "player.hpp"
 
 Player::Player() :
-	state(PlayerState::IDLE),
+	Unit(UnitType::PLAYER),
 	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
@@ -11,7 +11,7 @@ Player::Player() :
 }
 
 Player::Player(int x, int y) :
-	state(PlayerState::IDLE),
+	Unit(UnitType::PLAYER),
 	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
@@ -81,10 +81,10 @@ void Player::update(int delta)
 {
 	// Update the player based on its current state	
 	switch (state) {
-		case PlayerState::IDLE: {
+		case UnitState::IDLE: {
 			// Do nothing when idling
 		} break;
-		case PlayerState::MOVE: {
+		case UnitState::MOVE: {
 			// Move the player towards its destination
 			if (state_counter < 100) {
 				state_counter++;
@@ -95,7 +95,7 @@ void Player::update(int delta)
 				incrementMovement();
 				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
-					state = PlayerState::IDLE;
+					state = UnitState::IDLE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}
@@ -119,7 +119,7 @@ ScreenCoord Player::move(Vec2<int> to)
 		moveTarget = to;
 		moveNext = ScreenCoord(0, 0);
 		incrementMovement();
-		state = PlayerState::MOVE;
+		state = UnitState::MOVE;
 	}
 	else {
 		switch (attackIndex)
