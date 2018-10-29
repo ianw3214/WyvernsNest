@@ -19,6 +19,7 @@ public:
 	void render() override;
 
 	Unit * getUnitAt(ScreenCoord at);
+	std::vector<Enemy*> * getEnemiesAt(std::vector<ScreenCoord> * at);
 
 	bool playerTurn = true;
 

@@ -60,6 +60,12 @@ void Player::handleEvent(const SDL_Event & event)
 				attack1.toggleRender();
 				current_action = PlayerAction::ATTACK_1;
 			}
+			if (event.key.keysym.sym == SDLK_KP_3) {
+
+				attack2.playerPos = position;
+				attack2.toggleRender();
+				current_action = PlayerAction::ATTACK_2;
+			}
 		}
 	}
 }
@@ -73,7 +79,7 @@ void Player::update(int delta)
 		} break;
 		case UnitState::MOVE: {
 			// Move the player towards its destination
-			if (state_counter < 100) {
+			if (state_counter < 20) {
 				state_counter++;
 				calculateScreenPositionMovement();
 			}
@@ -100,7 +106,7 @@ void Player::setTileSize(int width, int height) {
 	calculateScreenPosition();
 }
 
-void Player::click(Vec2<int> to)
+std::vector<ScreenCoord> Player::click(Vec2<int> to)
 {
 	switch (current_action) {
 		case PlayerAction::NONE: {
@@ -114,11 +120,28 @@ void Player::click(Vec2<int> to)
 		} break;
 		case PlayerAction::ATTACK_1: {
 			// do the action here
+			turnfOffAttacks();
+			return (attack1.getAttackPos(to));
+		} break;
+		case PlayerAction::ATTACK_2: {
+			// do the action here
+			turnfOffAttacks();
+			return (attack2.getAttackPos(to));
 		} break;
 		default: {
 			// do nothing
 		} break;
 	}
+
+	std::vector<ScreenCoord>result;
+	return result;
+}
+
+void Player::turnfOffAttacks()
+{
+	attack1.isRendered = false;
+	attack2.isRendered = false;
+	//do the same for all attacks
 }
 
 void Player::calculateScreenPosition() {
@@ -130,8 +153,8 @@ void Player::calculateScreenPosition() {
 }
 
 void Player::calculateScreenPositionMovement() {
-		screenPosition.x() += moveNext.x() * 230 / 100;
-		screenPosition.y() += moveNext.y() * 200 / 100;
+		screenPosition.x() += moveNext.x() * 230 / 20;
+		screenPosition.y() += moveNext.y() * 200 / 20;
 }
 
 void Player::incrementMovement() {

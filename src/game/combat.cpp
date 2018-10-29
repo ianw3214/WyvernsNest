@@ -6,14 +6,19 @@ Combat::Combat() :
 	Player * player1 = new Player();
 	Player * player2 = new Player(1, 2);
 
+	Enemy * enemy1 = new Enemy();
+
 	player1->setTileSize(grid.tile_width, grid.tile_height);
 	player2->setTileSize(grid.tile_width, grid.tile_height);
+	enemy1->setTileSize(grid.tile_width, grid.tile_height);
 
 	addEntity(player1);
 	addEntity(player2);
+	addEntity(enemy1);
 
 	units.push_back(player1);
 	units.push_back(player2);
+	units.push_back(enemy1);
 }
 
 Combat::~Combat() {
@@ -23,6 +28,7 @@ Combat::~Combat() {
 #include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
 
+
 	// Only handle events if there is no selected unit or if the selected unit is idle
 	if (current == nullptr || current->getState() == UnitState::IDLE) {
 		for (Entity * entity : entities) entity->handleEvent(e);
@@ -31,6 +37,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 			// Movement handling logic
 			if (grid.isMousePosValid()) {
 				Unit * selected = getUnitAt(grid.mousePos);
+
 				// If the selected unit is different from the current one, change it
 				if (selected && selected != current) {
 					if (current) current->selected = false;
@@ -41,10 +48,18 @@ void Combat::handleEvent(const SDL_Event& e) {
 				else if (current) {
 					if (current->getType() == UnitType::PLAYER) {
 						Player * player = dynamic_cast<Player*>(current);
-						player->click(grid.mousePos);
-						player->selected = false;
+						std::vector<ScreenCoord> targets = player->click(grid.mousePos);
+						if (targets.size() > 0) {
+							getEnemiesAt(&targets);
+						}
+						//std::vector<Enemy*> * enemies = getEnemiesAt(targets);
 
-						current = player;
+
+
+						player->selected = false;
+						current = nullptr;
+
+
 					}
 					// TODO: do something with the target
 				}
@@ -70,10 +85,16 @@ void Combat::render() {
 			if (dynamic_cast<Player*>(e) != nullptr) {
 				//std::string test = typeid(e).name();
 				((Player *)e)->attack1.render(grid.mousePos);
+				((Player *)e)->attack2.render(grid.mousePos);
 				e->render();
 
 			}
 			else {
+				if (dynamic_cast<Enemy*>(e) != nullptr) {
+					//std::string test = typeid(e).name();
+					e->render();
+
+				}
 				//not a player
 			}
 		}
@@ -92,10 +113,33 @@ void Combat::render() {
 Unit * Combat::getUnitAt(ScreenCoord at)
 {
 	for (Unit * unit : units) {
-		if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
-			unit->selected = !unit->selected;
-			return unit;
+		if (unit->getState() == UnitState::IDLE) {
+			if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
+				unit->selected = !unit->selected;
+				return unit;
+			}
 		}
 	}
 	return nullptr;
 }
+
+std::vector<Enemy*>* Combat::getEnemiesAt(std::vector<ScreenCoord>* at)
+{
+	//for now, just do 1 damage to enemies
+	//std::vector<Enemy*> enemies;
+	for (ScreenCoord pos : *at) {
+		for (Unit * unit : units) {
+			if (unit->getType() == UnitType::ENEMY) {
+				Enemy * enemy = dynamic_cast<Enemy*>(unit);
+
+				if (enemy->position.x() == pos.x() && enemy->position.y() == pos.y()) {
+					//enemies->push_back((Enemy*)unit);
+					enemy->takeDamage(1);
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+
