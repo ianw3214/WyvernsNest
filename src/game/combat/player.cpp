@@ -49,7 +49,7 @@ void Player::handleEvent(const SDL_Event & event)
 	// Only handle events for the entity if it is selected
 	if (selected) {
 		if (event.type == SDL_KEYDOWN) {
-			// Move Key
+			// Move Key-
 			if (event.key.keysym.sym == SDLK_KP_1) {
 				current_action = PlayerAction::MOVE;
 			}

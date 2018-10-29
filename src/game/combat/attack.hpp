@@ -17,7 +17,7 @@ public:
 
 	// Pure virtual function providing interface framework
 	virtual std::vector<ScreenCoord> getAttackPos(ScreenCoord pos) = 0;
-	virtual void showValidGrid(ScreenCoord playerPos, ScreenCoord grid) = 0;
+	virtual void showValidGrid() = 0;
 
 	virtual bool isValid(ScreenCoord pos) = 0;
 
@@ -42,9 +42,25 @@ private:
 
 class Melee : public Attack {
 public:
-	Melee() : Attack(AttackType::MELEE) {}
+	Melee() : 
+		Attack(AttackType::MELEE),
+		valid1("res/test8.png"),
+		valid2("res/test8.png"),
+		valid3("res/test8.png"),
+		valid4("res/test8.png")
+	{
+		valid1.setSize(213, 180);
+		valid2.setSize(213, 180);
+		valid3.setSize(213, 180);
+		valid4.setSize(213, 180);
+	}
 
 	int damage = 1;
+
+	Sprite valid1;
+	Sprite valid2;
+	Sprite valid3;
+	Sprite valid4;
 
 	std::vector<ScreenCoord> getAttackPos(ScreenCoord pos) {
 		//TODO returns all the positions hit by the attack
@@ -69,13 +85,25 @@ public:
 		return false;
 	}
 
-	void showValidGrid(ScreenCoord playerPos, ScreenCoord grid) {
-		return;
+	void showValidGrid() {
+		int xScale = 213;
+		int yScale = 180;
+		valid1.setPos((playerPos.x()-1) * xScale, playerPos.y() * yScale);
+		valid2.setPos(playerPos.x() * xScale, (playerPos.y()-1) * yScale);
+		valid3.setPos((playerPos.x()+1) * xScale, playerPos.y() * yScale);
+		valid4.setPos(playerPos.x() * xScale, (playerPos.y() + 1) * yScale);
+
+		valid1.render();
+		valid2.render();
+		valid3.render();
+		valid4.render();
 	}
 
 
 	void render(ScreenCoord pos) {
 		if (isRendered) {
+			showValidGrid();
+
 			if (isValid(pos)) {
 				Sprite sprite("res/test6.png");
 				//TODO values here are temporary
@@ -165,7 +193,7 @@ public:
 		return false;
 	}
 
-	void showValidGrid(ScreenCoord playerPos, ScreenCoord grid) {
+	void showValidGrid() {
 		return;
 	}
 

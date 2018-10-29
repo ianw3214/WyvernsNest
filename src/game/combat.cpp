@@ -40,7 +40,11 @@ void Combat::handleEvent(const SDL_Event& e) {
 
 				// If the selected unit is different from the current one, change it
 				if (selected && selected != current) {
-					if (current) current->selected = false;
+					if (current) {
+						current->selected = false;
+						dynamic_cast<Player*>(current)->turnfOffAttacks();
+					}
+
 					current = selected;
 					// TODO: turn off attacks
 				}
