@@ -1,44 +1,77 @@
 #pragma once
 
 #include <string>
+#include <vector>
+
 #include "../../math/vec.hpp"
+#include "unit.hpp"
 
 // Enumeration for all attack types
 enum class AttackType {
 	MELEE
 };
 
+// Use an integer to represent the AoE of the attack
+using AttackAoE = int;
+
+// Base class to represent an attack effect
+class AttackEffect {
+public:
+	virtual void attack(ScreenCoord pos, std::vector<Unit*>& units) = 0;
+};
+
+// Attack effect that damages units
+class DamageEffect : public AttackEffect {
+public:
+	DamageEffect() : damage(1) {}
+	DamageEffect(int damage) : damage(damage) {}
+
+	void attack(ScreenCoord pos, std::vector<Unit*>& units) {
+		for (Unit * unit : units) {
+			if (unit->position.x() == pos.x() && unit->position.y() == pos.y()) {
+				// TODO: deal damage to the unit
+			}
+		}
+	}
+
+private:
+	int damage;
+};
+
+// Generic attack class to hold all of the data for an attack
 class Attack {
 
 public:
-	Attack() {}
-	Attack(AttackType type) : type(type) {}
+	Attack(std::string name, 
+		ScreenCoord source, 
+		AttackType type = AttackType::MELEE,
+		AttackEffect * effect = new DamageEffect(), 
+		AttackAoE aoe = 0);
 
-	// Pure virtual function providing interface framework
-	virtual ScreenCoord attack(ScreenCoord pos) = 0;
-	virtual void showValidGrid(ScreenCoord playerPos, ScreenCoord grid) = 0;
-
-	virtual bool isValid(ScreenCoord pos) = 0;
+	void attack(ScreenCoord pos, std::vector<Unit*>& units);
+	void showValidGrid(ScreenCoord playerPos, ScreenCoord grid);
+	bool isValid(ScreenCoord pos);
 
 	bool isRendered = false;
 	void toggleRender() {
 		isRendered = !isRendered;
 	};
 
-	ScreenCoord playerPos;
-
+	// Getter functions for attack properties
 	inline AttackType getType() const { return type; }
-
-protected:
-	std::string name;
-	int damage;
+	inline const AttackEffect& getEffect() const { return *effect; }
+	inline AttackAoE getAoE() const { return aoe; }
 	
 private:
-	AttackType type;
+	std::string name;
+	ScreenCoord source;
 
+	AttackType type;
+	AttackEffect * effect;
+	AttackAoE aoe;
 };
 
-
+/*
 class Melee : public Attack {
 public:
 	Melee() : Attack(AttackType::MELEE) {}
@@ -85,3 +118,4 @@ public:
 		}
 	}
 };
+*/
