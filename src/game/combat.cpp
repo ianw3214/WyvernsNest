@@ -34,6 +34,23 @@ void Combat::handleEvent(const SDL_Event& e) {
 		for (Entity * entity : entities) entity->handleEvent(e);
 
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
+			if (grid.isMousePosValid()) {
+				Unit * selected = getUnitAt(grid.mousePos);
+				if (!selected) {
+					if (current->getType() == UnitType::PLAYER) {
+						Player * player = dynamic_cast<Player*>(current);
+						std::vector<ScreenCoord> targets = player->click(grid.mousePos);
+						if (targets.size() > 0) {
+							getEnemiesAt(&targets);
+						}
+
+						getNextUnit();
+					}
+				}
+			}
+		}
+
+		if (false) {
 			// Movement handling logic
 			if (grid.isMousePosValid()) {
 				Unit * selected = getUnitAt(grid.mousePos);
@@ -74,8 +91,40 @@ void Combat::handleEvent(const SDL_Event& e) {
 
 void Combat::update(int delta) {
 	// Update shit here
+
+	if (current == nullptr) {
+		current = units[0];
+		unitIndex = 0;
+		if (current->getType() == UnitType::PLAYER) {
+			current->selected = true;
+		}
+		
+	}
+
 	grid.update();
 	for (Entity * e : entities) e->update(delta);
+}
+
+void Combat::getNextUnit() {
+
+	current->selected = false;
+
+	int n = units.size();
+	if (unitIndex == units.size() - 1) {
+		unitIndex = 0;
+	}
+	unitIndex++;
+	while (units[unitIndex]->getType() == UnitType::ENEMY) {
+		if (unitIndex == units.size() - 1) {
+			unitIndex = 0;
+			break;
+		}
+		unitIndex++;
+	}
+
+	current = units[unitIndex];
+	current->selected = true;
+	
 }
 
 void Combat::render() {
@@ -119,7 +168,7 @@ Unit * Combat::getUnitAt(ScreenCoord at)
 	for (Unit * unit : units) {
 		if (unit->getState() == UnitState::IDLE) {
 			if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
-				unit->selected = !unit->selected;
+				//unit->selected = !unit->selected;
 				return unit;
 			}
 		}

@@ -16,6 +16,7 @@ public:
 
 	void handleEvent(const SDL_Event& e) override;
 	void update(int delta) override;
+	void getNextUnit();
 	void render() override;
 
 	Unit * getUnitAt(ScreenCoord at);
@@ -31,5 +32,6 @@ private:
 	std::vector<Unit*> units;
 
 	Unit * current;
+	int unitIndex;
 
 };
