@@ -18,7 +18,7 @@ A 2D turn-based fantasy strategy game
     * Please make sure your code compiles. We do not have an auto-build and test system in place yet.
 5. When done, create a pull request on the main project
     * Click Pull Requests -> New Pull Request -> compare across forks
-    * base fork should be ianw3214/WyvernsNest, and base should be your sub-team branch
+    * base fork should be ianw3214/WyvernsNest, and base should be dev
     * head fork should be [your-name]/WyvernsNest, and compare should be where you added your changes.
 6. Submit your pull request
     * Keep an eye on it. Changes may be requested.
@@ -146,3 +146,6 @@ void State::update(const SDL_Event& event) {
     }
 }
 ```
+
+
+This project uses the [FreeType text rendering library](https://www.freetype.org/).

@@ -1,7 +1,12 @@
 #pragma once
 
 #include <string>
+#include <vector>
+
 #include "../../math/vec.hpp"
+#include "unit.hpp"
+
+class Combat;
 
 // Enumeration for all attack types
 enum class AttackType {
@@ -9,120 +14,59 @@ enum class AttackType {
 	PLUS
 };
 
+// Use an integer to represent the AoE of the attack
+using AttackAoE = int;
+
+// Base class to represent an attack effect
+class AttackEffect {
+public:
+	virtual void attack(ScreenCoord pos, Combat& combat) = 0;
+};
+
+// Attack effect that damages units
+class DamageEffect : public AttackEffect {
+public:
+	DamageEffect() : damage(1) {}
+	DamageEffect(int damage) : damage(damage) {}
+	void attack(ScreenCoord pos, Combat& combat);
+
+private:
+	int damage;
+};
+
+// Generic attack class to hold all of the data for an attack
 class Attack {
 
 public:
-	Attack() {}
-	Attack(AttackType type) : type(type) {}
+	Attack(std::string name, 
+		Unit * source, 
+		AttackType type = AttackType::MELEE,
+		AttackEffect * effect = new DamageEffect(), 
+		AttackAoE aoe = 0);
 
-	// Pure virtual function providing interface framework
-	virtual std::vector<ScreenCoord> getAttackPos(ScreenCoord pos) = 0;
-	virtual void showValidGrid() = 0;
+	void attack(ScreenCoord pos, Combat& combat);
+	void renderValidGrid();
+	bool isValid(ScreenCoord pos);
 
-	virtual bool isValid(ScreenCoord pos) = 0;
-
-	bool isRendered = false;
-	void toggleRender() {
-		isRendered = !isRendered;
-	};
-
-	ScreenCoord playerPos;
-	int damage;
-
+	// Getter functions for attack properties
 	inline AttackType getType() const { return type; }
-
-protected:
-	std::string name;
+	inline const AttackEffect& getEffect() const { return *effect; }
+	inline AttackAoE getAoE() const { return aoe; }
 	
 private:
+	std::string name;
+	Unit * source;
+
 	AttackType type;
+	AttackEffect * effect;
+	AttackAoE aoe;
 
+	Sprite validSprite;
+	Sprite targetValidSprite;
+	Sprite targetInvalidSprite;
 };
 
-
-class Melee : public Attack {
-public:
-	Melee() : 
-		Attack(AttackType::MELEE),
-		valid1("res/test8.png"),
-		valid2("res/test8.png"),
-		valid3("res/test8.png"),
-		valid4("res/test8.png")
-	{
-		valid1.setSize(213, 180);
-		valid2.setSize(213, 180);
-		valid3.setSize(213, 180);
-		valid4.setSize(213, 180);
-	}
-
-	int damage = 1;
-
-	Sprite valid1;
-	Sprite valid2;
-	Sprite valid3;
-	Sprite valid4;
-
-	std::vector<ScreenCoord> getAttackPos(ScreenCoord pos) {
-		//TODO returns all the positions hit by the attack
-		std::vector<ScreenCoord> hit;
-		if (isValid(pos)) {
-			hit.push_back(pos);
-		}
-
-		isRendered = false;
-
-		return hit;
-	}
-
-	bool isValid(ScreenCoord pos) {
-		//TODO
-		if ((pos.x() == playerPos.x() + 1 || pos.x() == playerPos.x() - 1) && pos.y() == playerPos.y()) {
-			return true;
-		}
-		else if ((pos.y() == playerPos.y() + 1 || pos.y() == playerPos.y() - 1) && pos.x() == playerPos.x()) {
-			return true;
-		}
-		return false;
-	}
-
-	void showValidGrid() {
-		int xScale = 213;
-		int yScale = 180;
-		valid1.setPos((playerPos.x()-1) * xScale, playerPos.y() * yScale);
-		valid2.setPos(playerPos.x() * xScale, (playerPos.y()-1) * yScale);
-		valid3.setPos((playerPos.x()+1) * xScale, playerPos.y() * yScale);
-		valid4.setPos(playerPos.x() * xScale, (playerPos.y() + 1) * yScale);
-
-		valid1.render();
-		valid2.render();
-		valid3.render();
-		valid4.render();
-	}
-
-
-	void render(ScreenCoord pos) {
-		if (isRendered) {
-			showValidGrid();
-
-			if (isValid(pos)) {
-				Sprite sprite("res/test6.png");
-				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, pos.y() * 180);
-				sprite.setSize(213, 180);
-				sprite.render();
-			}
-			else {
-				Sprite sprite("res/test7.png");
-				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, pos.y() * 180);
-				sprite.setSize(213, 180);
-				sprite.render();
-			}
-
-		}
-	}
-};
-
+/*
 class Plus : public Attack {
 public:
 	Plus() : 
@@ -228,3 +172,4 @@ public:
 		}
 	}
 };
+*/

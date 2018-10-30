@@ -5,9 +5,8 @@
 #include "player.hpp"
 #include "enemy.hpp"
 
-
-#define TILE_WIDTH 100
-#define TILE_HEIGHT 100
+#define SOURCE_TILE_WIDTH 32
+#define SOURCE_TILE_HEIGHT 32
 
 // TODO: load tilemap from a file
 #define DEFAULT_MAP_WIDTH 6
@@ -32,8 +31,6 @@ public:
 	void update();
 	ScreenCoord getMouseToGrid();
 
-	void getPlayerPositions();
-
 	bool isMousePosValid();
 
 	std::vector<int> tilemap;
@@ -47,15 +44,9 @@ public:
 	int mouseY;
 
 	ScreenCoord mousePos;
-
-	std::vector<Player>* players;
-
-	std::vector<Enemy>* enemies;
-
 private:
 
-	Sprite tile1;
-	Sprite tile2;
+	Sprite tilesheet;
 	Sprite selected;
 
 };

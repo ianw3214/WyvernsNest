@@ -7,6 +7,8 @@ Combat::Combat() :
 	Player * player2 = new Player(1, 2);
 
 	Enemy * enemy1 = new Enemy();
+	enemy1->position.x() = 2;
+	enemy1->position.y() = 2;
 
 	player1->setTileSize(grid.tile_width, grid.tile_height);
 	player2->setTileSize(grid.tile_width, grid.tile_height);
@@ -25,64 +27,35 @@ Combat::~Combat() {
 
 }
 
-#include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
-
 
 	// Only handle events if there is no selected unit or if the selected unit is idle
 	if (current == nullptr || current->getState() == UnitState::IDLE) {
 		for (Entity * entity : entities) entity->handleEvent(e);
 
 		if (e.type == SDL_MOUSEBUTTONDOWN) {
-			if (grid.isMousePosValid()) {
-				Unit * selected = getUnitAt(grid.mousePos);
-				if (!selected) {
-					if (current->getType() == UnitType::PLAYER) {
-						Player * player = dynamic_cast<Player*>(current);
-						std::vector<ScreenCoord> targets = player->click(grid.mousePos);
-						if (targets.size() > 0) {
-							getEnemiesAt(&targets);
-						}
-
-						getNextUnit();
-					}
-				}
-			}
-		}
-
-		if (false) {
 			// Movement handling logic
 			if (grid.isMousePosValid()) {
 				Unit * selected = getUnitAt(grid.mousePos);
 
-				// If the selected unit is different from the current one, change it
-				if (selected && selected != current) {
-					if (current) {
-						current->selected = false;
-						dynamic_cast<Player*>(current)->turnfOffAttacks();
-					}
+				// If the unit is a player that isn't idle, handle its click
+				if (current && 
+					current->getType() == UnitType::PLAYER && 
+					dynamic_cast<Player*>(current)->current_action != PlayerAction::NONE)
+				{
+					Player * player = dynamic_cast<Player*>(current);
+					player->click(grid.mousePos, *this);
 
-					current = selected;
-					// TODO: turn off attacks
-				}
-				// Otherwise if there is a current unit, move it
-				else if (current) {
-					if (current->getType() == UnitType::PLAYER) {
-						Player * player = dynamic_cast<Player*>(current);
-						std::vector<ScreenCoord> targets = player->click(grid.mousePos);
-						if (targets.size() > 0) {
-							getEnemiesAt(&targets);
+					player->selected = false;
+					current = nullptr;
+				} else {
+					// If the selected unit is different from the current one, change it
+					if (selected && selected != current) {
+						if (current) {
+							current->selected = false;
 						}
-						//std::vector<Enemy*> * enemies = getEnemiesAt(targets);
-
-
-
-						player->selected = false;
-						current = nullptr;
-
-
+						current = selected;
 					}
-					// TODO: do something with the target
 				}
 			}
 		}
@@ -91,108 +64,55 @@ void Combat::handleEvent(const SDL_Event& e) {
 
 void Combat::update(int delta) {
 	// Update shit here
-
-	if (current == nullptr) {
-		current = units[0];
-		unitIndex = 0;
-		if (current->getType() == UnitType::PLAYER) {
-			current->selected = true;
-		}
-		
-	}
-
 	grid.update();
 	for (Entity * e : entities) e->update(delta);
 }
 
-void Combat::getNextUnit() {
-
-	current->selected = false;
-
-	int n = units.size();
-	if (unitIndex == units.size() - 1) {
-		unitIndex = 0;
-	}
-	unitIndex++;
-	while (units[unitIndex]->getType() == UnitType::ENEMY) {
-		if (unitIndex == units.size() - 1) {
-			unitIndex = 0;
-			break;
-		}
-		unitIndex++;
-	}
-
-	current = units[unitIndex];
-	current->selected = true;
-	
-}
-
 void Combat::render() {
-
 	Core::Renderer::clear();
+	grid.render();
+	for (Entity * e : entities) {
+		e->render();
+	}
+    // RENDER SAMPLES
+    /*
+    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 50), ScreenCoord(2000, Core::windowHeight() - 50), Colour(0.0, 1.0, 0.0));
+    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 66), ScreenCoord(2000, Core::windowHeight() - 66), Colour(0.0, 1.0, 0.0));
+    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 82), ScreenCoord(2000, Core::windowHeight() - 82), Colour(0.0, 1.0, 0.0));
+    Core::Text_Renderer::setColour(Colour(0,0,0));
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render("Top align.", ScreenCoord(50, 50), 1.f);
 
-	if (playerTurn) {
-		grid.render();
-		for (Entity * e : entities) {
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+    Core::Text_Renderer::render("Bottom align.", ScreenCoord(50, 50), 1.f);
 
-			if (dynamic_cast<Player*>(e) != nullptr) {
-				//std::string test = typeid(e).name();
-				((Player *)e)->attack1.render(grid.mousePos);
-				((Player *)e)->attack2.render(grid.mousePos);
-				e->render();
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
+    Core::Text_Renderer::render("Middle align.", ScreenCoord(100, 50), 1.f);
 
-			}
-			else {
-				if (dynamic_cast<Enemy*>(e) != nullptr) {
-					//std::string test = typeid(e).name();
-					e->render();
+    Core::Renderer::drawLine(ScreenCoord(500, 0), ScreenCoord(500, 1000), Colour(0.0, 1.0, 0.0));
 
-				}
-				//not a player
-			}
-		}
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render("Left align.", ScreenCoord(500, 50), 1.f);
+
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render("Centre align.", ScreenCoord(500, 80), 1.f);
+
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::right, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render("Right align.", ScreenCoord(500, 110), 1.f);
+
+    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+    */
 
 		//enemies[0].render();
-
-	}
-	else {
-		Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-
-	}
-
-
 }
 
 Unit * Combat::getUnitAt(ScreenCoord at)
 {
 	for (Unit * unit : units) {
-		if (unit->getState() == UnitState::IDLE) {
-			if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
-				//unit->selected = !unit->selected;
-				return unit;
-			}
+		if (unit->position.x() == at.x() && unit->position.y() == at.y()) {
+			unit->selected = !unit->selected;
+			return unit;
 		}
 	}
 	return nullptr;
 }
-
-std::vector<Enemy*>* Combat::getEnemiesAt(std::vector<ScreenCoord>* at)
-{
-	//for now, just do 1 damage to enemies
-	//std::vector<Enemy*> enemies;
-	for (ScreenCoord pos : *at) {
-		for (Unit * unit : units) {
-			if (unit->getType() == UnitType::ENEMY) {
-				Enemy * enemy = dynamic_cast<Enemy*>(unit);
-
-				if (enemy->position.x() == pos.x() && enemy->position.y() == pos.y()) {
-					//enemies->push_back((Enemy*)unit);
-					enemy->takeDamage(1);
-				}
-			}
-		}
-	}
-	return nullptr;
-}
-
-
