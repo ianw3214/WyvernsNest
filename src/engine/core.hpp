@@ -58,6 +58,10 @@ namespace Core {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
 		}
 
+		inline void drawSprite(const Sprite& sprite) {
+			Engine::get_instance().getRenderer()->drawSprite(sprite);
+		}
+
 		inline void clear() {
 			Engine::get_instance().getRenderer()->clear();
 
