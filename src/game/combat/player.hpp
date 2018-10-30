@@ -11,7 +11,8 @@
 enum class PlayerAction {
 	NONE,
 	MOVE,
-	ATTACK_1
+	ATTACK_1,
+	ATTACK_2
 };
 
 // TODO: update player so that the positions are calculated from the grid
@@ -28,12 +29,14 @@ public:
 	void render();
 
 	void setTileSize(int width, int height);
-	void click(Vec2<int> to);
+	void click(Vec2<int> to, Combat& combat);
+	void turnfOffAttacks();
 
 	int id;
 
 	PlayerAction current_action;
-	Melee attack1;
+	Attack attack1;
+	Attack attack2;
 	int attackIndex = 0;
 
 	ScreenCoord moveTarget;

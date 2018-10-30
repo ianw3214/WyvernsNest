@@ -31,6 +31,10 @@ public:
 	inline UnitState getState() const { return state; }
 	inline UnitType getType() const { return type; }
 
+	// The health variables of the unit
+	int health;
+	int maxHealth;
+
 protected:
 
 	// State variable of the unit

@@ -6,21 +6,27 @@ Combat::Combat() :
 	Player * player1 = new Player();
 	Player * player2 = new Player(1, 2);
 
+	Enemy * enemy1 = new Enemy();
+	enemy1->position.x() = 2;
+	enemy1->position.y() = 2;
+
 	player1->setTileSize(grid.tile_width, grid.tile_height);
 	player2->setTileSize(grid.tile_width, grid.tile_height);
+	enemy1->setTileSize(grid.tile_width, grid.tile_height);
 
 	addEntity(player1);
 	addEntity(player2);
+	addEntity(enemy1);
 
 	units.push_back(player1);
 	units.push_back(player2);
+	units.push_back(enemy1);
 }
 
 Combat::~Combat() {
 
 }
 
-#include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
 
 	// Only handle events if there is no selected unit or if the selected unit is idle
@@ -31,22 +37,25 @@ void Combat::handleEvent(const SDL_Event& e) {
 			// Movement handling logic
 			if (grid.isMousePosValid()) {
 				Unit * selected = getUnitAt(grid.mousePos);
-				// If the selected unit is different from the current one, change it
-				if (selected && selected != current) {
-					if (current) current->selected = false;
-					current = selected;
-					// TODO: turn off attacks
-				}
-				// Otherwise if there is a current unit, move it
-				else if (current) {
-					if (current->getType() == UnitType::PLAYER) {
-						Player * player = dynamic_cast<Player*>(current);
-						player->click(grid.mousePos);
-						player->selected = false;
 
-						current = player;
+				// If the unit is a player that isn't idle, handle its click
+				if (current && 
+					current->getType() == UnitType::PLAYER && 
+					dynamic_cast<Player*>(current)->current_action != PlayerAction::NONE)
+				{
+					Player * player = dynamic_cast<Player*>(current);
+					player->click(grid.mousePos, *this);
+
+					player->selected = false;
+					current = nullptr;
+				} else {
+					// If the selected unit is different from the current one, change it
+					if (selected && selected != current) {
+						if (current) {
+							current->selected = false;
+						}
+						current = selected;
 					}
-					// TODO: do something with the target
 				}
 			}
 		}
@@ -66,20 +75,8 @@ void Combat::render() {
 	if (playerTurn) {
 		grid.render();
 		for (Entity * e : entities) {
-
-			if (dynamic_cast<Player*>(e) != nullptr) {
-				//std::string test = typeid(e).name();
-				((Player *)e)->attack1.render(grid.mousePos);
-				e->render();
-
-			}
-			else {
-				//not a player
-			}
+			e->render();
 		}
-
-		//enemies[0].render();
-
 	}
 	else {
 		Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
@@ -92,7 +89,8 @@ void Combat::render() {
 Unit * Combat::getUnitAt(ScreenCoord at)
 {
 	for (Unit * unit : units) {
-		if (unit->position.x() == grid.mousePos.x() && unit->position.y() == grid.mousePos.y()) {
+		std::cout << unit->position.x() << ", " << unit->position.y() << std::endl;
+		if (unit->position.x() == at.x() && unit->position.y() == at.y()) {
 			unit->selected = !unit->selected;
 			return unit;
 		}

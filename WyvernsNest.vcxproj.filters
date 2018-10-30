@@ -149,5 +149,8 @@
     <ClInclude Include="src\game\combat\unit.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\unitData.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

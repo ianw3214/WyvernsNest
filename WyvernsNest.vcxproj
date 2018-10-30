@@ -165,6 +165,7 @@
     <ClInclude Include="src\game\customization.hpp" />
     <ClInclude Include="src\game\cutscene.hpp" />
     <ClInclude Include="src\game\combat\grid.hpp" />
+    <ClInclude Include="src\game\unitData.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />
