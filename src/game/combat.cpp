@@ -62,6 +62,24 @@ void Combat::handleEvent(const SDL_Event& e) {
 	}
 }
 
+//if (e.type == SDL_MOUSEBUTTONDOWN) {
+//	if (grid.isMousePosValid()) {
+//		Unit * selected = getUnitAt(grid.mousePos);
+//		if (!selected) {
+//			if (current->getType() == UnitType::PLAYER) {
+//				Player * player = dynamic_cast<Player*>(current);
+//				std::vector<ScreenCoord> targets = player->click(grid.mousePos);
+//				if (targets.size() > 0) {
+//					getEnemiesAt(&targets);
+//				}
+//
+//				getNextUnit();
+//			}
+//		}
+//	}
+//}
+
+
 void Combat::update(int delta) {
 	// Update shit here
 	grid.update();
