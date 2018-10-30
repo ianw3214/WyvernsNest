@@ -1,6 +1,7 @@
 #include "renderer.hpp"
 
 #include "engine.hpp"
+#include "sprite.hpp"
 
 const char * BASIC_VERTEX_SHADER =
 	"#version 330 core\n"
@@ -43,6 +44,7 @@ Renderer::Renderer() :
 }
 
 void Renderer::clear() const {
+	glClearColor(1, 0, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -92,6 +94,43 @@ void Renderer::drawTexture(ScreenCoord v, int width, int height, const Texture &
 
 	// Bind the texture and draw
 	texture.bind();
+	drawTriangles(va, ib, textureShader);
+}
+
+void Renderer::drawSprite(const Sprite & sprite) {
+	float positions[16] = {
+		// coordinate 1
+		lerp(-1.f, 1.f, static_cast<float>(sprite.x) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(sprite.y) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_x) / static_cast<float>(sprite.original_w)),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_y) / static_cast<float>(sprite.original_h)),
+		// coordinate 2
+		lerp(-1.f, 1.f, static_cast<float>(sprite.x) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(sprite.y + sprite.h) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_x) / static_cast<float>(sprite.original_w)),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_y + sprite.src_h) / static_cast<float>(sprite.original_h)),
+		// coordinate 3
+		lerp(-1.f, 1.f, static_cast<float>(sprite.x + sprite.w) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(sprite.y) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_x + sprite.src_w) / static_cast<float>(sprite.original_w)),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_y) / static_cast<float>(sprite.original_h)),
+		// coordinate 4
+		lerp(-1.f, 1.f, static_cast<float>(sprite.x + sprite.w) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(-1.f, 1.f, static_cast<float>(sprite.y + sprite.h) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_x + sprite.src_w) / static_cast<float>(sprite.original_w)),
+		lerp(0.f, 1.f, static_cast<float>(sprite.src_y + sprite.src_h) / static_cast<float>(sprite.original_h))
+	};
+	VertexArray		va;
+	VertexBuffer	vb(positions, sizeof(float) * 16);
+	IndexBuffer		ib(SQUARE_INDICES, 6);
+	// Specify the layout of the buffer data
+	VertexBufferLayout layout;
+	layout.pushFloat(2);
+	layout.pushFloat(2);
+	va.addBuffer(vb, layout);
+
+	// Bind the texture and draw
+	sprite.getTexture().bind();
 	drawTriangles(va, ib, textureShader);
 }
 
