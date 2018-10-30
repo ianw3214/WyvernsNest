@@ -69,21 +69,11 @@ void Combat::update(int delta) {
 }
 
 void Combat::render() {
-
 	Core::Renderer::clear();
-
-	if (playerTurn) {
-		grid.render();
-		for (Entity * e : entities) {
-			e->render();
-		}
+	grid.render();
+	for (Entity * e : entities) {
+		e->render();
 	}
-	else {
-		Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-
-	}
-
-
 }
 
 Unit * Combat::getUnitAt(ScreenCoord at)

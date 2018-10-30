@@ -5,9 +5,6 @@
 #include "attack.hpp"
 #include "unit.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 100
-#define DEFAULT_SPRITE_HEIGHT 100
-
 enum class PlayerAction {
 	NONE,
 	MOVE,
@@ -28,7 +25,6 @@ public:
 	void update(int delta);
 	void render();
 
-	void setTileSize(int width, int height);
 	void click(Vec2<int> to, Combat& combat);
 	void turnfOffAttacks();
 
@@ -37,7 +33,6 @@ public:
 	PlayerAction current_action;
 	Attack attack1;
 	Attack attack2;
-	int attackIndex = 0;
 
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
@@ -48,15 +43,6 @@ private:
 
 	// State variables of the player
 	int state_counter;
-
-	// Variables needed for proper sprite rendering
-	int sprite_width;
-	int sprite_height;
-	int tile_width, tile_height;
-
-	// Store both grid position and screen position to avoid recalculating every frame
-	ScreenCoord screenPosition;
-	void calculateScreenPosition();
 
 	void calculateScreenPositionMovement();
 	void incrementMovement();

@@ -14,10 +14,12 @@ public:
 	Combat();
 	~Combat();
 
+	// Default state functions called from the state handler
 	void handleEvent(const SDL_Event& e) override;
 	void update(int delta) override;
 	void render() override;
 
+	// Utility function to get the unit at a grid position
 	Unit * getUnitAt(ScreenCoord at);
 
 	bool playerTurn = true;
@@ -29,6 +31,7 @@ private:
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
 
+	// Reference to the current unit that is taking its action
 	Unit * current;
 
 };
