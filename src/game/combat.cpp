@@ -89,7 +89,6 @@ void Combat::render() {
 Unit * Combat::getUnitAt(ScreenCoord at)
 {
 	for (Unit * unit : units) {
-		std::cout << unit->position.x() << ", " << unit->position.y() << std::endl;
 		if (unit->position.x() == at.x() && unit->position.y() == at.y()) {
 			unit->selected = !unit->selected;
 			return unit;
