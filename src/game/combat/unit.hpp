@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../../engine/core.hpp"
+#include "attack.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 100
-#define DEFAULT_SPRITE_HEIGHT 100
+#define DEFAULT_SPRITE_WIDTH 200
+#define DEFAULT_SPRITE_HEIGHT 200
 
 // Enumeration of unit types
 enum class UnitType {
@@ -23,6 +24,7 @@ public:
 
 	Unit();
 	Unit(UnitType type);
+	Unit(UnitType type, Attack attack1, Attack attack2);
 
 	// The position of the unit in terms of grid coordinates
 	Vec2<int> position;
@@ -38,10 +40,15 @@ public:
 
 	// Setter methods
 	void setTileSize(int width, int height);
+	void setTopMargin(int margin);
 
 	// The health variables of the unit
 	int health;
 	int maxHealth;
+
+	// The attacks of the unit
+	Attack attack1;
+	Attack attack2;
 
 protected:
 
@@ -55,6 +62,10 @@ protected:
 	int sprite_width;
 	int sprite_height;
 	int tile_width, tile_height;
+	int top_margin;
+
+	// Common sprites used by most units
+	Sprite shadow;
 
 private:
 

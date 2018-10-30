@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 
+#include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
-#include "unit.hpp"
 
 class Combat;
+class Unit;
 
 // Enumeration for all attack types
 enum class AttackType {
@@ -52,6 +53,9 @@ public:
 	inline AttackType getType() const { return type; }
 	inline const AttackEffect& getEffect() const { return *effect; }
 	inline AttackAoE getAoE() const { return aoe; }
+
+	// Other methods to make sure this class works properly
+	void setTileSize(int width, int height);
 	
 private:
 	std::string name;
@@ -64,6 +68,9 @@ private:
 	Sprite validSprite;
 	Sprite targetValidSprite;
 	Sprite targetInvalidSprite;
+
+	// Helper variables to make sure sprites render correctly
+	int tile_width, tile_height;
 };
 
 /*

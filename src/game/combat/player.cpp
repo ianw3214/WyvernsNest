@@ -5,9 +5,7 @@ Player::Player() :
 	current_action(PlayerAction::NONE),
 	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
-	sprite_selected("res/HeroF_Sprite_Selected.png"),
-	attack1("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0),
-	attack2("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0)
+	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
 	sprite_idle.setSize(sprite_width, sprite_height);
 	sprite_selected.setSize(sprite_width, sprite_height);
@@ -18,9 +16,7 @@ Player::Player(int x, int y) :
 	current_action(PlayerAction::NONE),
 	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
-	sprite_selected("res/HeroF_Sprite_Selected.png"),
-	attack1("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0),
-	attack2("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0)
+	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
 	sprite_idle.setSize(sprite_width, sprite_height);
 	sprite_selected.setSize(sprite_width, sprite_height);
@@ -34,6 +30,9 @@ Player::~Player()
 
 void Player::render()
 {
+	// Render the shadow first
+	shadow.render();
+
 	if (selected) {
 		if (current_action == PlayerAction::ATTACK_1) {
 			attack1.renderValidGrid();
@@ -143,8 +142,8 @@ void Player::turnfOffAttacks()
 }
 
 void Player::calculateScreenPositionMovement() {
-		screenPosition.x() += moveNext.x() * 230 / 20;
-		screenPosition.y() += moveNext.y() * 200 / 20;
+		screenPosition.x() += moveNext.x() * tile_width / 20;
+		screenPosition.y() += moveNext.y() * tile_height / 20;
 }
 
 void Player::incrementMovement() {

@@ -31,8 +31,6 @@ public:
 	int id;
 
 	PlayerAction current_action;
-	Attack attack1;
-	Attack attack2;
 
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;

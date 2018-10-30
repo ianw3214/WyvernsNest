@@ -1,4 +1,6 @@
 #include "attack.hpp"
+
+#include "unit.hpp"
 #include "../combat.hpp"
 
 Attack::Attack(std::string name,
@@ -16,9 +18,11 @@ Attack::Attack(std::string name,
 	targetValidSprite("res/test6.png"),
 	targetInvalidSprite("res/test7.png")
 {
+	/*
 	validSprite.setSize(213, 180);
 	targetValidSprite.setSize(213, 180);
 	targetInvalidSprite.setSize(213, 180);
+	*/
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {
@@ -30,15 +34,13 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 void Attack::renderValidGrid() {
 	switch (type) {
 	case AttackType::MELEE: {
-		int xScale = 213;
-		int yScale = 180;
-		validSprite.setPos((source->position.x() - 1) * xScale, source->position.y() * yScale);
+		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
 		validSprite.render();
-		validSprite.setPos(source->position.x() * xScale, (source->position.y() - 1) * yScale);
+		validSprite.setPos(source->position.x() * tile_width, (source->position.y() - 1) * tile_height);
 		validSprite.render();
-		validSprite.setPos((source->position.x() + 1) * xScale, source->position.y() * yScale);
+		validSprite.setPos((source->position.x() + 1) * tile_width, source->position.y() * tile_height);
 		validSprite.render();
-		validSprite.setPos(source->position.x() * xScale, (source->position.y() + 1) * yScale);
+		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
 		validSprite.render();
 	} break;
 	case AttackType::PLUS: {
@@ -85,6 +87,14 @@ bool Attack::isValid(ScreenCoord pos) {
 	}
 	}
 	return false;
+}
+
+void Attack::setTileSize(int width, int height) {
+	tile_width = width;
+	tile_height = height;
+	validSprite.setSize(tile_width, tile_height);
+	targetValidSprite.setSize(tile_width, tile_height);
+	targetInvalidSprite.setSize(tile_width, tile_height);
 }
 
 void DamageEffect::attack(ScreenCoord pos, Combat & combat) {
