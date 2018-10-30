@@ -5,6 +5,9 @@
 #include "player.hpp"
 #include "enemy.hpp"
 
+#define SOURCE_TILE_WIDTH 32
+#define SOURCE_TILE_HEIGHT 32
+
 // TODO: load tilemap from a file
 #define DEFAULT_MAP_WIDTH 6
 #define DEFAULT_MAP_HEIGHT 4

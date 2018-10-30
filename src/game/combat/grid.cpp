@@ -14,6 +14,8 @@ Grid::Grid() :
 	tile_height = Core::windowHeight() / map_height;
 	// Initialize the tile sprites to the tile width/height
 	selected.setSize(tile_width, tile_height);
+	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
+	tilesheet.setSize(tile_width, tile_height);
 }
 
 Grid::~Grid() {
@@ -32,6 +34,8 @@ Grid::Grid(std::vector<Player>* p, std::vector<Enemy>* e) :
 	tile_height = Core::windowHeight() / map_height;
 	// Initialize the tile sprites to the tile width/height
 	selected.setSize(tile_width, tile_height);
+	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
+	tilesheet.setSize(tile_width, tile_height);
 }
 
 void Grid::update()
@@ -60,20 +64,22 @@ void Grid::render()
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
 			if (tilemap[TILE_INDEX(x, y)] == 1) {
-				
-				tile1.setPos(tile_width * x, tile_height * (y));
-				tile1.render();
+				tilesheet.setSourcePos(0, 0);
+				tilesheet.setPos(tile_width * x, tile_height * (y));
+				tilesheet.render();
 			}
 			else {
-				tile2.setPos(tile_width * x, tile_height * (y));
-				tile2.render();
+				tilesheet.setSourcePos(1 * SOURCE_TILE_WIDTH, 0);
+				tilesheet.setPos(tile_width * x, tile_height * (y));
+				tilesheet.render();
 			}
 
-			//selected square
+			/*	RENDER THE SELECTED TILE
 			if (y == mousePos.y() && x == mousePos.x()) {
-				//selected.setPos(tile_width * x , Core::windowHeight() - tile_height * (y + 1));
-				//selected.render();
+				selected.setPos(tile_width * x , Core::windowHeight() - tile_height * (y + 1));
+				selected.render();
 			}
+			*/
 		}
 	}
 }
