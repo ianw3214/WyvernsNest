@@ -22,6 +22,8 @@ public:
 
 	// Utility function to get the unit at a grid position
 	Unit * getUnitAt(ScreenCoord at);
+	void nextUnitTurn();
+	void selectUnit(Unit * unit);
 
 	bool playerTurn = true;
 

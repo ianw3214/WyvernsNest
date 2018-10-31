@@ -170,6 +170,7 @@
     <ClInclude Include="src\game\combat.hpp" />
     <ClInclude Include="src\game\combat\attack.hpp" />
     <ClInclude Include="src\game\combat\enemy.hpp" />
+    <ClInclude Include="src\game\combat\node.hpp" />
     <ClInclude Include="src\game\combat\player.hpp" />
     <ClInclude Include="src\game\combat\unit.hpp" />
     <ClInclude Include="src\game\customization.hpp" />

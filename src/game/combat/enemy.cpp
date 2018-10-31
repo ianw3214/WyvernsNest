@@ -17,9 +17,10 @@ Enemy::~Enemy()
 
 void Enemy::render()
 {
-	shadow.render();
 
-	if (!isDead) {
+	if (state != UnitState::DEAD) {
+		shadow.render();
+
 		sprite.setPos(screenPosition.x(), screenPosition.y());
 		sprite.render();
 	}
@@ -49,3 +50,4 @@ void Enemy::drawHealth() {
 void Enemy::update()
 {
 }
+

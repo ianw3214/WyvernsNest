@@ -15,7 +15,10 @@ enum class UnitType {
 // Enumeration of all possible unit states
 enum class UnitState {
 	IDLE,
-	MOVE
+	MOVE,
+	ATTACK,
+	DONE,
+	DEAD
 };
 
 class Unit : public Entity {
@@ -41,10 +44,13 @@ public:
 	// Setter methods
 	void setTileSize(int width, int height);
 	void setTopMargin(int margin);
+	void setState(UnitState newState) { state = newState; }
+
 
 	// The health variables of the unit
 	int health;
 	int maxHealth;
+	void takeDamage(int damage);
 
 	// The attacks of the unit
 	Attack attack1;

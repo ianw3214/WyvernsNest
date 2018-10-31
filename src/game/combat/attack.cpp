@@ -100,7 +100,7 @@ void Attack::setTileSize(int width, int height) {
 void DamageEffect::attack(ScreenCoord pos, Combat & combat) {
 	Unit * unit = combat.getUnitAt(pos);
 	if (unit) {
-		unit->health -= damage;
+		unit->takeDamage(damage);
 		// Do something if the unit dies
 	}
 }

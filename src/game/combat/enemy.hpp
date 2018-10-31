@@ -15,6 +15,7 @@ public:
 	void drawHealth();
 	void update();
 
+
 	int id;
 
 	bool isDead = false;

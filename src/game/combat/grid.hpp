@@ -38,6 +38,8 @@ public:
 	ScreenCoord getMouseToGrid();
 	bool isMousePosValid();
 
+	bool isPosValid(ScreenCoord pos);
+
 	// The actual tilemap data of the grid for rendering purposes
 	std::vector<int> tilemap;
 

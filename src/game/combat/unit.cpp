@@ -3,7 +3,7 @@
 // TODO: Design better constructors
 
 // Construct a player unit by default
-Unit::Unit() : 
+Unit::Unit() :
 	type(UnitType::PLAYER),
 	state(UnitState::IDLE),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
@@ -16,7 +16,7 @@ Unit::Unit() :
 
 }
 
-Unit::Unit(UnitType type) : 
+Unit::Unit(UnitType type) :
 	type(type),
 	state(UnitState::IDLE),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
@@ -36,7 +36,7 @@ Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
 	attack1(attack1),
-	attack2(attack2) ,
+	attack2(attack2),
 	shadow("res/assets/shadow.png")
 {
 
@@ -64,4 +64,12 @@ void Unit::calculateScreenPosition() {
 	screenPosition.y() -= sprite_height - tile_height;
 	// Calculate shadow positions
 	shadow.setPos(position.x() * tile_width, position.y() * tile_height + tile_height / 2);
+}
+
+void Unit::takeDamage(int damage) {
+	health -= damage;
+	if (health <= 0) {
+		health = 0;
+		state = UnitState::DEAD;
+	}
 }

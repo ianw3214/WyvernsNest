@@ -45,6 +45,10 @@ bool Grid::isMousePosValid()
 	return mousePos.x() < map_width && mousePos.y() < map_height;
 }
 
+bool Grid::isPosValid(ScreenCoord pos) {
+	return tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
+}
+
 void Grid::render()
 {
 	for (int y = 0; y < map_height; y++) {

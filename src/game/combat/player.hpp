@@ -4,6 +4,7 @@
 #include "../../math/vec.hpp"
 #include "attack.hpp"
 #include "unit.hpp"
+#include "node.hpp"
 
 enum class PlayerAction {
 	NONE,
@@ -11,6 +12,8 @@ enum class PlayerAction {
 	ATTACK_1,
 	ATTACK_2
 };
+
+class Combat;
 
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Unit {
@@ -44,6 +47,10 @@ private:
 
 	void calculateScreenPositionMovement();
 	void incrementMovement();
+
+	void getPath(Combat & combat);
+
+	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
 	Sprite sprite_idle;
