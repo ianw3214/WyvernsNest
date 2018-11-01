@@ -48,6 +48,9 @@ public:
 		Unit * source, 
 		AttackType type = AttackType::MELEE,
 		AttackRange range = 0,
+         
+         
+         
 		AttackEffect * effect = new DamageEffect(), 
 		AttackAoE aoe = 0,
 		bool affect_self = false);
@@ -67,6 +70,8 @@ public:
 private:
 	std::string name;
 	Unit * source;
+
+	int range;
 
 	AttackType type;
 	AttackRange range;
