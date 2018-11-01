@@ -47,8 +47,19 @@ void Enemy::drawHealth() {
 	
 }
 
-void Enemy::update()
-{
+void Enemy::update(int delta) {
+	switch (state) {
+	case UnitState::ATTACK: {
+		if (compareCounter(ENEMY_DEFAULT_ATTACK_COUNTER)) {
+			state = UnitState::DONE;
+		} else {
+			incrementCounter();
+		}
+	} break;
+	default: {
+		// do nothing
+	} break;
+	}
 }
 
 void Enemy::takeTurn() {
@@ -57,12 +68,14 @@ void Enemy::takeTurn() {
 	case 0: {
 		// do the action here
 		// attack1.attack(to, combat);
-		state = UnitState::DONE;
+		state = UnitState::ATTACK;
+		startCounter();
 	} break;
 	case 1: {
 		// do the action here
 		// attack2.attack(to, combat);
-		state = UnitState::DONE;
+		state = UnitState::ATTACK;
+		startCounter();
 	} break;
 	default: {
 		// do nothing

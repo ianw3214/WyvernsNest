@@ -60,6 +60,11 @@ protected:
 
 	// State variable of the unit
 	UnitState state;
+	// The state counter can be used by setting it to 0 and incrementing every frame
+	int state_counter;
+	inline void startCounter() { state_counter = 0; }
+	inline void incrementCounter() { state_counter++; }
+	inline bool compareCounter(int num) const { return state_counter >= num; }
 
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();

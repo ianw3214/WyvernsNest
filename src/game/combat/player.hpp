@@ -6,6 +6,10 @@
 #include "unit.hpp"
 #include "node.hpp"
 
+#define PLAYER_DEFAULT_MOVE_COUNTER		20
+#define PLAYER_DEFAULT_ATTACK_COUNTER	20
+
+// Enumeration to represent the possible player actions
 enum class PlayerAction {
 	NONE,
 	MOVE,
@@ -33,8 +37,10 @@ public:
 
 	int id;
 
+	// The action that is being expected from the player
 	PlayerAction current_action;
 
+	// Variables to help keep track of player movement
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
@@ -42,14 +48,12 @@ public:
 
 private:
 
-	// State variables of the player
-	int state_counter;
-
+	// Helper functions to calculate the screen position and movement of the player
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
+	// Pathfinding helper methods
 	void getPath(Combat & combat);
-
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites

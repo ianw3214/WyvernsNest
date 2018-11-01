@@ -6,6 +6,7 @@
 Unit::Unit() :
 	type(UnitType::PLAYER),
 	state(UnitState::IDLE),
+	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
@@ -19,6 +20,7 @@ Unit::Unit() :
 Unit::Unit(UnitType type) :
 	type(type),
 	state(UnitState::IDLE),
+	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
@@ -32,6 +34,7 @@ Unit::Unit(UnitType type) :
 Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	type(type),
 	state(UnitState::IDLE),
+	state_counter(0),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),

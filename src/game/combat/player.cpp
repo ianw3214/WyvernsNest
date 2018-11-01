@@ -1,10 +1,11 @@
 #include "player.hpp"
 #include "../combat.hpp"
 
+// TODO: only allow the player to move once during the turn
+
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
 	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
@@ -15,7 +16,6 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
 	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
@@ -50,29 +50,23 @@ void Player::render()
 	}
 
 }
+
 void Player::handleEvent(const SDL_Event & event)
 {
-
 	// Only handle events for the entity if it is selected
-	if (selected) {
+	if (selected && state == UnitState::IDLE) {
 		if (event.type == SDL_KEYDOWN) {
 			// Move Key
 			if (event.key.keysym.sym == SDLK_KP_1) {
-				if (state == UnitState::IDLE) {
-					current_action = PlayerAction::MOVE;
-				}
+				current_action = PlayerAction::MOVE;
 			}
 			// Attack 1 key
 			if (event.key.keysym.sym == SDLK_KP_2) {
-				if (state == UnitState::IDLE || state == UnitState::ATTACK) {
-					current_action = PlayerAction::ATTACK_1;
-				}
+				current_action = PlayerAction::ATTACK_1;
 			}
 			// Attack 2 key
 			if (event.key.keysym.sym == SDLK_KP_3) {
-				if (state == UnitState::IDLE || state == UnitState::ATTACK) {
-					current_action = PlayerAction::ATTACK_2;
-				}
+				current_action = PlayerAction::ATTACK_2;
 			}
 		}
 		
@@ -88,24 +82,27 @@ void Player::update(int delta)
 		} break;
 		case UnitState::MOVE: {
 			// Move the player towards its destination
-			if (state_counter < 20) {
-				state_counter++;
-				calculateScreenPositionMovement();
-			}
-			else {
-				state_counter = 0;
+			if (compareCounter(PLAYER_DEFAULT_MOVE_COUNTER)) {
+				startCounter();
 				incrementMovement();
 				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
-					state = UnitState::ATTACK;
-					current_action = PlayerAction::NONE;
+					state = UnitState::IDLE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}
 			}
+			else {
+				incrementCounter();
+				calculateScreenPositionMovement();
+			}
 		} break;
 		case UnitState::ATTACK: {
-
+			if (compareCounter(PLAYER_DEFAULT_ATTACK_COUNTER)) {
+				state = UnitState::DONE;
+			} else {
+				incrementCounter();
+			}
 		} break;
 		default: {
 			// Do nothing by default
@@ -124,20 +121,23 @@ void Player::click(Vec2<int> to, Combat& combat)
 			moveNext = ScreenCoord(0, 0);
 			incrementMovement();
 			state = UnitState::MOVE;
+			startCounter();
 		} break;
 		case PlayerAction::ATTACK_1: {
 			// do the action here
 			turnfOffAttacks();
 			attack1.attack(to, combat);
 			current_action = PlayerAction::NONE;
-			state = UnitState::DONE;
+			state = UnitState::ATTACK;
+			startCounter();
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
 			turnfOffAttacks();
 			attack2.attack(to, combat);
 			current_action = PlayerAction::NONE;
-			state = UnitState::DONE;
+			state = UnitState::ATTACK;
+			startCounter();
 		} break;
 		default: {
 			// do nothing
