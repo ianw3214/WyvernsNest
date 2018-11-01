@@ -55,6 +55,8 @@ void Player::render()
 		sprite_idle.render();
 	}
 
+	renderHealth();
+
 }
 
 void Player::renderTurnUI() {

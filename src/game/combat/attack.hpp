@@ -11,9 +11,13 @@ class Unit;
 
 // Enumeration for all attack types
 enum class AttackType {
+	SELF,
 	MELEE,
-	PLUS
+	RANGED
 };
+
+// Use an integer to represent the range of the attack
+using AttackRange = int;
 
 // Use an integer to represent the AoE of the attack
 using AttackAoE = int;
@@ -35,6 +39,7 @@ private:
 	int damage;
 };
 
+// TODO: Change affect self to be calculated in the effect, not in the attack
 // Generic attack class to hold all of the data for an attack
 class Attack {
 
@@ -42,8 +47,10 @@ public:
 	Attack(std::string name, 
 		Unit * source, 
 		AttackType type = AttackType::MELEE,
+		AttackRange range = 0,
 		AttackEffect * effect = new DamageEffect(), 
-		AttackAoE aoe = 0);
+		AttackAoE aoe = 0,
+		bool affect_self = false);
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
@@ -62,8 +69,10 @@ private:
 	Unit * source;
 
 	AttackType type;
+	AttackRange range;
 	AttackEffect * effect;
 	AttackAoE aoe;
+	bool affect_self;
 
 	Sprite validSprite;
 	Sprite targetValidSprite;
@@ -71,6 +80,9 @@ private:
 
 	// Helper variables to make sure sprites render correctly
 	int tile_width, tile_height;
+
+	// Helper methods
+	void attackAoE(ScreenCoord pos, Combat& combat);
 };
 
 /*

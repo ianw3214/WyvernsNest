@@ -158,7 +158,7 @@ void Combat::nextUnitTurn()
 	selectUnit(units[unitIndex]);
 	// If the current unit is an enemy, take its turn
 	if (current->getType() == UnitType::ENEMY) {
-		dynamic_cast<Enemy*>(current)->takeTurn();
+		dynamic_cast<Enemy*>(current)->takeTurn(*this);
 	}
 }
 

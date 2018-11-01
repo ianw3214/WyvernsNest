@@ -61,6 +61,7 @@ public:
 	int health;
 	int maxHealth;
 	void takeDamage(int damage);
+	void renderHealth();
 
 	// The attacks of the unit
 	Attack attack1;

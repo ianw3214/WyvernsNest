@@ -14,10 +14,9 @@ public:
 	~Enemy();
 
 	void render();
-	void drawHealth();
 	void update(int delta);
 
-	void takeTurn();
+	void takeTurn(Combat& combat);
 
 	int id;
 

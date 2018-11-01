@@ -6,33 +6,50 @@
 Attack::Attack(std::string name,
 	Unit * source,
 	AttackType type,
+	AttackRange range,
 	AttackEffect * effect,
-	AttackAoE aoe)
+	AttackAoE aoe,
+	bool affect_self)
 	:
 	name(name),
 	source(source),
 	type(type),
+	range(range),
 	effect(effect),
 	aoe(aoe),
+	affect_self(affect_self),
 	validSprite("res/test8.png"),
 	targetValidSprite("res/test6.png"),
 	targetInvalidSprite("res/test7.png")
 {
-	/*
-	validSprite.setSize(213, 180);
-	targetValidSprite.setSize(213, 180);
-	targetInvalidSprite.setSize(213, 180);
-	*/
+	
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {
-	effect->attack(pos, combat);
+	switch (type) {
+	case AttackType::SELF: {
+		if (affect_self) {
+			effect->attack(source->position, combat);
+		}
+		attackAoE(source->position, combat);
+	} break;
+	case AttackType::MELEE: {
+		effect->attack(pos, combat);
+		attackAoE(pos, combat);
+	} break;
+	case AttackType::RANGED: {
+
+	} break;
+	}
 	// TODO: figure out how to apply the attack effect to the surrounding aoe
 }
 
 // Display the valid attack tiles on the grid
 void Attack::renderValidGrid() {
 	switch (type) {
+	case AttackType::SELF: {
+		// TODO: Somehow display the valid sprite
+	} break;
 	case AttackType::MELEE: {
 		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
 		validSprite.render();
@@ -43,8 +60,7 @@ void Attack::renderValidGrid() {
 		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
 		validSprite.render();
 	} break;
-	case AttackType::PLUS: {
-		// TODO: More descriptive name than plus
+	case AttackType::RANGED: {
 		// TODO: Display the sprites correctly
 		// TODO: Add a range property and figure out valid grid based off of range
 	} break;
@@ -68,6 +84,9 @@ void Attack::renderValidGrid() {
 
 bool Attack::isValid(ScreenCoord pos) {
 	switch (type) {
+	case AttackType::SELF: {
+		return pos == source->position;
+	} break;
 	case AttackType::MELEE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
@@ -81,8 +100,7 @@ bool Attack::isValid(ScreenCoord pos) {
 		}
 		*/
 	} break;
-	case AttackType::PLUS: {
-		// TODO: More descriptive name than plus
+	case AttackType::RANGED: {
 		// TODO: Calculate whether the pos is valid based off a range property
 	}
 	}
@@ -95,6 +113,18 @@ void Attack::setTileSize(int width, int height) {
 	validSprite.setSize(tile_width, tile_height);
 	targetValidSprite.setSize(tile_width, tile_height);
 	targetInvalidSprite.setSize(tile_width, tile_height);
+}
+
+void Attack::attackAoE(ScreenCoord pos, Combat & combat) {
+	for (int i = -aoe; i <= aoe; ++i) {
+		int height = aoe - std::abs(i);
+		for (int j = -height; j <= height; ++j) {
+			// Apply the attack effect on grid cell [i, j]
+			if (!(Vec2<int>(i, j) == Vec2<int>(0, 0))) {
+				effect->attack(source->position + Vec2<int>(i, j), combat);
+			}
+		}
+	}
 }
 
 void DamageEffect::attack(ScreenCoord pos, Combat & combat) {
