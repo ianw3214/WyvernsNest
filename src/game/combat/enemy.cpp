@@ -6,9 +6,6 @@ Enemy::Enemy() :
 {
 	sprite.setSize(sprite_width, sprite_height);
 
-	// TEMPORARY DEBUG CODE
-	health = 10;
-	maxHealth = 10;
 }
 
 Enemy::~Enemy()

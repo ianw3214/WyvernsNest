@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../../engine/core.hpp"
+
 #include "attack.hpp"
+#include "../unitData.hpp"
 
 #define DEFAULT_SPRITE_WIDTH 200
 #define DEFAULT_SPRITE_HEIGHT 200
@@ -40,6 +42,14 @@ public:
 	// Getter methods
 	inline UnitState getState() const { return state; }
 	inline UnitType getType() const { return type; }
+	// Unit attribute getter methods
+	inline int getSTR() const { return data.strength; }
+	inline int getDEX() const { return data.dexterity; }
+	inline int getINT() const { return data.intelligence; }
+	inline int getCON() const { return data.constitution; }
+	inline int getMoveSpeed() const { return move_speed; }
+	inline int getMaxHealth() const { return maxHealth; }
+
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -57,6 +67,10 @@ public:
 	Attack attack2;
 
 protected:
+
+	// Variables that contain various useful stats for the unit
+	int move_speed;
+	void loadPropertiesFromUnitData();
 
 	// State variable of the unit
 	UnitState state;
@@ -82,5 +96,9 @@ private:
 
 	// The type of the unit
 	UnitType type;
+
+	// The unit data of the unit
+	UnitData data;
+	void generateDefaultUnitData();
 
 };

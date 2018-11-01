@@ -45,7 +45,8 @@ void Combat::handleEvent(const SDL_Event& e) {
 	if (!game_over) {
 		// Check for win condition if the player input triggers it
 		bool win = true;
-		for (const Unit * unit : units) if (unit->health > 0) win = false;
+		for (const Unit * unit : units) 
+			if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
 		if (win) {
 			// Handle the win condition here
 			game_over = true;

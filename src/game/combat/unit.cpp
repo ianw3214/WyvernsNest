@@ -14,7 +14,8 @@ Unit::Unit() :
 	attack2("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0),
 	shadow("res/assets/shadow.png")
 {
-
+	generateDefaultUnitData();
+	loadPropertiesFromUnitData();
 }
 
 Unit::Unit(UnitType type) :
@@ -28,7 +29,8 @@ Unit::Unit(UnitType type) :
 	attack2("PUNCH", this, AttackType::MELEE, new DamageEffect(5), 0),
 	shadow("res/assets/shadow.png")
 {
-
+	generateDefaultUnitData();
+	loadPropertiesFromUnitData();
 }
 
 Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
@@ -42,7 +44,8 @@ Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	attack2(attack2),
 	shadow("res/assets/shadow.png")
 {
-
+	generateDefaultUnitData();
+	loadPropertiesFromUnitData();
 }
 
 void Unit::setTileSize(int width, int height) {
@@ -69,10 +72,29 @@ void Unit::calculateScreenPosition() {
 	shadow.setPos(position.x() * tile_width, position.y() * tile_height + tile_height / 2);
 }
 
+void Unit::generateDefaultUnitData() {
+	// Default name
+	data.name = "BOB";
+	// Default stats
+	data.strength = 10;
+	data.dexterity = 10;
+	data.intelligence = 10;
+	data.constitution = 10;
+	// Default traits -> NOT YET IMPLEMENTED
+}
+
 void Unit::takeDamage(int damage) {
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
+}
+
+void Unit::loadPropertiesFromUnitData() {
+	// The health of the unit depends on it's constitution
+	health = data.constitution;
+	maxHealth = data.constitution;
+	// The movement speed in terms of grid units of the unit
+	move_speed = data.dexterity / 5 + 1;
 }

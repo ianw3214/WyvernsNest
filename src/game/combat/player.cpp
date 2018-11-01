@@ -35,6 +35,9 @@ void Player::render()
 	shadow.render();
 
 	if (selected) {
+		if (current_action == PlayerAction::MOVE) {
+			// Render the valid move grid cells here
+		}
 		if (current_action == PlayerAction::ATTACK_1) {
 			attack1.renderValidGrid();
 		}
@@ -143,11 +146,15 @@ void Player::click(Vec2<int> to, Combat& combat)
 		case PlayerAction::MOVE: {
 			// Only move the player to empty positions
 			if (combat.isPosEmpty(to)) {
-				moveTarget = to;
-				moveNext = ScreenCoord(0, 0);
-				incrementMovement();
-				state = UnitState::MOVE;
-				startCounter();
+				// Also check if the movement is valid first
+				int steps = std::abs(to.x() - position.x()) + std::abs(to.y() - position.y());
+				if (steps <= getMoveSpeed()) {
+					moveTarget = to;
+					moveNext = ScreenCoord(0, 0);
+					incrementMovement();
+					state = UnitState::MOVE;
+					startCounter();
+				}
 			}
 		} break;
 		case PlayerAction::ATTACK_1: {
