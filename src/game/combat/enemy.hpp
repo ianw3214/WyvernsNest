@@ -4,6 +4,8 @@
 #include "../../math/vec.hpp"
 #include "unit.hpp"
 
+#define ENEMY_DEFAULT_ATTACK_COUNTER 20
+
 class Enemy : public Unit {
 
 public:
@@ -13,8 +15,9 @@ public:
 
 	void render();
 	void drawHealth();
-	void update();
+	void update(int delta);
 
+	void takeTurn();
 
 	int id;
 

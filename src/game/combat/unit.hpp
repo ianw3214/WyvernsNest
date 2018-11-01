@@ -1,7 +1,9 @@
 #pragma once
 
 #include "../../engine/core.hpp"
+
 #include "attack.hpp"
+#include "../unitData.hpp"
 
 #define DEFAULT_SPRITE_WIDTH 200
 #define DEFAULT_SPRITE_HEIGHT 200
@@ -40,6 +42,14 @@ public:
 	// Getter methods
 	inline UnitState getState() const { return state; }
 	inline UnitType getType() const { return type; }
+	// Unit attribute getter methods
+	inline int getSTR() const { return data.strength; }
+	inline int getDEX() const { return data.dexterity; }
+	inline int getINT() const { return data.intelligence; }
+	inline int getCON() const { return data.constitution; }
+	inline int getMoveSpeed() const { return move_speed; }
+	inline int getMaxHealth() const { return maxHealth; }
+
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -58,8 +68,17 @@ public:
 
 protected:
 
+	// Variables that contain various useful stats for the unit
+	int move_speed;
+	void loadPropertiesFromUnitData();
+
 	// State variable of the unit
 	UnitState state;
+	// The state counter can be used by setting it to 0 and incrementing every frame
+	int state_counter;
+	inline void startCounter() { state_counter = 0; }
+	inline void incrementCounter() { state_counter++; }
+	inline bool compareCounter(int num) const { return state_counter >= num; }
 
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();
@@ -77,5 +96,9 @@ private:
 
 	// The type of the unit
 	UnitType type;
+
+	// The unit data of the unit
+	UnitData data;
+	void generateDefaultUnitData();
 
 };

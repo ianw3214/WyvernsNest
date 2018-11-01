@@ -1,10 +1,11 @@
 #include "player.hpp"
 #include "../combat.hpp"
 
+// TODO: only allow the player to move once during the turn
+
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
 	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
@@ -15,7 +16,6 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	state_counter(0),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
 	sprite_selected("res/HeroF_Sprite_Selected.png")
 {
@@ -35,6 +35,9 @@ void Player::render()
 	shadow.render();
 
 	if (selected) {
+		if (current_action == PlayerAction::MOVE) {
+			// Render the valid move grid cells here
+		}
 		if (current_action == PlayerAction::ATTACK_1) {
 			attack1.renderValidGrid();
 		}
@@ -43,6 +46,9 @@ void Player::render()
 		}
 		sprite_selected.setPos(screenPosition.x(), screenPosition.y());
 		sprite_selected.render();
+		if (state == UnitState::IDLE) {
+			renderTurnUI();
+		}
 	}
 	else {
 		sprite_idle.setPos(screenPosition.x(), screenPosition.y());
@@ -50,29 +56,43 @@ void Player::render()
 	}
 
 }
+
+void Player::renderTurnUI() {
+	
+	// Setup the variables to draw the UI correctly
+	ScreenCoord pos = screenPosition;
+	pos.x() += tile_width;
+	if (pos.y() < 0) pos.y() = 0;
+	Colour base = Colour(.7f, .7f, .7f);
+	Colour select = Colour(.9f, .9f, .9f);
+
+	// The actual drawing of the UI elements
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
+	Core::Text_Renderer::render("Option 1", pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_1 ? select : base);
+	Core::Text_Renderer::render("Option 2", pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
+	Core::Text_Renderer::render("Option 3", pos, 1.f);
+}
+
 void Player::handleEvent(const SDL_Event & event)
 {
-
 	// Only handle events for the entity if it is selected
-	if (selected) {
+	if (selected && state == UnitState::IDLE) {
 		if (event.type == SDL_KEYDOWN) {
 			// Move Key
 			if (event.key.keysym.sym == SDLK_KP_1) {
-				if (state == UnitState::IDLE) {
-					current_action = PlayerAction::MOVE;
-				}
+				current_action = PlayerAction::MOVE;
 			}
 			// Attack 1 key
 			if (event.key.keysym.sym == SDLK_KP_2) {
-				if (state == UnitState::IDLE || state == UnitState::ATTACK) {
-					current_action = PlayerAction::ATTACK_1;
-				}
+				current_action = PlayerAction::ATTACK_1;
 			}
 			// Attack 2 key
 			if (event.key.keysym.sym == SDLK_KP_3) {
-				if (state == UnitState::IDLE || state == UnitState::ATTACK) {
-					current_action = PlayerAction::ATTACK_2;
-				}
+				current_action = PlayerAction::ATTACK_2;
 			}
 		}
 		
@@ -88,24 +108,27 @@ void Player::update(int delta)
 		} break;
 		case UnitState::MOVE: {
 			// Move the player towards its destination
-			if (state_counter < 20) {
-				state_counter++;
-				calculateScreenPositionMovement();
-			}
-			else {
-				state_counter = 0;
+			if (compareCounter(PLAYER_DEFAULT_MOVE_COUNTER)) {
+				startCounter();
 				incrementMovement();
 				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
-					state = UnitState::ATTACK;
-					current_action = PlayerAction::NONE;
+					state = UnitState::IDLE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}
 			}
+			else {
+				incrementCounter();
+				calculateScreenPositionMovement();
+			}
 		} break;
 		case UnitState::ATTACK: {
-
+			if (compareCounter(PLAYER_DEFAULT_ATTACK_COUNTER)) {
+				state = UnitState::DONE;
+			} else {
+				incrementCounter();
+			}
 		} break;
 		default: {
 			// Do nothing by default
@@ -115,29 +138,40 @@ void Player::update(int delta)
 
 void Player::click(Vec2<int> to, Combat& combat)
 {
+	if (state != UnitState::IDLE) return;
 	switch (current_action) {
 		case PlayerAction::NONE: {
 			// do nothing
 		} break;
 		case PlayerAction::MOVE: {
-			moveTarget = to;
-			moveNext = ScreenCoord(0, 0);
-			incrementMovement();
-			state = UnitState::MOVE;
+			// Only move the player to empty positions
+			if (combat.isPosEmpty(to)) {
+				// Also check if the movement is valid first
+				int steps = std::abs(to.x() - position.x()) + std::abs(to.y() - position.y());
+				if (steps <= getMoveSpeed()) {
+					moveTarget = to;
+					moveNext = ScreenCoord(0, 0);
+					incrementMovement();
+					state = UnitState::MOVE;
+					startCounter();
+				}
+			}
 		} break;
 		case PlayerAction::ATTACK_1: {
 			// do the action here
 			turnfOffAttacks();
 			attack1.attack(to, combat);
 			current_action = PlayerAction::NONE;
-			state = UnitState::DONE;
+			state = UnitState::ATTACK;
+			startCounter();
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
 			turnfOffAttacks();
 			attack2.attack(to, combat);
 			current_action = PlayerAction::NONE;
-			state = UnitState::DONE;
+			state = UnitState::ATTACK;
+			startCounter();
 		} break;
 		default: {
 			// do nothing
@@ -219,25 +253,25 @@ std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& com
 	ScreenCoord bot(pos.x(), pos.y() + 1);
 
 	if (pos.x() > 0) {
-		if (combat.grid.isPosValid(right)) {
+		if (combat.grid.isPosEmpty(right)) {
 			neighbours.push_back(right);
 		}
 	}
 
 	if (pos.x() < combat.grid.map_width) {
-		if (combat.grid.isPosValid(left)) {
+		if (combat.grid.isPosEmpty(left)) {
 			neighbours.push_back(left);
 		}
 	}
 
 	if (pos.y() > 0) {
-		if (combat.grid.isPosValid(bot)) {
+		if (combat.grid.isPosEmpty(bot)) {
 			neighbours.push_back(bot);
 		}
 	}
 
 	if (pos.y() < combat.grid.map_height) {
-		if (combat.grid.isPosValid(top)) {
+		if (combat.grid.isPosEmpty(top)) {
 			neighbours.push_back(top);
 		}
 	}

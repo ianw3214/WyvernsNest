@@ -6,7 +6,11 @@
 #include "combat/player.hpp"
 #include "combat/enemy.hpp"
 
+#define GAME_OVER_MENU_WIDTH	800
+#define GAME_OVER_MENU_HEIGHT	400
 
+// TODO: Implement loading unit stats and calculating health, speed, etc. accordingly
+// TODO: Base turn order off of unit stats
 class Combat : public State {
 
 public:
@@ -17,7 +21,6 @@ public:
 	// Default state functions called from the state handler
 	void handleEvent(const SDL_Event& e) override;
 	void update(int delta) override;
-	void getNextUnit();
 	void render() override;
 
 	// Utility function to get the unit at a grid position
@@ -25,12 +28,15 @@ public:
 	void nextUnitTurn();
 	void selectUnit(Unit * unit);
 
-	bool playerTurn = true;
-
 	Grid grid;
+	bool isPosEmpty(Vec2<int> pos) const;
 
 private:
 
+	// Combat state variables
+	bool game_over;
+	bool game_win;
+	
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
 
