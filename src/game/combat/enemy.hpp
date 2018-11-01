@@ -2,8 +2,11 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "unit.hpp"
 
-class Enemy {
+#define ENEMY_DEFAULT_ATTACK_COUNTER 20
+
+class Enemy : public Unit {
 
 public:
 
@@ -11,19 +14,16 @@ public:
 	~Enemy();
 
 	void render();
-	void update();
+	void update(int delta);
 
-	void takeDamage(int dmg);
-	ScreenCoord getPosition();
+	void takeTurn(Combat& combat);
 
 	int id;
 
-	ScreenCoord position = ScreenCoord(2, 2);
-	int health = 10;
-
-	int width = 25;
-	int height = 50;
+	bool isDead = false;
 
 private:
+	
+	Sprite sprite;
 
 };

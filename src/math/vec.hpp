@@ -56,6 +56,10 @@ struct Vec2 {
 		return *this;
 	}
 
+	bool operator==(const Vec2<T>& rhs) const {
+		return (*this)[0] == rhs[0] && (*this)[1] == rhs[1];
+	}
+
     T dot(Vec2 v) {
         T x = this->m_values[0] * v->m_values[0];
         T y = this->m_values[1] * v->m_values[1];
@@ -161,6 +165,10 @@ struct Vec3 {
 		(*this)[1] -= rhs[1];
 		(*this)[2] -= rhs[2];
 		return *this;
+	}
+
+	bool operator==(const Vec3<T>& rhs) const {
+		return (*this)[0] == rhs[0] && (*this)[1] == rhs[1] && (this)[2] == rhs[2];
 	}
 
     T dot(Vec3 v) {
