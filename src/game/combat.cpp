@@ -25,6 +25,9 @@ Combat::Combat() :
 	// Keeping track of turn order
 	unitIndex = 0;
 	selectUnit(units[unitIndex]);
+
+	// Set the combat references of the units
+	for (Unit * unit : units) unit->combat = this;
 }
 
 Combat::~Combat() {

@@ -67,6 +67,9 @@ public:
 	Attack attack1;
 	Attack attack2;
 
+	// Utility references to the combat state to access needed data
+	Combat * combat;
+
 protected:
 
 	// Variables that contain various useful stats for the unit

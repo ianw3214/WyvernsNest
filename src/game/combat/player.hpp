@@ -36,6 +36,7 @@ public:
 	void update(int delta);
 	void render();
 	void renderTurnUI();
+	void renderValidMoves();
 
 	void click(Vec2<int> to, Combat& combat);
 	void turnfOffAttacks();
@@ -50,7 +51,6 @@ public:
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
 
-
 private:
 
 	// Helper functions to calculate the screen position and movement of the player
@@ -64,5 +64,6 @@ private:
 	// Player sprites
 	Sprite sprite_idle;
 	Sprite sprite_selected;
+	Sprite valid_tile;
 
 };

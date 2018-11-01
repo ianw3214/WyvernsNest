@@ -18,8 +18,8 @@ Attack::Attack(std::string name,
 	effect(effect),
 	aoe(aoe),
 	affect_self(affect_self),
-	validSprite("res/test8.png"),
-	targetValidSprite("res/test6.png"),
+	validSprite("res/assets/valid.png"),
+	targetValidSprite("res/assets/valid_circle.png"),
 	targetInvalidSprite("res/test7.png")
 {
 	
@@ -114,7 +114,7 @@ void Attack::setTileSize(int width, int height) {
 	targetValidSprite.setSize(tile_width, tile_height);
 	targetInvalidSprite.setSize(tile_width, tile_height);
 }
-
+	
 void Attack::attackAoE(ScreenCoord pos, Combat & combat) {
 	for (int i = -aoe; i <= aoe; ++i) {
 		int height = aoe - std::abs(i);
