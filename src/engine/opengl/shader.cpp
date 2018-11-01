@@ -28,6 +28,16 @@ void Shader::setUniform1i(const std::string & name, int value) {
 	glUniform1i(getUniformLocation(name), value);
 }
 
+void Shader::setUniform2i(const std::string & name, int v0, int v1) {
+	bind();
+	glUniform2i(getUniformLocation(name), v0, v1);
+}
+
+void Shader::setUniform3f(const std::string& name, float v0, float v1, float v2) {
+	bind();
+	glUniform3f(getUniformLocation(name), v0, v1, v2);
+}
+
 void Shader::setUniform4f(const std::string & name, float v0, float v1, float v2, float v3) {
 	bind();
 	glUniform4f(getUniformLocation(name), v0, v1, v2, v3);
@@ -90,7 +100,7 @@ GLuint Shader::createShaderProgram(const std::string& vertexSource, const std::s
 	glAttachShader(program, fragmentShader);
 	glLinkProgram(program);
 	glValidateProgram(program);
-
+	
 	// TODO: Error handling
 
 	// Delete the shaders once the program has been created

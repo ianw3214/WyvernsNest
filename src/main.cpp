@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "engine/core.hpp"
-#include "game/combat.hpp"
+#include "game/menu.hpp"
 
 int main(int argc, char* argv[]) {
 
@@ -13,7 +13,10 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Combat * state = new Combat();
+	// Core::setDebugMode(true);
+
+	// Combat * state = new Combat();
+	Menu * state = new Menu();
 	Core::setState(state);
 
 	// Main engine loop
