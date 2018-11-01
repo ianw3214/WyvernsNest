@@ -68,6 +68,30 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 	drawLines(va, ib, basicShader);
 }
 
+void Renderer::drawRect(ScreenCoord v, int width, int height, Colour colour) {
+	float positions[16] = {
+		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(1.f, -1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(1.f, -1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(1.f, -1.f, static_cast<float>(v.y()) / static_cast<float>(Engine::get_instance().getWindowHeight())),
+		lerp(-1.f, 1.f, static_cast<float>(v.x() + width) / static_cast<float>(Engine::get_instance().getWindowWidth())),
+		lerp(1.f, -1.f, static_cast<float>(v.y() + height) / static_cast<float>(Engine::get_instance().getWindowHeight()))
+	};
+	VertexArray		va;
+	VertexBuffer	vb(positions, sizeof(float) * 16);
+	IndexBuffer		ib(SQUARE_INDICES, 6);
+	// Specify the layout of the buffer data
+	VertexBufferLayout layout;
+	layout.pushFloat(2);
+	va.addBuffer(vb, layout);
+
+	// Issue the actual draw call
+	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), 1.f);
+	drawTriangles(va, ib, basicShader);
+}
+
 void Renderer::drawTexture(ScreenCoord v, int width, int height, const Texture & texture) {
 	float positions[16] = {
 		lerp(-1.f, 1.f, static_cast<float>(v.x()) / static_cast<float>(Engine::get_instance().getWindowWidth())),

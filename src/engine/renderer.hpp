@@ -14,6 +14,7 @@ public:
 
 	void clear() const;
 	void drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour);
+	void drawRect(ScreenCoord v, int width, int height, Colour colour);
 	void drawTexture(ScreenCoord v, int width, int height, const Texture& texture);
 	void drawSprite(const Sprite& sprite);
 private:

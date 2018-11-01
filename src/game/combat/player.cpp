@@ -43,12 +43,35 @@ void Player::render()
 		}
 		sprite_selected.setPos(screenPosition.x(), screenPosition.y());
 		sprite_selected.render();
+		if (state == UnitState::IDLE) {
+			renderTurnUI();
+		}
 	}
 	else {
 		sprite_idle.setPos(screenPosition.x(), screenPosition.y());
 		sprite_idle.render();
 	}
 
+}
+
+void Player::renderTurnUI() {
+	
+	// Setup the variables to draw the UI correctly
+	ScreenCoord pos = screenPosition;
+	pos.x() += tile_width;
+	if (pos.y() < 0) pos.y() = 0;
+	Colour base = Colour(.7f, .7f, .7f);
+	Colour select = Colour(.9f, .9f, .9f);
+
+	// The actual drawing of the UI elements
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
+	Core::Text_Renderer::render("Option 1", pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_1 ? select : base);
+	Core::Text_Renderer::render("Option 2", pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
+	Core::Text_Renderer::render("Option 3", pos, 1.f);
 }
 
 void Player::handleEvent(const SDL_Event & event)

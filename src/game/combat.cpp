@@ -72,8 +72,8 @@ void Combat::render() {
 		}
 	}
 
+	/*
     // RENDER SAMPLES
-    /*
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 50), ScreenCoord(2000, Core::windowHeight() - 50), Colour(0.0, 1.0, 0.0));
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 66), ScreenCoord(2000, Core::windowHeight() - 66), Colour(0.0, 1.0, 0.0));
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 82), ScreenCoord(2000, Core::windowHeight() - 82), Colour(0.0, 1.0, 0.0));
@@ -99,7 +99,7 @@ void Combat::render() {
     Core::Text_Renderer::render("Right align.", ScreenCoord(500, 110), 1.f);
 
     Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    */
+	*/
 }
 
 // Returns the unit occupying the specified grid coordinate

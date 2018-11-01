@@ -9,6 +9,10 @@
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20
 
+#define UI_X_OFFSET					   -10
+#define UI_Y_OFFSET					    5
+#define UI_OPTION_HEIGHT				30
+
 // Enumeration to represent the possible player actions
 enum class PlayerAction {
 	NONE,
@@ -31,6 +35,7 @@ public:
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
 	void render();
+	void renderTurnUI();
 
 	void click(Vec2<int> to, Combat& combat);
 	void turnfOffAttacks();
