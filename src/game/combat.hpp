@@ -24,9 +24,8 @@ public:
 	void nextUnitTurn();
 	void selectUnit(Unit * unit);
 
-	bool playerTurn = true;
-
 	Grid grid;
+	bool isPosEmpty(Vec2<int> pos) const;
 
 private:
 

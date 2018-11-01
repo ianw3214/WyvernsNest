@@ -135,16 +135,20 @@ void Player::update(int delta)
 
 void Player::click(Vec2<int> to, Combat& combat)
 {
+	if (state != UnitState::IDLE) return;
 	switch (current_action) {
 		case PlayerAction::NONE: {
 			// do nothing
 		} break;
 		case PlayerAction::MOVE: {
-			moveTarget = to;
-			moveNext = ScreenCoord(0, 0);
-			incrementMovement();
-			state = UnitState::MOVE;
-			startCounter();
+			// Only move the player to empty positions
+			if (combat.isPosEmpty(to)) {
+				moveTarget = to;
+				moveNext = ScreenCoord(0, 0);
+				incrementMovement();
+				state = UnitState::MOVE;
+				startCounter();
+			}
 		} break;
 		case PlayerAction::ATTACK_1: {
 			// do the action here
@@ -242,25 +246,25 @@ std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& com
 	ScreenCoord bot(pos.x(), pos.y() + 1);
 
 	if (pos.x() > 0) {
-		if (combat.grid.isPosValid(right)) {
+		if (combat.grid.isPosEmpty(right)) {
 			neighbours.push_back(right);
 		}
 	}
 
 	if (pos.x() < combat.grid.map_width) {
-		if (combat.grid.isPosValid(left)) {
+		if (combat.grid.isPosEmpty(left)) {
 			neighbours.push_back(left);
 		}
 	}
 
 	if (pos.y() > 0) {
-		if (combat.grid.isPosValid(bot)) {
+		if (combat.grid.isPosEmpty(bot)) {
 			neighbours.push_back(bot);
 		}
 	}
 
 	if (pos.y() < combat.grid.map_height) {
-		if (combat.grid.isPosValid(top)) {
+		if (combat.grid.isPosEmpty(top)) {
 			neighbours.push_back(top);
 		}
 	}

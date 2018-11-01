@@ -3,7 +3,7 @@
 Combat::Combat() :
 	current(nullptr)
 {
-	Player * player1 = new Player();
+	Player * player1 = new Player(0, 1);
 	Player * player2 = new Player(1, 2);
 
 	Enemy * enemy1 = new Enemy();
@@ -35,6 +35,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 	// Only handle events if there is no selected unit or if the selected unit is idle
 	for (Entity * entity : entities) entity->handleEvent(e);
 
+	/*
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (grid.isMousePosValid()) {
 			Unit * selected = getUnitAt(grid.mousePos);
@@ -44,6 +45,13 @@ void Combat::handleEvent(const SDL_Event& e) {
 					player->click(grid.mousePos, *this);
 				}
 			}
+		}
+	}
+	*/
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		if (current->getType() == UnitType::PLAYER) {
+			Player * player = dynamic_cast<Player*>(current);
+			player->click(grid.mousePos, *this);
 		}
 	}
 }
@@ -137,4 +145,14 @@ void Combat::selectUnit(Unit * unit)
 
 	current = unit;
 	unit->selected = true;
+}
+
+bool Combat::isPosEmpty(Vec2<int> pos) const {
+	if (!grid.isPosEmpty(pos)) return false;
+	for (const Unit * unit : units) {
+		if (unit->position == pos) {
+			return false;
+		}
+	}
+	return true;
 }

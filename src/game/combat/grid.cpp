@@ -2,6 +2,7 @@
 
 #include <cmath> 
 
+#include <iostream>
 Grid::Grid() :
 	tilemap(DEFAULT_TILEMAP),
 	map_width(DEFAULT_MAP_WIDTH),
@@ -16,6 +17,12 @@ Grid::Grid() :
 	selected.setSize(tile_width, tile_height);
 	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
 	tilesheet.setSize(tile_width, tile_height);
+
+	// Fill the grid with no collisions and add the buffer space on top
+	for (unsigned int i = 0; i < tilemap.size(); ++i) {
+		if (i < static_cast<unsigned int>(map_width)) collisionmap.push_back(true);
+		else collisionmap.push_back(false);
+	}
 
 	// Debugging code
 	renderOutline = true;
@@ -45,8 +52,8 @@ bool Grid::isMousePosValid()
 	return mousePos.x() < map_width && mousePos.y() < map_height;
 }
 
-bool Grid::isPosValid(ScreenCoord pos) {
-	return tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
+bool Grid::isPosEmpty(Vec2<int> pos) const {
+	return !collisionmap[TILE_INDEX(pos.x(), pos.y())];
 }
 
 void Grid::render()
