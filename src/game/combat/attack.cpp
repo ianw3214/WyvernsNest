@@ -20,7 +20,7 @@ Attack::Attack(std::string name,
 	affect_self(affect_self),
 	validSprite("res/assets/valid.png"),
 	targetValidSprite("res/assets/valid_circle.png"),
-	targetInvalidSprite("res/test7.png")
+	targetInvalidSprite("res/assets/invalid_circle.png")
 {
 	
 }
@@ -34,11 +34,14 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 		attackAoE(source->position, combat);
 	} break;
 	case AttackType::MELEE: {
+		// TODO: Make sure the attack is valid before running it
 		effect->attack(pos, combat);
 		attackAoE(pos, combat);
 	} break;
 	case AttackType::RANGED: {
-
+		// TODO: Make sure the attack is valid before running it
+		effect->attack(pos, combat);
+		attackAoE(pos, combat);
 	} break;
 	}
 	// TODO: figure out how to apply the attack effect to the surrounding aoe
@@ -59,10 +62,6 @@ void Attack::renderValidGrid() {
 		validSprite.render();
 		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
 		validSprite.render();
-	} break;
-	case AttackType::RANGED: {
-		// TODO: Display the sprites correctly
-		// TODO: Add a range property and figure out valid grid based off of range
 	} break;
 	case AttackType::RANGED: {
 		for (int y = -range; y < range + 1 ; y++) {
@@ -126,9 +125,6 @@ bool Attack::isValid(ScreenCoord pos) {
 			return true;
 		}
 		*/
-	} break;
-	case AttackType::RANGED: {
-		// TODO: Calculate whether the pos is valid based off a range property
 	} break;
 	case AttackType::RANGED: {
 		int x_diff = std::abs(pos.x() - source->position.x());
