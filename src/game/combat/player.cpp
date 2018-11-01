@@ -132,6 +132,7 @@ void Player::update(int delta)
 				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
 					state = UnitState::IDLE;
+					current_action = PlayerAction::NONE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}
