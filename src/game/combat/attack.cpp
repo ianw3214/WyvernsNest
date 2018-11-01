@@ -7,7 +7,8 @@ Attack::Attack(std::string name,
 	Unit * source,
 	AttackType type,
 	AttackEffect * effect,
-	AttackAoE aoe)
+	AttackAoE aoe,
+	int range)
 	:
 	name(name),
 	source(source),
@@ -16,7 +17,8 @@ Attack::Attack(std::string name,
 	aoe(aoe),
 	validSprite("res/test8.png"),
 	targetValidSprite("res/test6.png"),
-	targetInvalidSprite("res/test7.png")
+	targetInvalidSprite("res/test7.png"),
+	range(range)
 {
 	/*
 	validSprite.setSize(213, 180);
@@ -50,6 +52,32 @@ void Attack::renderValidGrid() {
 		// TODO: Display the sprites correctly
 		// TODO: Add a range property and figure out valid grid based off of range
 	} break;
+	case AttackType::RANGED: {
+		for (int y = -range; y < range + 1 ; y++) {
+			for (int x = -range; x < range + 1 ; x++) {
+				if (!(y == x && y == 0)) {
+					if (abs(x) + abs(y) <= range) {
+						validSprite.setPos((source->position.x() + x) * tile_width, (source->position.y() + y) * tile_height);
+						validSprite.render();
+					}
+				}
+			}
+		}
+	} break;
+	}
+
+	int mouseX; int mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+	int x = static_cast<int>(floor(mouseX / tile_width));
+	int y = static_cast<int>(floor(mouseY / tile_height));
+
+	if (isValid(ScreenCoord(x, y))) {
+		targetValidSprite.setPos(x * tile_width, y * tile_height);
+		targetValidSprite.render();
+	}
+	else {
+		targetInvalidSprite.setPos(x * tile_width, y * tile_height);
+		targetInvalidSprite.render();
 	}
 	// TODO: get the mouse position somehow to render whether the target position is valid
 	/*
@@ -87,7 +115,13 @@ bool Attack::isValid(ScreenCoord pos) {
 	case AttackType::PLUS: {
 		// TODO: More descriptive name than plus
 		// TODO: Calculate whether the pos is valid based off a range property
-	}
+	} break;
+	case AttackType::RANGED: {
+		int x_diff = std::abs(pos.x() - source->position.x());
+		int y_diff = std::abs(pos.y() - source->position.y());
+		if (x_diff + y_diff <= range) return true;
+		return false;
+	} break;
 	}
 	return false;
 }

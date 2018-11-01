@@ -44,7 +44,8 @@ public:
 		Unit * source, 
 		AttackType type = AttackType::MELEE,
 		AttackEffect * effect = new DamageEffect(), 
-		AttackAoE aoe = 0);
+		AttackAoE aoe = 0,
+		int range = 0);
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
@@ -61,6 +62,8 @@ public:
 private:
 	std::string name;
 	Unit * source;
+
+	int range;
 
 	AttackType type;
 	AttackEffect * effect;
