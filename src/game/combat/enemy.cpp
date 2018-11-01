@@ -2,14 +2,10 @@
 
 Enemy::Enemy() :
 	Unit(UnitType::ENEMY),
-	sprite_width(DEFAULT_SPRITE_WIDTH),
-	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	sprite("res/assets/WyvernFighter_Sprite.png")
 {
 	sprite.setSize(sprite_width, sprite_height);
-	// TEMPORARY DEBUG CODE
-	health = 10;
-	maxHealth = 10;
+
 }
 
 Enemy::~Enemy()
@@ -18,7 +14,10 @@ Enemy::~Enemy()
 
 void Enemy::render()
 {
-	if (!isDead) {
+
+	if (state != UnitState::DEAD) {
+		shadow.render();
+
 		sprite.setPos(screenPosition.x(), screenPosition.y());
 		sprite.render();
 	}
@@ -28,43 +27,56 @@ void Enemy::render()
 }
 
 void Enemy::drawHealth() {
-	ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
-	double healthLeft = (1 - double(health) / maxHealth) * 100;
-	for (int i = 0; i < 5; i++) {
-		Core::Renderer::drawLine(pos + ScreenCoord(-50 + health, -50 + i), pos + ScreenCoord(50, -50 + i), Colour(1.0, 0.0, 0.0));
-		Core::Renderer::drawLine(pos + ScreenCoord(-50, -50 + i), pos + ScreenCoord(50 - healthLeft, -50 + i), Colour(0.0, 1.0, 0.0));
+	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
+	ScreenCoord pos = screenPosition;
+	pos.x() += (sprite_width - tile_width) / 2;
+	int healthBarWidth = tile_width;
+	int tick = lerp(0, healthBarWidth, static_cast<float>(health) / static_cast<float>(maxHealth));
+	// TODO: Use rectangle rendering (implement in engine)
+	for (int i = 0; i < 10; ++i) {
+		Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
 	}
-
+	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
+	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
+	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	
 }
 
-void Enemy::update()
-{
-}
-
-void Enemy::takeDamage(int dmg)
-{
-	health -= dmg;
-
-	if (health <= 0) {
-		//die
-		isDead = true;
+void Enemy::update(int delta) {
+	switch (state) {
+	case UnitState::ATTACK: {
+		if (compareCounter(ENEMY_DEFAULT_ATTACK_COUNTER)) {
+			state = UnitState::DONE;
+		} else {
+			incrementCounter();
+		}
+	} break;
+	default: {
+		// do nothing
+	} break;
 	}
 }
 
-ScreenCoord Enemy::getPosition()
-{
-	return position;
+void Enemy::takeTurn() {
+	int key = rand() % 2;
+	switch (key) {
+	case 0: {
+		// do the action here
+		// attack1.attack(to, combat);
+		state = UnitState::ATTACK;
+		startCounter();
+	} break;
+	case 1: {
+		// do the action here
+		// attack2.attack(to, combat);
+		state = UnitState::ATTACK;
+		startCounter();
+	} break;
+	default: {
+		// do nothing
+	} break;
+	}
 }
 
-void Enemy::calculateScreenPosition() {
-	screenPosition.x() = position.x() * tile_width;
-	screenPosition.y() = position.y() * tile_height;
-	screenPosition.x() += (tile_width - sprite_width) / 2;
-	screenPosition.y() += (tile_height - sprite_height) / 2;
-}
-
-void Enemy::setTileSize(int width, int height) {
-	tile_width = width;
-	tile_height = height;
-	calculateScreenPosition();
-}

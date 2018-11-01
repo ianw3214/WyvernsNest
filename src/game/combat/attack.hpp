@@ -3,10 +3,11 @@
 #include <string>
 #include <vector>
 
+#include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
-#include "unit.hpp"
 
 class Combat;
+class Unit;
 
 // Enumeration for all attack types
 enum class AttackType {
@@ -45,18 +46,16 @@ public:
 		AttackAoE aoe = 0);
 
 	void attack(ScreenCoord pos, Combat& combat);
-	void showValidGrid(ScreenCoord playerPos, ScreenCoord grid);
+	void renderValidGrid();
 	bool isValid(ScreenCoord pos);
-
-	bool isRendered = false;
-	void toggleRender() {
-		isRendered = !isRendered;
-	};
 
 	// Getter functions for attack properties
 	inline AttackType getType() const { return type; }
 	inline const AttackEffect& getEffect() const { return *effect; }
 	inline AttackAoE getAoE() const { return aoe; }
+
+	// Other methods to make sure this class works properly
+	void setTileSize(int width, int height);
 	
 private:
 	std::string name;
@@ -65,92 +64,16 @@ private:
 	AttackType type;
 	AttackEffect * effect;
 	AttackAoE aoe;
+
+	Sprite validSprite;
+	Sprite targetValidSprite;
+	Sprite targetInvalidSprite;
+
+	// Helper variables to make sure sprites render correctly
+	int tile_width, tile_height;
 };
 
 /*
-class Melee : public Attack {
-public:
-	Melee() : 
-		Attack(AttackType::MELEE),
-		valid1("res/test8.png"),
-		valid2("res/test8.png"),
-		valid3("res/test8.png"),
-		valid4("res/test8.png")
-	{
-		valid1.setSize(213, 180);
-		valid2.setSize(213, 180);
-		valid3.setSize(213, 180);
-		valid4.setSize(213, 180);
-	}
-
-	int damage = 1;
-
-	Sprite valid1;
-	Sprite valid2;
-	Sprite valid3;
-	Sprite valid4;
-
-	std::vector<ScreenCoord> getAttackPos(ScreenCoord pos) {
-		//TODO returns all the positions hit by the attack
-		std::vector<ScreenCoord> hit;
-		if (isValid(pos)) {
-			hit.push_back(pos);
-		}
-
-		isRendered = false;
-
-		return hit;
-	}
-
-	bool isValid(ScreenCoord pos) {
-		//TODO
-		if ((pos.x() == playerPos.x() + 1 || pos.x() == playerPos.x() - 1) && pos.y() == playerPos.y()) {
-			return true;
-		}
-		else if ((pos.y() == playerPos.y() + 1 || pos.y() == playerPos.y() - 1) && pos.x() == playerPos.x()) {
-			return true;
-		}
-		return false;
-	}
-
-	void showValidGrid() {
-		int xScale = 213;
-		int yScale = 180;
-		valid1.setPos((playerPos.x()-1) * xScale, playerPos.y() * yScale);
-		valid2.setPos(playerPos.x() * xScale, (playerPos.y()-1) * yScale);
-		valid3.setPos((playerPos.x()+1) * xScale, playerPos.y() * yScale);
-		valid4.setPos(playerPos.x() * xScale, (playerPos.y() + 1) * yScale);
-
-		valid1.render();
-		valid2.render();
-		valid3.render();
-		valid4.render();
-	}
-
-
-	void render(ScreenCoord pos) {
-		if (isRendered) {
-			showValidGrid();
-
-			if (isValid(pos)) {
-				Sprite sprite("res/test6.png");
-				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, pos.y() * 180);
-				sprite.setSize(213, 180);
-				sprite.render();
-			}
-			else {
-				Sprite sprite("res/test7.png");
-				//TODO values here are temporary
-				sprite.setPos(pos.x() * 213, pos.y() * 180);
-				sprite.setSize(213, 180);
-				sprite.render();
-			}
-
-		}
-	}
-};
-
 class Plus : public Attack {
 public:
 	Plus() : 

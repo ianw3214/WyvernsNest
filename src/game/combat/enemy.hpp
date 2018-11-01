@@ -4,8 +4,7 @@
 #include "../../math/vec.hpp"
 #include "unit.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 100
-#define DEFAULT_SPRITE_HEIGHT 100
+#define ENEMY_DEFAULT_ATTACK_COUNTER 20
 
 class Enemy : public Unit {
 
@@ -16,29 +15,16 @@ public:
 
 	void render();
 	void drawHealth();
-	void update();
+	void update(int delta);
 
-	void takeDamage(int dmg);
-	ScreenCoord getPosition();
-
-	void calculateScreenPosition();
-
-	void setTileSize(int width, int height);
+	void takeTurn();
 
 	int id;
-
-	ScreenCoord screenPosition;
-
-	int width = 25;
-	int height = 50;
 
 	bool isDead = false;
 
 private:
-	int sprite_width;
-	int sprite_height;
-	int tile_width, tile_height;
-
+	
 	Sprite sprite;
 
 };

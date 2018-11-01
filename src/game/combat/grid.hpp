@@ -5,17 +5,24 @@
 #include "player.hpp"
 #include "enemy.hpp"
 
-
-#define TILE_WIDTH 100
-#define TILE_HEIGHT 100
+#define SOURCE_TILE_WIDTH 32
+#define SOURCE_TILE_HEIGHT 32
+#define SOURCE_WIDTH 6
+#define SOURCE_HEIGHT 4
+#define INDEX_TO_X(i) (i % SOURCE_WIDTH)
+#define INDEX_TO_Y(i) (SOURCE_HEIGHT - (i / SOURCE_WIDTH) - 1)
 
 // TODO: load tilemap from a file
-#define DEFAULT_MAP_WIDTH 6
-#define DEFAULT_MAP_HEIGHT 4
-#define DEFAULT_TILEMAP { 1, 1, 0, 0, 0, 0, \
-		1, 1, 1, 1, 1, 1, \
-		0, 1, 0, 0, 1, 0, \
-		1, 0, 0, 1, 1, 0 }
+// TODO: store tiles that are 'blocked' so units can't move to that position
+#define DEFAULT_MAP_WIDTH 8
+#define DEFAULT_MAP_HEIGHT 7
+#define DEFAULT_TILEMAP { 23, 23, 23, 23, 23, 23, 23, 23, \
+		8,  13, 13, 13, 13, 13, 13, 11, \
+		8,  13,  9, 13, 18, 13, 13, 11, \
+		8,  13,  9, 18, 13, 15, 16, 17, \
+		8,  13,  9, 13, 11, 21, 21, 21, \
+		8,  13,  9, 13, 11, 21, 21, 21, \
+		14, 16, 15, 16, 17, 21, 21, 21  }
 #define TILE_INDEX(x, y) (y * map_width + x)
 
 class Grid {	
@@ -25,37 +32,38 @@ public:
 	Grid();
 	~Grid();
 
-	Grid(std::vector<Player>* players, std::vector<Enemy>* enemies);
-
-
 	void render();
 	void update();
+
+	// Helper functions
 	ScreenCoord getMouseToGrid();
-
-	void getPlayerPositions();
-
 	bool isMousePosValid();
+	bool isPosEmpty(Vec2<int> pos) const;
 
+	// The actual tilemap data of the grid for rendering purposes
 	std::vector<int> tilemap;
+	std::vector<bool> collisionmap;
 
+	// Grid properties
 	int tile_width;
 	int tile_height;
 	int map_width;
 	int map_height;
+	int top_margin;
 
+	// Mouse properties
 	int mouseX;
 	int mouseY;
-
+	// MousePos is the grid coordinates of the mouse
 	ScreenCoord mousePos;
 
-	std::vector<Player>* players;
-
-	std::vector<Enemy>* enemies;
+	// Debugging methods
+	bool renderOutline;
 
 private:
 
-	Sprite tile1;
-	Sprite tile2;
+	// Grid sprites
+	Sprite tilesheet;
 	Sprite selected;
 
 };
