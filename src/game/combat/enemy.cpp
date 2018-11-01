@@ -51,3 +51,22 @@ void Enemy::update()
 {
 }
 
+void Enemy::takeTurn() {
+	int key = rand() % 2;
+	switch (key) {
+	case 0: {
+		// do the action here
+		// attack1.attack(to, combat);
+		state = UnitState::DONE;
+	} break;
+	case 1: {
+		// do the action here
+		// attack2.attack(to, combat);
+		state = UnitState::DONE;
+	} break;
+	default: {
+		// do nothing
+	} break;
+	}
+}
+

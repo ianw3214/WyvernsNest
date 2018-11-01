@@ -15,6 +15,7 @@ public:
 	void drawHealth();
 	void update();
 
+	void takeTurn();
 
 	int id;
 
