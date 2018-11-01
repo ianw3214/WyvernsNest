@@ -1,14 +1,33 @@
 #include "combat.hpp"
 
-Combat::Combat() {
-	//players.push_back(Player());
+Combat::Combat() :
+	current(nullptr)
+{
+	Player * player1 = new Player(0, 1);
+	Player * player2 = new Player(1, 2);
 
-	player1.setTileSize(grid.tile_width, grid.tile_height);
-	player2.setTileSize(grid.tile_width, grid.tile_height);
+	Enemy * enemy1 = new Enemy();
+	enemy1->position.x() = 2;
+	enemy1->position.y() = 2;
 
-	entities.push_back(&player1);
-	entities.push_back(&player2);
+	player1->setTileSize(grid.tile_width, grid.tile_height);
+	player2->setTileSize(grid.tile_width, grid.tile_height);
+	enemy1->setTileSize(grid.tile_width, grid.tile_height);
 
+	addEntity(player1);
+	addEntity(player2);
+	addEntity(enemy1);
+
+	units.push_back(player1);
+	units.push_back(player2);
+	units.push_back(enemy1);
+
+	// Keeping track of turn order
+	unitIndex = 0;
+	selectUnit(units[unitIndex]);
+
+	// Set the combat references of the units
+	for (Unit * unit : units) unit->combat = this;
 }
 
 Combat::~Combat() {
@@ -17,73 +36,82 @@ Combat::~Combat() {
 
 void Combat::handleEvent(const SDL_Event& e) {
 
-	if (selectedInt == -1 || (selectedInt != -1 && ((Player *)entities[selectedInt])->state == 0)) {
-
-		for (Entity * entity : entities) entity->handleEvent(e);
-
-		if (e.type == SDL_MOUSEBUTTONDOWN) {
-			if (grid.isMousePosValid()) {
-
-
-				int previous = selectedInt;
-
-				selectedInt = getIndexAt(grid.mousePos);
-
-
-				if (selectedInt != -1 && selectedInt != previous && previous != -1) {
-					((Player *)entities[previous])->selected = false;
-					//TODO turn off attacks
-				}
-				else if (selectedInt == -1 && previous != -1) {
-					ScreenCoord target = ((Player *)entities[previous])->move(grid.mousePos);
-					((Player *)entities[previous])->selected = false;
-
-					selectedInt = previous;
-					//TODO do something with the target
-				}
-
-				//if (selectedPlayer != nullptr) {
-				//	selectedPlayer->selected = false;
-				//	selectedPlayer = nullptr;
-				//}
-				//selectedPlayer = &(getPlayerAt(grid.mousePos));
+	for (Entity * entity : entities) entity->handleEvent(e);
+	// Handle mouse clicks for player units
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		if (current->getType() == UnitType::PLAYER) {
+			Player * player = dynamic_cast<Player*>(current);
+			player->click(grid.mousePos, *this);
+		}
+	}
+	// Keep looking for win/lose conditions while the game hasn't ended
+	if (!game_over) {
+		// Check for win condition if the player input triggers it
+		bool win = true;
+		for (const Unit * unit : units) 
+			if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
+		if (win) {
+			// Handle the win condition here
+			game_over = true;
+			game_win = true;
+		}
+		// TODO: Also check for lose condition where all player units are dead
+	}
+	// Otherwise, handle the events for the game over menu
+	else {
+		if (e.type == SDL_KEYDOWN) {
+			if (e.key.keysym.sym == SDLK_RETURN) {
+				// Move on to the next state
 
 			}
 		}
 	}
 }
 
+
 void Combat::update(int delta) {
-	// Update shit here
+
 	grid.update();
 	for (Entity * e : entities) e->update(delta);
+
+	// If the game isn't over, keep going with the turn order
+	if (!game_over) {
+		// If the unit is done with its state, go to the next unit
+		if (current->getState() == UnitState::DONE) {
+			nextUnitTurn();
+		}
+	}
+	// If the game is over, update according to the menu
+	else {
+		
+	}
 }
 
 void Combat::render() {
-
 	Core::Renderer::clear();
-
-	if (playerTurn) {
-		grid.render();
-	//	player.render();
-		//player.render();
-		//player2.render();
-
-		for (Entity * e : entities) {
-
-			if (dynamic_cast<Player*>(e) != nullptr) {
-				//std::string test = typeid(e).name();
-				((Player *)e)->attack1.render(grid.mousePos);
-				e->render();
-
-			}
-			else {
-				//not a player
+	grid.render();
+	// Render sprites in the order they appear in the grid
+	for (int i = 0; i < grid.map_height; ++i) {
+		for (Unit * unit : units) {
+			if (unit->position.y() == i) {
+				unit->render();
 			}
 		}
-    
+	}
+	// Render the game over screen if the game is over
+	if (game_over) {
+		// First, render the base rectangle
+		int x = (Core::windowWidth() - GAME_OVER_MENU_WIDTH) / 2;
+		int y = (Core::windowHeight() - GAME_OVER_MENU_HEIGHT) / 2;
+		Core::Renderer::drawRect(ScreenCoord(x, y), GAME_OVER_MENU_WIDTH, GAME_OVER_MENU_HEIGHT, Colour(0.6f, 0.6f, 0.6f));
+		// Render text
+		Core::Text_Renderer::render("GAME OVER", ScreenCoord(x + 200, y), 4.f);
+		y += 220;
+		Core::Text_Renderer::render("Press enter to continue", ScreenCoord(x + 180, y));
+	}
+
+	/*
     // RENDER SAMPLES
-    /*
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 50), ScreenCoord(2000, Core::windowHeight() - 50), Colour(0.0, 1.0, 0.0));
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 66), ScreenCoord(2000, Core::windowHeight() - 66), Colour(0.0, 1.0, 0.0));
     Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 82), ScreenCoord(2000, Core::windowHeight() - 82), Colour(0.0, 1.0, 0.0));
@@ -109,43 +137,52 @@ void Combat::render() {
     Core::Text_Renderer::render("Right align.", ScreenCoord(500, 110), 1.f);
 
     Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    */
-
-		//enemies[0].render();
-
-	}
-	else {
-		Core::Renderer::drawLine(ScreenCoord(0, 0), ScreenCoord(100, 100), Colour(1.0, 0.0, 0.0));
-
-	}
-	// SAMPLE CODE
-
-
+	*/
 }
 
-Player Combat::getPlayerAt(ScreenCoord at)
+// Returns the unit occupying the specified grid coordinate
+Unit * Combat::getUnitAt(ScreenCoord at)
 {
-	int test3 = 0;
-	for (Entity * e : entities) {
-		if (dynamic_cast<Player*>(e) != nullptr) {
-			if (((Player *) e)->position.x() == grid.mousePos.x() && ((Player *)e)->position.y() == grid.mousePos.y()) {
-				((Player *) e)->selected = !((Player *)e)->selected;
-				return *((Player *)e);
-			}
+	for (Unit * unit : units) {
+		if (unit->position.x() == at.x() && unit->position.y() == at.y()) {
+			return unit;
 		}
+	}
+	return nullptr;
+}
+
+// Returns the next logical unit in combat
+void Combat::nextUnitTurn()
+{
+	unitIndex++;
+	if (unitIndex == units.size()) {
+		unitIndex = 0;
+	}
+	selectUnit(units[unitIndex]);
+	// If the current unit is an enemy, take its turn
+	if (current->getType() == UnitType::ENEMY) {
+		dynamic_cast<Enemy*>(current)->takeTurn(*this);
 	}
 }
 
-int Combat::getIndexAt(ScreenCoord at)
+// Select a unit to be the current unit
+void Combat::selectUnit(Unit * unit)
 {
-	for (int i = 0; i < entities.size(); i ++) {
-		Entity *  e = entities[i];
-		if (dynamic_cast<Player*>(e) != nullptr) {
-			if (((Player *)e)->position.x() == grid.mousePos.x() && ((Player *)e)->position.y() == grid.mousePos.y()) {
-				((Player *)e)->selected = !((Player *)e)->selected;
-				return i;
-			}
+	if (current) {
+		current->setState(UnitState::IDLE);
+		current->selected = false;
+	}
+
+	current = unit;
+	unit->selected = true;
+}
+
+bool Combat::isPosEmpty(Vec2<int> pos) const {
+	if (!grid.isPosEmpty(pos)) return false;
+	for (const Unit * unit : units) {
+		if (unit->position == pos) {
+			return false;
 		}
 	}
-	return -1;
+	return true;
 }

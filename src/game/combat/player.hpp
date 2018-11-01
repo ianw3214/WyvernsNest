@@ -3,14 +3,28 @@
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
 #include "attack.hpp"
+#include "unit.hpp"
+#include "node.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 100
-#define DEFAULT_SPRITE_HEIGHT 100
+#define PLAYER_DEFAULT_MOVE_COUNTER		20
+#define PLAYER_DEFAULT_ATTACK_COUNTER	20
 
-#define MOVE_STATE 1
+#define UI_X_OFFSET					   -10
+#define UI_Y_OFFSET					    5
+#define UI_OPTION_HEIGHT				30
+
+// Enumeration to represent the possible player actions
+enum class PlayerAction {
+	NONE,
+	MOVE,
+	ATTACK_1,
+	ATTACK_2
+};
+
+class Combat;
 
 // TODO: update player so that the positions are calculated from the grid
-class Player : public Entity {
+class Player : public Unit {
 
 public:
 
@@ -21,37 +35,35 @@ public:
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
 	void render();
+	void renderTurnUI();
+	void renderValidMoves();
 
-	void setTileSize(int width, int height);
-	ScreenCoord move(Vec2<int> to);
+	void click(Vec2<int> to, Combat& combat);
+	void turnfOffAttacks();
 
 	int id;
 
-	Vec2<int> position;
-	bool selected = false;
+	// The action that is being expected from the player
+	PlayerAction current_action;
 
-	Melee attack1;
-	int attackIndex = 0;
-
-	int state = 0;
-	int state_counter = 0;
-
+	// Variables to help keep track of player movement
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
-
+	ScreenCoord moveNext;
 
 private:
 
-	int sprite_width;
-	int sprite_height;
-	int tile_width, tile_height;
-
-	// Store both grid position and screen position to avoid recalculating every frame
-	ScreenCoord screenPosition;
-	void calculateScreenPosition();
-
+	// Helper functions to calculate the screen position and movement of the player
 	void calculateScreenPositionMovement();
+	void incrementMovement();
 
-	Sprite idle;
+	// Pathfinding helper methods
+	void getPath(Combat & combat);
+	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
+
+	// Player sprites
+	Sprite sprite_idle;
+	Sprite sprite_selected;
+	Sprite valid_tile;
 
 };
