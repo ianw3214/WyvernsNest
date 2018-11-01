@@ -1,5 +1,3 @@
-// Loic
-
 /**
   *		Cutscene game state
   *			- Set the next scene to transition to

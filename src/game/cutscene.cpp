@@ -7,6 +7,7 @@ Cutscene::Cutscene(State * state) {
 }
 
 Cutscene::~Cutscene() {
+	changeState(m_state);
 	delete[] &m_sprites;
 }
 
@@ -16,9 +17,9 @@ void Cutscene::handleEvent(const SDL_Event& e) {
 }
 
 void Cutscene::update(int delta) {
-	m_state->update(delta);
+	render(); // Render the current image
 }
 
 void Cutscene::render() {
-	m_state->render();
+	m_curr_img->render();
 }
