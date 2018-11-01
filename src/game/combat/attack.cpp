@@ -26,7 +26,9 @@ Attack::Attack(std::string name,
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {
-	effect->attack(pos, combat);
+	if (isValid(pos)) {
+		effect->attack(pos, combat);
+	}
 	// TODO: figure out how to apply the attack effect to the surrounding aoe
 }
 
@@ -72,6 +74,7 @@ bool Attack::isValid(ScreenCoord pos) {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
 		if (x_diff + y_diff == 1) return true;
+		return false;
 		/*
 		if ((pos.x() == source->position.x() + 1 || pos.x() == source->position.x() - 1) && pos.y() == source->position.y()) {
 			return true;

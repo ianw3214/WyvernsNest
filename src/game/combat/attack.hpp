@@ -12,7 +12,8 @@ class Unit;
 // Enumeration for all attack types
 enum class AttackType {
 	MELEE,
-	PLUS
+	PLUS,
+	RANGED
 };
 
 // Use an integer to represent the AoE of the attack
