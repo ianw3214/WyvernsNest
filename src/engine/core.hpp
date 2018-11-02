@@ -54,8 +54,16 @@ namespace Core {
 			Engine::get_instance().getRenderer()->drawLine(v1, v2, colour);
 		}
 
+		inline void drawRect(ScreenCoord v, int width, int height, Colour colour) {
+			Engine::get_instance().getRenderer()->drawRect(v, width, height, colour);
+		}
+
 		inline void drawTexture(ScreenCoord v, int width, int height, const Texture& texture) {
 			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
+		}
+
+		inline void drawSprite(const Sprite& sprite) {
+			Engine::get_instance().getRenderer()->drawSprite(sprite);
 		}
 
 		inline void clear() {
