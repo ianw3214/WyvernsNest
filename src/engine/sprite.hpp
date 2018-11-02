@@ -16,7 +16,7 @@ public:
 	// Sprite size
 	int w, h;
 
-	const Texture& getTexture() const { return texture; }
+	const Texture& getTexture() const;
 
 	// Texture source information
 	int src_x, src_y;
@@ -34,6 +34,6 @@ public:
 
 private:
 
-	Texture texture;
+	std::string texture;
 
 };

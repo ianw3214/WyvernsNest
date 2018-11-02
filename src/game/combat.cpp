@@ -62,7 +62,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.keysym.sym == SDLK_RETURN) {
 				// Move on to the next state
-
+				changeState(new Combat());
 			}
 		}
 	}
