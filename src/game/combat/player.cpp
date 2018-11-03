@@ -7,7 +7,8 @@ Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
-	sprite_selected("res/HeroF_Sprite_Selected.png")
+	sprite_selected("res/HeroF_Sprite_Selected.png"),
+	valid_tile("res/assets/valid.png")
 {
 	sprite_idle.setSize(sprite_width, sprite_height);
 	sprite_selected.setSize(sprite_width, sprite_height);
@@ -17,7 +18,8 @@ Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	sprite_idle("res/assets/HeroF_Sprite.png"),
-	sprite_selected("res/HeroF_Sprite_Selected.png")
+	sprite_selected("res/HeroF_Sprite_Selected.png"),
+	valid_tile("res/assets/valid.png")
 {
 	sprite_idle.setSize(sprite_width, sprite_height);
 	sprite_selected.setSize(sprite_width, sprite_height);
@@ -36,7 +38,7 @@ void Player::render()
 
 	if (selected) {
 		if (current_action == PlayerAction::MOVE) {
-			// Render the valid move grid cells here
+			renderValidMoves();
 		}
 		if (current_action == PlayerAction::ATTACK_1) {
 			attack1.renderValidGrid();
@@ -54,6 +56,8 @@ void Player::render()
 		sprite_idle.setPos(screenPosition.x(), screenPosition.y());
 		sprite_idle.render();
 	}
+
+	renderHealth();
 
 }
 
@@ -75,6 +79,20 @@ void Player::renderTurnUI() {
 	pos.y() += UI_OPTION_HEIGHT;
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
 	Core::Text_Renderer::render("Option 3", pos, 1.f);
+}
+
+void Player::renderValidMoves() {
+	valid_tile.setSize(tile_width, tile_height);
+	for (int i = -getMoveSpeed(); i <= getMoveSpeed(); ++i) {
+		int height = getMoveSpeed() - std::abs(i);
+		for (int j = -height; j <= height; ++j) {
+			// Render the sprite on grid cell [i, j]
+			if (combat->isPosEmpty(Vec2<int>(i, j) + position)) {
+				valid_tile.setPos((i + position.x()) * tile_width, (j + position.y()) * tile_height);
+				valid_tile.render();
+			}
+		}
+	}
 }
 
 void Player::handleEvent(const SDL_Event & event)
@@ -114,6 +132,7 @@ void Player::update(int delta)
 				// If the player reaches the target destination, stop moving it
 				if (position.x() == moveTarget.x() && position.y() == moveTarget.y()) {
 					state = UnitState::IDLE;
+					current_action = PlayerAction::NONE;
 					position = moveTarget;
 					calculateScreenPosition();
 				}

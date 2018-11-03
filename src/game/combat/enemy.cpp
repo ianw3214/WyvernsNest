@@ -6,6 +6,9 @@ Enemy::Enemy() :
 {
 	sprite.setSize(sprite_width, sprite_height);
 
+	// Set the enemy attacks to the same AoE attack
+	attack1 = Attack("AoE", this, AttackType::SELF, 0, new DamageEffect(2), 1, false);
+	attack2 = Attack("AoE", this, AttackType::SELF, 0, new DamageEffect(2), 1, false);
 }
 
 Enemy::~Enemy()
@@ -22,26 +25,8 @@ void Enemy::render()
 		sprite.render();
 	}
 
-	drawHealth();
+	renderHealth();
 
-}
-
-void Enemy::drawHealth() {
-	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
-	ScreenCoord pos = screenPosition;
-	pos.x() += (sprite_width - tile_width) / 2;
-	int healthBarWidth = tile_width;
-	int tick = lerp(0, healthBarWidth, static_cast<float>(health) / static_cast<float>(maxHealth));
-	// TODO: Use rectangle rendering (implement in engine)
-	for (int i = 0; i < 10; ++i) {
-		Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
-	}
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-	
 }
 
 void Enemy::update(int delta) {
@@ -59,18 +44,18 @@ void Enemy::update(int delta) {
 	}
 }
 
-void Enemy::takeTurn() {
+void Enemy::takeTurn(Combat& combat) {
 	int key = rand() % 2;
 	switch (key) {
 	case 0: {
 		// do the action here
-		// attack1.attack(to, combat);
+		attack1.attack(position, combat);
 		state = UnitState::ATTACK;
 		startCounter();
 	} break;
 	case 1: {
 		// do the action here
-		// attack2.attack(to, combat);
+		attack2.attack(position, combat);
 		state = UnitState::ATTACK;
 		startCounter();
 	} break;

@@ -61,10 +61,14 @@ public:
 	int health;
 	int maxHealth;
 	void takeDamage(int damage);
+	void renderHealth();
 
 	// The attacks of the unit
 	Attack attack1;
 	Attack attack2;
+
+	// Utility references to the combat state to access needed data
+	Combat * combat;
 
 protected:
 

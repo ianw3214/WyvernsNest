@@ -25,6 +25,9 @@ Combat::Combat() :
 	// Keeping track of turn order
 	unitIndex = 0;
 	selectUnit(units[unitIndex]);
+
+	// Set the combat references of the units
+	for (Unit * unit : units) unit->combat = this;
 }
 
 Combat::~Combat() {
@@ -59,7 +62,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.keysym.sym == SDLK_RETURN) {
 				// Move on to the next state
-
+				changeState(new Combat());
 			}
 		}
 	}
@@ -158,7 +161,7 @@ void Combat::nextUnitTurn()
 	selectUnit(units[unitIndex]);
 	// If the current unit is an enemy, take its turn
 	if (current->getType() == UnitType::ENEMY) {
-		dynamic_cast<Enemy*>(current)->takeTurn();
+		dynamic_cast<Enemy*>(current)->takeTurn(*this);
 	}
 }
 
