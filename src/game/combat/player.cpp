@@ -145,11 +145,16 @@ void Player::click(Vec2<int> to, Combat& combat)
 		} break;
 		case PlayerAction::MOVE: {
 			// Only move the player to empty positions
+
+
 			if (combat.isPosEmpty(to)) {
 				// Also check if the movement is valid first
 				int steps = std::abs(to.x() - position.x()) + std::abs(to.y() - position.y());
 				if (steps <= getMoveSpeed()) {
 					moveTarget = to;
+
+					path = getPath(combat);
+
 					moveNext = ScreenCoord(0, 0);
 					incrementMovement();
 					state = UnitState::MOVE;
@@ -199,8 +204,19 @@ void Player::incrementMovement() {
 
 	position += moveNext;
 
+	if (path.size() <= 0) {
+		//nothing left
+		return;
+	}
+
+	ScreenCoord next = path[0];
+	path.erase(path.begin());
+
+	moveNext = ScreenCoord(next.x() - position.x(), next.y() - position.y());
+
 	calculateScreenPosition();
 
+	/*
 	if (position.x() != moveTarget.x()) {
 		if (position.x() < moveTarget.x()) {
 			moveNext = ScreenCoord(1, 0);
@@ -217,9 +233,10 @@ void Player::incrementMovement() {
 			moveNext = ScreenCoord(0, -1);
 		}
 	}
+	*/
 }
 
-void Player::getPath(Combat& combat) {
+std::vector<ScreenCoord> Player::getPath(Combat& combat) {
 	std::vector<std::vector<ScreenCoord>> open;
 
 	std::vector<ScreenCoord> root;
@@ -233,14 +250,19 @@ void Player::getPath(Combat& combat) {
 		ScreenCoord end_position = n.back();
 		if (end_position.x() == moveTarget.x() && end_position.y() == moveTarget.y()) {
 			//n is solution
+			return n;
 		}
 
 		std::vector<ScreenCoord> successors = getValidNeighbours(end_position, combat);
 		for (ScreenCoord succ : successors) {
 			std::vector<ScreenCoord> s(n);
 			s.push_back(succ);
+			open.push_back(s);
 		}
 	}
+
+	std::vector<ScreenCoord> result;
+	return result;
 	//no solution found
 }
 
@@ -253,14 +275,14 @@ std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& com
 	ScreenCoord bot(pos.x(), pos.y() + 1);
 
 	if (pos.x() > 0) {
-		if (combat.grid.isPosEmpty(right)) {
-			neighbours.push_back(right);
+		if (combat.grid.isPosEmpty(left)) {
+			neighbours.push_back(left);
 		}
 	}
 
 	if (pos.x() < combat.grid.map_width) {
-		if (combat.grid.isPosEmpty(left)) {
-			neighbours.push_back(left);
+		if (combat.grid.isPosEmpty(right)) {
+			neighbours.push_back(right);
 		}
 	}
 

@@ -50,6 +50,8 @@ public:
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
 
+	std::vector<ScreenCoord> path;
+
 
 private:
 
@@ -58,7 +60,7 @@ private:
 	void incrementMovement();
 
 	// Pathfinding helper methods
-	void getPath(Combat & combat);
+	std::vector<ScreenCoord> getPath(Combat & combat);
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
