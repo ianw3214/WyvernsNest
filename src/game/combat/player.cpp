@@ -244,8 +244,18 @@ std::vector<ScreenCoord> Player::getPath(Combat& combat) {
 
 	open.push_back(root);
 	while (!(open.empty())) {
-		std::vector<ScreenCoord> n = open[0];
-		open.erase(open.begin());
+
+		if (open.size() > 30) {
+			int test = 0;
+
+		}
+
+		std::vector<ScreenCoord> n = heuristic(&open);
+		//std::vector<ScreenCoord> n = open[0];
+		//open.erase(*node);
+		std::vector<std::vector<ScreenCoord>>::iterator index = std::find(open.begin(), open.end(), n);
+		open.erase(index);
+
 
 		ScreenCoord end_position = n.back();
 		if (end_position.x() == moveTarget.x() && end_position.y() == moveTarget.y()) {
@@ -264,6 +274,23 @@ std::vector<ScreenCoord> Player::getPath(Combat& combat) {
 	std::vector<ScreenCoord> result;
 	return result;
 	//no solution found
+}
+
+std::vector<ScreenCoord> Player::heuristic(std::vector<std::vector<ScreenCoord>> * open) {
+	std::vector<ScreenCoord> smallest;
+	int smallest_dist = 99999;
+	for (std::vector<ScreenCoord> node : *open) {
+		ScreenCoord end_position = node.back();
+		int x_diff = std::abs(end_position.x() - moveTarget.x());
+		int y_diff = std::abs(end_position.y() - moveTarget.y());
+		ScreenCoord v(x_diff, y_diff);
+		if (v.norm() < smallest_dist) {
+			smallest_dist = v.norm();
+			smallest = node;
+		}
+	}
+
+	return smallest;
 }
 
 std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& combat) {
@@ -297,6 +324,5 @@ std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& com
 			neighbours.push_back(top);
 		}
 	}
-
 	return neighbours;
 }

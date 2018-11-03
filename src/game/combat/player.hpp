@@ -61,6 +61,7 @@ private:
 
 	// Pathfinding helper methods
 	std::vector<ScreenCoord> getPath(Combat & combat);
+	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
