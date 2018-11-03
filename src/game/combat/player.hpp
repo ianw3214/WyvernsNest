@@ -5,6 +5,7 @@
 #include "attack.hpp"
 #include "unit.hpp"
 #include "node.hpp"
+#include "../../engine/animatedSprite.hpp"
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20
@@ -37,6 +38,7 @@ public:
 	void render();
 	void renderTurnUI();
 	void renderValidMoves();
+	
 
 	void click(Vec2<int> to, Combat& combat);
 	void turnfOffAttacks();
@@ -59,13 +61,17 @@ private:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
+	std::vector<ScreenCoord> getPossibleMoves(Combat & combat);
+	void updatePossibleMoves(Combat & combat);
+	std::vector<ScreenCoord> possibleMoves;
+
 	// Pathfinding helper methods
 	std::vector<ScreenCoord> getPath(Combat & combat);
 	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
-	Sprite sprite_idle;
+	AnimatedSprite sprite_idle;
 	Sprite sprite_selected;
 	Sprite valid_tile;
 

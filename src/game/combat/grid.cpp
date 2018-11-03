@@ -58,6 +58,10 @@ bool Grid::isPosEmpty(Vec2<int> pos) const {
 	return !collisionmap[TILE_INDEX(pos.x(), pos.y())];
 }
 
+bool Grid::isPosValid(Vec2<int> pos) const {
+	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
+}
+
 void Grid::render()
 {
 	for (int y = 0; y < map_height; y++) {

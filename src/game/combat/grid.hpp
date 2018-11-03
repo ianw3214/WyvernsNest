@@ -40,6 +40,8 @@ public:
 	bool isMousePosValid();
 	bool isPosEmpty(Vec2<int> pos) const;
 
+	bool isPosValid(Vec2<int> pos) const;
+
 	// The actual tilemap data of the grid for rendering purposes
 	std::vector<int> tilemap;
 	std::vector<bool> collisionmap;

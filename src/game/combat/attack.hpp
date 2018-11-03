@@ -13,7 +13,11 @@ class Unit;
 enum class AttackType {
 	SELF,
 	MELEE,
-	RANGED
+	RANGED,
+	PIERCE,
+	SPIN,
+	HEAL,
+	BIG_AOE
 };
 
 // Use an integer to represent the range of the attack
@@ -34,9 +38,9 @@ public:
 	DamageEffect() : damage(1) {}
 	DamageEffect(int damage) : damage(damage) {}
 	void attack(ScreenCoord pos, Combat& combat);
+	int damage;
 
 private:
-	int damage;
 };
 
 // TODO: Change affect self to be calculated in the effect, not in the attack
@@ -57,6 +61,7 @@ public:
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
+	void renderValidTarget();
 	bool isValid(ScreenCoord pos);
 
 	// Getter functions for attack properties

@@ -178,7 +178,7 @@ void Combat::selectUnit(Unit * unit)
 }
 
 bool Combat::isPosEmpty(Vec2<int> pos) const {
-	if (!grid.isPosEmpty(pos)) return false;
+	if (!grid.isPosValid(pos)) return false;
 	for (const Unit * unit : units) {
 		if (unit->position == pos) {
 			return false;
