@@ -138,6 +138,7 @@
     <ClCompile Include="src\engine\renderer.cpp" />
     <ClCompile Include="src\engine\sprite.cpp" />
     <ClCompile Include="src\engine\state.cpp" />
+    <ClCompile Include="src\engine\textureManager.cpp" />
     <ClCompile Include="src\engine\text\font.cpp" />
     <ClCompile Include="src\engine\text\textRenderer.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="src\engine\renderer.hpp" />
     <ClInclude Include="src\engine\sprite.hpp" />
     <ClInclude Include="src\engine\state.hpp" />
+    <ClInclude Include="src\engine\textureManager.hpp" />
     <ClInclude Include="src\engine\text\font.hpp" />
     <ClInclude Include="src\engine\text\textRenderer.hpp" />
     <ClInclude Include="src\game\combat.hpp" />

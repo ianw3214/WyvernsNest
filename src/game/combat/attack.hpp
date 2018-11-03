@@ -71,8 +71,6 @@ private:
 	std::string name;
 	Unit * source;
 
-	int range;
-
 	AttackType type;
 	AttackRange range;
 	AttackEffect * effect;

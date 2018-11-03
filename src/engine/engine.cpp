@@ -10,6 +10,7 @@
 // Other project includes
 #include "renderer.hpp"
 #include "text/textRenderer.hpp"
+#include "textureManager.hpp"
 #include "state.hpp"
 
 bool Engine::init(const char * name, int window_width, int window_height) {
@@ -63,6 +64,9 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 
 	// Initialize the text renderer after the OpenGL context is created
 	m_textRenderer = new TextRenderer("res/test_font.ttf", 32, Vec2<int>(m_windowWidth, m_windowHeight));
+
+	// Initialize the texture manager
+	m_textureManager = new TextureManager();
 
 	// reset m_lastTick for a more accurate first tick
 	m_lastTick = SDL_GetTicks();
@@ -135,6 +139,10 @@ TextRenderer * Engine::getTextRenderer() {
 	return m_textRenderer;
 }
 
+TextureManager * Engine::getTextureManager() {
+	return m_textureManager;
+}
+
 void Engine::setState(State * state) {
 	if (m_state) delete m_state;
 	m_state = state;
@@ -160,6 +168,10 @@ Engine::Engine() :
 
 Engine::~Engine() {
 	delete m_state;
+
+	delete m_renderer;
+	delete m_textRenderer;
+	delete m_textureManager;
 
 	SDL_GL_DeleteContext(m_context);
 	SDL_DestroyWindow(m_window);

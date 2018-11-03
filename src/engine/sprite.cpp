@@ -11,8 +11,8 @@ Sprite::Sprite(const std::string & path) :
 	original_w(0),
 	original_h(0)
 {
-	src_w = original_w = w = texture.getWidth();
-	src_h = original_h = h = texture.getHeight();
+	src_w = original_w = w = Core::getTexture(path)->getWidth();
+	src_h = original_h = h = Core::getTexture(path)->getHeight();
 }
 
 Sprite::~Sprite() {
@@ -22,6 +22,10 @@ Sprite::~Sprite() {
 void Sprite::render() {
 	// Core::Renderer::drawTexture(ScreenCoord(x, y), w, h, texture);
 	Core::Renderer::drawSprite(*this);
+}
+
+const Texture & Sprite::getTexture() const {
+	return *Core::getTexture(texture);
 }
 
 void Sprite::setPos(int x, int y) {
