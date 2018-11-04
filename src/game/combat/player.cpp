@@ -71,13 +71,13 @@ void Player::renderTurnUI() {
 
 	// The actual drawing of the UI elements
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
-	Core::Text_Renderer::render("Option 1", pos, 1.f);
+	Core::Text_Renderer::render("MOVE", pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_1 ? select : base);
-	Core::Text_Renderer::render("Option 2", pos, 1.f);
+	Core::Text_Renderer::render(attack1.getName(), pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
-	Core::Text_Renderer::render("Option 3", pos, 1.f);
+	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
 }
 
 void Player::renderValidMoves() {
@@ -244,18 +244,22 @@ void Player::click(Vec2<int> to, Combat& combat)
 		case PlayerAction::ATTACK_1: {
 			// do the action here
 			turnfOffAttacks();
-			attack1.attackStart(to, combat);
-			current_action = PlayerAction::NONE;
-			state = UnitState::ATTACK;
-			startCounter();
+			bool hit = attack1.attackStart(to, combat);
+			if (hit) {
+				current_action = PlayerAction::NONE;
+				state = UnitState::ATTACK;
+				startCounter();
+			}
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
 			turnfOffAttacks();
-			attack2.attackStart(to, combat);
-			current_action = PlayerAction::NONE;
-			state = UnitState::ATTACK;
-			startCounter();
+			bool hit = attack2.attackStart(to, combat);
+			if (hit) {
+				current_action = PlayerAction::NONE;
+				state = UnitState::ATTACK;
+				startCounter();
+			}
 		} break;
 		default: {
 			// do nothing

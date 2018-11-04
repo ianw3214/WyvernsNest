@@ -40,14 +40,16 @@ void Attack::update()
 	}
 }
 
-void Attack::attackStart(ScreenCoord pos, Combat & c)
+bool Attack::attackStart(ScreenCoord pos, Combat & c)
 {
-	attackStarted = true;
-	attack_counter = 0;
-	target = pos;
-	combat = &c;
 
-	if (source->getType() == UnitType::PLAYER) {
+
+	if (source->getType() == UnitType::PLAYER && isValid(pos)) {
+		attackStarted = true;
+		attack_counter = 0;
+		target = pos;
+		combat = &c;
+
 		switch (type) {
 		case AttackType::SELF: {
 			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
@@ -72,6 +74,8 @@ void Attack::attackStart(ScreenCoord pos, Combat & c)
 		} break;
 		}
 	}
+
+	return isValid(pos);
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {

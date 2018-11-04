@@ -60,7 +60,7 @@ public:
 		bool affect_self = false);
 
 	void update();
-	void attackStart(ScreenCoord pos, Combat & combat);
+	bool attackStart(ScreenCoord pos, Combat & combat);
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
@@ -71,6 +71,7 @@ public:
 	inline AttackType getType() const { return type; }
 	inline const AttackEffect& getEffect() const { return *effect; }
 	inline AttackAoE getAoE() const { return aoe; }
+	inline std::string getName() const { return name; }
 
 	// Other methods to make sure this class works properly
 	void setTileSize(int width, int height);
