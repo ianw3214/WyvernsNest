@@ -17,7 +17,7 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	sprite_idle("res/FemaleattackTEST4.png", 96, 96),
+	sprite_idle("res/FemaleSheet.png", 96, 96),
 	sprite_selected("res/HeroF_Sprite_Selected.png"),
 	valid_tile("res/assets/valid.png")
 {
@@ -37,26 +37,24 @@ void Player::render()
 	// Render the shadow first
 	shadow.render();
 
-	if (selected) {
 		if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
 			renderValidMoves();
+
 		}
 		if (current_action == PlayerAction::ATTACK_1) {
 			attack1.renderValidGrid();
+
 		}
 		if (current_action == PlayerAction::ATTACK_2) {
 			attack2.renderValidGrid();
+
 		}
-		sprite_selected.setPos(screenPosition.x(), screenPosition.y());
-		sprite_selected.render();
-		if (state == UnitState::IDLE) {
-			renderTurnUI();
-		}
-	}
-	else {
 		sprite_idle.setPos(screenPosition.x(), screenPosition.y());
 		sprite_idle.render();
-	}
+
+		if (state == UnitState::IDLE && selected) {
+			renderTurnUI();
+		}
 
 	renderHealth();
 
@@ -90,6 +88,41 @@ void Player::renderValidMoves() {
 		valid_tile.setPos((pos.x()) * tile_width, (pos.y()) * tile_height);
 		valid_tile.render();
 	}
+
+	int i = 0;
+	for (ScreenCoord pos : path_line) {
+		ScreenCoord start;
+		ScreenCoord end;
+		if (i == 0) {
+			i++;
+			continue;
+		}
+		else {
+			start = pos;
+			end = path_line[i - 1];
+		}
+
+		start.x() *= tile_width;
+		end.x() *= tile_width;
+		start.y() *= tile_height;
+		end.y() *= tile_height;
+
+		start.x() += tile_width / 2;
+		end.x() += tile_width / 2;
+		start.y() += tile_height / 2;
+		end.y() += tile_height / 2;
+
+		//start = ScreenCoord(0, 0);
+		//end = ScreenCoord(100,100);
+
+		Core::Renderer::drawLine(start, end, Colour(1, 0, 0));
+
+		//valid_tile.setPos((pos.x()) * tile_width, (pos.y()) * tile_height);
+		//valid_tile.render();
+
+		i++;
+	}
+
 	/*
 	valid_tile.setSize(tile_width, tile_height);
 	for (int i = -getMoveSpeed(); i <= getMoveSpeed(); ++i) {
@@ -112,8 +145,10 @@ void Player::handleEvent(const SDL_Event & event)
 		if (event.type == SDL_KEYDOWN) {
 			// Move Key
 			if (event.key.keysym.sym == SDLK_KP_1) {
-				current_action = PlayerAction::MOVE;
-				updatePossibleMoves(*combat);
+				if (!moved) {
+					current_action = PlayerAction::MOVE;
+					updatePossibleMoves(*combat);
+				}
 			}
 			// Attack 1 key
 			if (event.key.keysym.sym == SDLK_KP_2) {
@@ -131,6 +166,11 @@ void Player::handleEvent(const SDL_Event & event)
 void Player::update(int delta)
 {
 	// Update the player based on its current state	
+
+	attack1.update();
+	attack2.update();
+
+
 	switch (state) {
 		case UnitState::IDLE: {
 			// Do nothing when idling
@@ -156,6 +196,7 @@ void Player::update(int delta)
 		case UnitState::ATTACK: {
 			if (compareCounter(PLAYER_DEFAULT_ATTACK_COUNTER)) {
 				state = UnitState::DONE;
+				moved = false;
 			} else {
 				incrementCounter();
 			}
@@ -164,6 +205,7 @@ void Player::update(int delta)
 			// Do nothing by default
 		} break;
 	}
+
 }
 
 void Player::click(Vec2<int> to, Combat& combat)
@@ -183,13 +225,14 @@ void Player::click(Vec2<int> to, Combat& combat)
 				if (steps <= getMoveSpeed()) {
 					moveTarget = to;
 
-					path = getPath(combat);
+					path = getPath(combat, moveTarget);
 
 					if (path.size() > 0) {
 						moveNext = ScreenCoord(0, 0);
 						incrementMovement();
 						state = UnitState::MOVE;
 						startCounter();
+						moved = true;
 					}
 					else {
 						//incorrect pos
@@ -201,7 +244,7 @@ void Player::click(Vec2<int> to, Combat& combat)
 		case PlayerAction::ATTACK_1: {
 			// do the action here
 			turnfOffAttacks();
-			attack1.attack(to, combat);
+			attack1.attackStart(to, combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -209,7 +252,7 @@ void Player::click(Vec2<int> to, Combat& combat)
 		case PlayerAction::ATTACK_2: {
 			// do the action here
 			turnfOffAttacks();
-			attack2.attack(to, combat);
+			attack2.attackStart(to, combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -311,7 +354,7 @@ void Player::updatePossibleMoves(Combat & combat)
 	possibleMoves = getPossibleMoves(combat);
 }
 
-std::vector<ScreenCoord> Player::getPath(Combat& combat) {
+std::vector<ScreenCoord> Player::getPath(Combat& combat, ScreenCoord to) {
 	std::vector<std::vector<ScreenCoord>> open;
 
 	std::vector<ScreenCoord> root;
@@ -329,7 +372,7 @@ std::vector<ScreenCoord> Player::getPath(Combat& combat) {
 			//continue;
 
 			ScreenCoord end_position = n.back();
-			if (end_position.x() == moveTarget.x() && end_position.y() == moveTarget.y()) {
+			if (end_position.x() == to.x() && end_position.y() == to.y()) {
 				//n is solution
 				return n;
 			}

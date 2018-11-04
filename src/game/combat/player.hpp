@@ -8,7 +8,7 @@
 #include "../../engine/animatedSprite.hpp"
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
-#define PLAYER_DEFAULT_ATTACK_COUNTER	20
+#define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
 #define UI_X_OFFSET					   -10
 #define UI_Y_OFFSET					    5
@@ -42,7 +42,7 @@ public:
 
 	void click(Vec2<int> to, Combat& combat);
 	void turnfOffAttacks();
-
+	void takeDamage(int damage);
 	int id;
 
 	// The action that is being expected from the player
@@ -54,6 +54,10 @@ public:
 	ScreenCoord moveNext;
 
 	std::vector<ScreenCoord> path;
+	std::vector<ScreenCoord> path_line;
+	AnimatedSprite sprite_idle;
+
+	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
 
 private:
 
@@ -66,13 +70,12 @@ private:
 	std::vector<ScreenCoord> possibleMoves;
 
 	// Pathfinding helper methods
-	std::vector<ScreenCoord> getPath(Combat & combat);
 	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
-	AnimatedSprite sprite_idle;
 	Sprite sprite_selected;
 	Sprite valid_tile;
 
+	bool moved;
 };

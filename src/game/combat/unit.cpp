@@ -24,7 +24,7 @@ Unit::Unit(UnitType type) :
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
 	attack1("PUNCH", this, AttackType::MELEE, 0, new DamageEffect(5), 0),
-	attack2("BIG_AOE", this, AttackType::BIG_AOE, 5, new DamageEffect(5), 0),
+	attack2("RANGED", this, AttackType::RANGED, 5, new DamageEffect(5), 0),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();

@@ -27,8 +27,57 @@ Attack::Attack(std::string name,
 	}
 }
 
+void Attack::update()
+{
+	if (attackStarted) {
+		if (attack_counter < 15 * 2) {
+			attack_counter++;
+		}
+		else {
+			attack(target, *combat);
+			attackStarted = false;
+		}
+	}
+}
+
+void Attack::attackStart(ScreenCoord pos, Combat & c)
+{
+	attackStarted = true;
+	attack_counter = 0;
+	target = pos;
+	combat = &c;
+
+	if (source->getType() == UnitType::PLAYER) {
+		switch (type) {
+		case AttackType::SELF: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
+		} break;
+		case AttackType::MELEE: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
+		} break;
+		case AttackType::RANGED: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
+		} break;
+		case AttackType::PIERCE: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
+		} break;
+		case AttackType::SPIN: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
+		} break;
+		case AttackType::HEAL: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
+		} break;
+		case AttackType::BIG_AOE: {
+			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
+		} break;
+		}
+	}
+}
+
 void Attack::attack(ScreenCoord pos, Combat& combat) {
 	if (isValid(pos)) {
+
+
 		switch (type) {
 		case AttackType::SELF: {
 			if (affect_self) {
@@ -155,6 +204,8 @@ void Attack::renderValidTarget() {
 	SDL_GetMouseState(&mouseX, &mouseY);
 	int x = static_cast<int>(floor(mouseX / tile_width));
 	int y = static_cast<int>(floor(mouseY / tile_height));
+
+
 
 	switch (type) {
 	case AttackType::MELEE: {
@@ -317,6 +368,15 @@ void DamageEffect::attack(ScreenCoord pos, Combat & combat) {
 	Unit * unit = combat.getUnitAt(pos);
 	if (unit) {
 		unit->takeDamage(damage);
+		if (unit->getType() == UnitType::PLAYER) {
+			Player * player = dynamic_cast<Player*>(unit);
+			if (player->getState() == UnitState::DEAD) {
+				player->sprite_idle.animation_index = 5;
+			}
+			else {
+				player->sprite_idle.animation_index = 4;
+			}
+		}
 		// Do something if the unit dies
 	}
 }

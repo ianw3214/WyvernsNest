@@ -59,6 +59,9 @@ public:
 		AttackAoE aoe = 0,
 		bool affect_self = false);
 
+	void update();
+	void attackStart(ScreenCoord pos, Combat & combat);
+
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
 	void renderValidTarget();
@@ -71,6 +74,11 @@ public:
 
 	// Other methods to make sure this class works properly
 	void setTileSize(int width, int height);
+
+	bool attackStarted;
+	int attack_counter;
+	ScreenCoord target;
+	Combat * combat;
 	
 private:
 	std::string name;
