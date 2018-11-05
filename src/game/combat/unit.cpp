@@ -76,7 +76,7 @@ void Unit::generateDefaultUnitData() {
 	data.strength = 10;
 	data.dexterity = 10;
 	data.intelligence = 10;
-	data.constitution = 10;
+	data.constitution = 100;
 	// Default traits -> NOT YET IMPLEMENTED
 }
 

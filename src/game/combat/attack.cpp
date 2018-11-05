@@ -85,41 +85,41 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 		switch (type) {
 		case AttackType::SELF: {
 			if (affect_self) {
-				effect->attack(source->position, combat);
+				effect->attack(source->position, combat, source->getINT(), 1.0);
 			}
 			attackAoE(source->position, combat);
 		} break;
 		case AttackType::MELEE: {
 			// TODO: Make sure the attack is valid before running it
-			effect->attack(pos, combat);
+			effect->attack(pos, combat, source->getSTR(), 0.5);
 			attackAoE(pos, combat);
 		} break;
 		case AttackType::RANGED: {
 			// TODO: Make sure the attack is valid before running it
-			effect->attack(pos, combat);
+			effect->attack(pos, combat, source->getINT(), 1.0);
 			attackAoE(pos, combat);
 		} break;
 		case AttackType::PIERCE: {
-			effect->attack(pos, combat);
-			effect->attack(pos + pos - source->position, combat);
+			effect->attack(pos, combat, source->getSTR(), 1.0);
+			effect->attack(pos + pos - source->position, combat, source->getSTR(), 0.5);
 		} break;
 		case AttackType::SPIN: {
-			effect->attack(source->position + ScreenCoord(0, 1), combat);
-			effect->attack(source->position + ScreenCoord(1, 0), combat);
-			effect->attack(source->position + ScreenCoord(0, -1), combat);
-			effect->attack(source->position + ScreenCoord(-1, 0), combat);
+			effect->attack(source->position + ScreenCoord(0, 1), combat, source->getSTR(), 0.7);
+			effect->attack(source->position + ScreenCoord(1, 0), combat, source->getSTR(), 0.7);
+			effect->attack(source->position + ScreenCoord(0, -1), combat, source->getSTR(), 0.7);
+			effect->attack(source->position + ScreenCoord(-1, 0), combat, source->getSTR(), 0.7);
 		} break;
 		case AttackType::HEAL: {
 			// TODO: Make sure the attack is valid before running it
-			effect->attack(pos, combat);
+			effect->attack(pos, combat, source->getINT(), 2.0);
 		} break;
 		case AttackType::BIG_AOE: {
 			// TODO: Make sure the attack is valid before running it
-			effect->attack(pos, combat);
-			effect->attack(pos + ScreenCoord(0, 1), combat);
-			effect->attack(pos + ScreenCoord(0, -1), combat);
-			effect->attack(pos + ScreenCoord(1, 0), combat);
-			effect->attack(pos + ScreenCoord(-1, 0), combat);
+			effect->attack(pos, combat, source->getINT(), 2.0);
+			effect->attack(pos + ScreenCoord(0, 1), combat, source->getINT(), 1.0);
+			effect->attack(pos + ScreenCoord(0, -1), combat, source->getINT(), 1.0);
+			effect->attack(pos + ScreenCoord(1, 0), combat, source->getINT(), 1.0);
+			effect->attack(pos + ScreenCoord(-1, 0), combat, source->getINT(), 1.0);
 		} break;
 		}
 	}
@@ -362,16 +362,16 @@ void Attack::attackAoE(ScreenCoord pos, Combat & combat) {
 		for (int j = -height; j <= height; ++j) {
 			// Apply the attack effect on grid cell [i, j]
 			if (!(Vec2<int>(i, j) == Vec2<int>(0, 0))) {
-				effect->attack(source->position + Vec2<int>(i, j), combat);
+				effect->attack(source->position + Vec2<int>(i, j), combat, 0, 0.0);
 			}
 		}
 	}
 }
 
-void DamageEffect::attack(ScreenCoord pos, Combat & combat) {
+void DamageEffect::attack(ScreenCoord pos, Combat & combat, int stat, double mult) {
 	Unit * unit = combat.getUnitAt(pos);
 	if (unit) {
-		unit->takeDamage(damage);
+		unit->takeDamage(damage + stat * mult);
 		if (unit->getType() == UnitType::PLAYER) {
 			Player * player = dynamic_cast<Player*>(unit);
 			if (player->getState() == UnitState::DEAD) {

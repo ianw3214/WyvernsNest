@@ -29,7 +29,7 @@ using AttackAoE = int;
 // Base class to represent an attack effect
 class AttackEffect {
 public:
-	virtual void attack(ScreenCoord pos, Combat& combat) = 0;
+	virtual void attack(ScreenCoord pos, Combat& combat, int stat, double mult) = 0;
 };
 
 // Attack effect that damages units
@@ -37,7 +37,7 @@ class DamageEffect : public AttackEffect {
 public:
 	DamageEffect() : damage(1) {}
 	DamageEffect(int damage) : damage(damage) {}
-	void attack(ScreenCoord pos, Combat& combat);
+	void attack(ScreenCoord pos, Combat& combat, int stat, double mult);
 	int damage;
 
 private:
