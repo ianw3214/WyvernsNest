@@ -1,7 +1,5 @@
 #include "attackloader.hpp"
 
-#define _DEBUG
-
 #ifdef _DEBUG
 #include <iostream>
 #define LOG(x) std::cout << x << std::endl

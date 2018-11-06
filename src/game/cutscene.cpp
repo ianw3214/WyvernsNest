@@ -23,10 +23,10 @@ Cutscene::~Cutscene() {
 
 void Cutscene::handleEvent(const SDL_Event& e) {
 	if (e.type == SDL_KEYDOWN) {
-		if (e.key.keysym.sym == SDLK_a && m_position < sizeof(m_sprites) - 1) {
+		if (e.key.keysym.sym == SDLK_a && m_position < m_sprites.size() - 1) {
 			m_curr_img = m_sprites[m_position++];
 		}
-		else if (e.key.keysym.sym == SDLK_a && m_position == sizeof(m_sprites) - 1) {
+		else if (e.key.keysym.sym == SDLK_a && m_position == m_sprites.size() - 1) {
 			changeState(m_state);
 		}
 	}
