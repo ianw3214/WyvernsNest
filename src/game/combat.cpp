@@ -1,5 +1,7 @@
 #include "combat.hpp"
 
+#include "util/attackloader.hpp"
+
 Combat::Combat() :
 	current(nullptr)
 {
@@ -28,6 +30,9 @@ Combat::Combat() :
 
 	// Set the combat references of the units
 	for (Unit * unit : units) unit->combat = this;
+
+	// ----- DEBUGGING CODE -----
+	Attacks::get("test", nullptr);
 }
 
 Combat::~Combat() {

@@ -1,0 +1,29 @@
+{
+    "attacks":[
+        {
+            "name" : "PUNCH",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ]
+        },{
+            "name": "RANGED",
+            "type": "ranged",
+            "range": 2,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 2
+                }
+            ]
+        }
+    ]
+}

@@ -1,5 +1,7 @@
 #include "unit.hpp"
 
+#include "../util/attackloader.hpp"
+
 // TODO: Design better constructors
 
 // Construct a player unit by default
@@ -9,8 +11,8 @@ Unit::Unit() :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1("PUNCH", this, AttackType::MELEE, 0, new DamageEffect(5), 0),
-	attack2("RANGED", this, AttackType::RANGED, 3, new DamageEffect(5), 0),  
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
@@ -23,8 +25,8 @@ Unit::Unit(UnitType type) :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1("PUNCH", this, AttackType::MELEE, 0, new DamageEffect(5), 0),
-	attack2("RANGED", this, AttackType::RANGED, 5, new DamageEffect(5), 0),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();

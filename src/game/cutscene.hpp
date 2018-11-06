@@ -3,7 +3,7 @@
   *			- Set the next scene to transition to
   *			- Store a list of images(sprites) to show in the cutscene
   *			- Handle user input (mouse click or button press) to move between images
-  *		
+  *
   *		Future goals
   *			- Load cutscene data from file
   *			- Animated sprites in cutscenes
@@ -27,5 +27,8 @@ public:
 	void render() override;
 
 private:
-
+	State *m_state;
+	Sprite *m_curr_img;
+	unsigned int m_position;
+	std::vector<Sprite *> m_sprites;
 };
