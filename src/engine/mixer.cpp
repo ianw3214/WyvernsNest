@@ -18,7 +18,6 @@ Mixer::~Mixer() {
     Mix_CloseAudio();
 }
 
-#include <iostream>
 void Mixer::loadAudio(const std::string &filePath, AudioType audioType) {
     switch(audioType) {
     case AudioType::Chunk:
@@ -55,7 +54,6 @@ void Mixer::playAudio(const std::string &filePath, int loops, float volume) {
     if(music_idx == m_music.end()) {
         auto chunk_idx = m_chunks.find(filePath);
         if(chunk_idx == m_chunks.end()) {
-            std::cout << "no" << std::endl;
             // TODO: error handling, audio does not exist
         } else {
             // Attempt to play the chunk.
