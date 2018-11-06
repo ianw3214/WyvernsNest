@@ -19,6 +19,7 @@ int main(int argc, char* argv[]) {
 	Menu * state = new Menu();
 	Core::setState(state);
 
+	/*
 	//	---------------TEMPORARY AUDIO CODE--------------------------
 	// load WAV file
 	SDL_AudioSpec wavSpec;
@@ -33,6 +34,7 @@ int main(int argc, char* argv[]) {
 	int success = SDL_QueueAudio(deviceId, wavBuffer, wavLength);
 	SDL_PauseAudioDevice(deviceId, 0);
 	//	-------------------------------------------------------------
+	*/
 
 	// Main engine loop
 	while (Core::running()) {

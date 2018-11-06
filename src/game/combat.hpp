@@ -30,6 +30,7 @@ public:
 
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
+	Unit * current;
 
 private:
 
@@ -41,7 +42,6 @@ private:
 	std::vector<Unit*> units;
 
 	// Reference to the current unit that is taking its action
-	Unit * current;
 	int unitIndex;
 
 };
