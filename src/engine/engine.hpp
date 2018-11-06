@@ -6,6 +6,8 @@
 
 class Renderer;
 class TextRenderer;
+class TextureManager;
+
 class State;
 
 class Engine {
@@ -32,6 +34,7 @@ public:
 	int getWindowHeight() const;
 	Renderer * getRenderer();
 	TextRenderer * getTextRenderer();
+	TextureManager * getTextureManager();
 
 	// State changing functions
 	void setState(State * state);
@@ -49,6 +52,7 @@ private:
 	// System objects
 	Renderer * m_renderer;
 	TextRenderer * m_textRenderer;
+	TextureManager * m_textureManager;
 
 	// SDL/OpenGL specific objects
 	SDL_Window * m_window;

@@ -4,6 +4,7 @@
 #include "engine.hpp"
 #include "renderer.hpp"
 #include "text/textRenderer.hpp"
+#include "textureManager.hpp"
 #include "entity.hpp"
 #include "state.hpp"
 #include "sprite.hpp"
@@ -45,6 +46,10 @@ namespace Core {
 
 	inline bool getdebugMode(bool mode) {
 		return Engine::get_instance().getDebugMode();
+	}
+
+	inline Texture * getTexture(const std::string& fileName) {
+		return Engine::get_instance().getTextureManager()->getTexture(fileName);
 	}
 
 	// Wrappers around renderer functionalities
