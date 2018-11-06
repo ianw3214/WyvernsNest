@@ -87,6 +87,9 @@
     <ClCompile Include="src\engine\textureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\animatedSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\game\util\attackloader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,6 +183,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\textureManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\animatedSprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\vendor\nlohmann\json.hpp">

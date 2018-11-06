@@ -79,10 +79,15 @@ void Combat::update(int delta) {
 	grid.update();
 	for (Entity * e : entities) e->update(delta);
 
+	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
+		Player * player = dynamic_cast<Player*>(current);
+		player->path_line = player->getPath(*this, grid.getMouseToGrid());
+	}
+
 	// If the game isn't over, keep going with the turn order
 	if (!game_over) {
 		// If the unit is done with its state, go to the next unit
-		if (current->getState() == UnitState::DONE) {
+		if (current->getState() == UnitState::DONE || current->getState() == UnitState::DEAD) {
 			nextUnitTurn();
 		}
 	}
@@ -163,7 +168,13 @@ void Combat::nextUnitTurn()
 	if (unitIndex == units.size()) {
 		unitIndex = 0;
 	}
-	selectUnit(units[unitIndex]);
+	if (units[unitIndex]->getState() == UnitState::DEAD) {
+		nextUnitTurn();
+		return;
+	}
+	else {
+		selectUnit(units[unitIndex]);
+	}
 	// If the current unit is an enemy, take its turn
 	if (current->getType() == UnitType::ENEMY) {
 		dynamic_cast<Enemy*>(current)->takeTurn(*this);
@@ -180,10 +191,14 @@ void Combat::selectUnit(Unit * unit)
 
 	current = unit;
 	unit->selected = true;
+
+	if (unit->getType() == UnitType::PLAYER) {
+		dynamic_cast<Player*>(unit)->sprite_idle.animation_index = 1;
+	}
 }
 
 bool Combat::isPosEmpty(Vec2<int> pos) const {
-	if (!grid.isPosEmpty(pos)) return false;
+	if (!grid.isPosValid(pos)) return false;
 	for (const Unit * unit : units) {
 		if (unit->position == pos) {
 			return false;

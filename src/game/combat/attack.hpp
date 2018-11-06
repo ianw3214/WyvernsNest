@@ -14,7 +14,11 @@ enum class AttackType {
 	INVALID,	// THIS SHOULD NEVER BE A REAL ATTACK, ONLY USED IF SOMETHING FAILS
 	SELF,
 	MELEE,
-	RANGED
+	RANGED,
+	PIERCE,
+	SPIN,
+	HEAL,
+	BIG_AOE
 };
 
 // Use an integer to represent the range of the attack
@@ -27,7 +31,7 @@ using AttackAoE = int;
 // Base class to represent an attack effect
 class AttackEffect {
 public:
-	virtual void attack(ScreenCoord pos, Combat& combat) = 0;
+	virtual void attack(ScreenCoord pos, Combat& combat, int stat, double mult) = 0;
 };
 
 // Attack effect that damages units
@@ -35,10 +39,10 @@ class DamageEffect : public AttackEffect {
 public:
 	DamageEffect() : damage(1) {}
 	DamageEffect(int damage) : damage(damage) {}
-	void attack(ScreenCoord pos, Combat& combat);
+	void attack(ScreenCoord pos, Combat& combat, int stat, double mult);
+	int damage;
 
 private:
-	int damage;
 };
 
 // TODO: Handle invalid attacks during gameplay
@@ -59,17 +63,27 @@ public:
 	// Constuctor that duplicates an attack but changes the source unit
 	Attack(const Attack& other, Unit * source);
 
+	void update();
+	bool attackStart(ScreenCoord pos, Combat & combat);
+
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
+	void renderValidTarget();
 	bool isValid(ScreenCoord pos);
 
 	// Getter functions for attack properties
 	inline AttackType getType() const { return type; }
 	inline const AttackEffect& getEffect() const { return *effect; }
 	inline AttackAoE getAoE() const { return aoe; }
+	inline std::string getName() const { return name; }
 
 	// Other methods to make sure this class works properly
 	void setTileSize(int width, int height);
+
+	bool attackStarted;
+	int attack_counter;
+	ScreenCoord target;
+	Combat * combat;
 	
 private:
 	std::string name;
