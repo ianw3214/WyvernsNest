@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -83,7 +83,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -150,6 +150,7 @@
     <ClCompile Include="src\game\cutscene.cpp" />
     <ClCompile Include="src\game\combat\grid.cpp" />
     <ClCompile Include="src\game\menu.cpp" />
+    <ClCompile Include="src\game\util\attackloader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
@@ -181,9 +182,11 @@
     <ClInclude Include="src\game\combat\grid.hpp" />
     <ClInclude Include="src\game\menu.hpp" />
     <ClInclude Include="src\game\unitData.hpp" />
+    <ClInclude Include="src\game\util\attackloader.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />
+    <ClInclude Include="src\vendor\nlohmann\json.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

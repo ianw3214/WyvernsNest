@@ -11,6 +11,7 @@ class Unit;
 
 // Enumeration for all attack types
 enum class AttackType {
+	INVALID,	// THIS SHOULD NEVER BE A REAL ATTACK, ONLY USED IF SOMETHING FAILS
 	SELF,
 	MELEE,
 	RANGED
@@ -22,6 +23,7 @@ using AttackRange = int;
 // Use an integer to represent the AoE of the attack
 using AttackAoE = int;
 
+// TODO: Move attack effects to a different file location
 // Base class to represent an attack effect
 class AttackEffect {
 public:
@@ -39,21 +41,23 @@ private:
 	int damage;
 };
 
+// TODO: Handle invalid attacks during gameplay
 // TODO: Change affect self to be calculated in the effect, not in the attack
+// TODO: Change attacks to be able to have multiple effects
 // Generic attack class to hold all of the data for an attack
 class Attack {
 
 public:
+	Attack();
 	Attack(std::string name, 
 		Unit * source, 
 		AttackType type = AttackType::MELEE,
 		AttackRange range = 0,
-         
-         
-         
 		AttackEffect * effect = new DamageEffect(), 
 		AttackAoE aoe = 0,
 		bool affect_self = false);
+	// Constuctor that duplicates an attack but changes the source unit
+	Attack(const Attack& other, Unit * source);
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();

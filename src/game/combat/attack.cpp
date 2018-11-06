@@ -3,6 +3,22 @@
 #include "unit.hpp"
 #include "../combat.hpp"
 
+// Construct an invalid attack by default
+Attack::Attack() :
+	name("INVALID"),
+	source(nullptr),
+	type(AttackType::INVALID),
+	range(0),
+	effect(nullptr),
+	aoe(0),
+	affect_self(false),
+	validSprite("res/assets/valid.png"),
+	targetValidSprite("res/assets/valid_circle.png"),
+	targetInvalidSprite("res/assets/invalid_circle.png")
+{
+
+}
+
 Attack::Attack(std::string name,
 	Unit * source,
 	AttackType type,
@@ -23,6 +39,21 @@ Attack::Attack(std::string name,
 	targetInvalidSprite("res/assets/invalid_circle.png")
 {
 	
+}
+
+Attack::Attack(const Attack & other, Unit * source) :
+	name(other.name),
+	source(source),
+	type(other.type),
+	range(other.range),
+	effect(other.effect),
+	aoe(other.aoe),
+	affect_self(other.affect_self),
+	validSprite("res/assets/valid.png"),
+	targetValidSprite("res/assets/valid_circle.png"),
+	targetInvalidSprite("res/assets/invalid_circle.png")
+{
+
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {

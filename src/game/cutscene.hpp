@@ -29,6 +29,6 @@ public:
 private:
 	State *m_state;
 	Sprite *m_curr_img;
-	int m_position;
+	unsigned int m_position;
 	std::vector<Sprite *> m_sprites;
 };
