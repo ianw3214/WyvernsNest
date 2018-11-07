@@ -5,9 +5,10 @@
 #include "attack.hpp"
 #include "unit.hpp"
 #include "node.hpp"
+#include "../../engine/animatedSprite.hpp"
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
-#define PLAYER_DEFAULT_ATTACK_COUNTER	20
+#define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
 #define UI_X_OFFSET					   -10
 #define UI_Y_OFFSET					    5
@@ -19,6 +20,16 @@ enum class PlayerAction {
 	MOVE,
 	ATTACK_1,
 	ATTACK_2
+};
+
+// Enumeration to represent player animation states
+enum class PlayerAnim {
+	IDLE = 0,
+	SELECTED = 1,
+	ATTACK_MELEE = 2,
+	ATTACK_RANGED = 3,
+	TAKE_DAMAGE = 4,
+	DEAD = 5
 };
 
 class Combat;
@@ -37,10 +48,9 @@ public:
 	void render();
 	void renderTurnUI();
 	void renderValidMoves();
+	
 
 	void click(Vec2<int> to, Combat& combat);
-	void turnfOffAttacks();
-
 	int id;
 
 	// The action that is being expected from the player
@@ -51,19 +61,34 @@ public:
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
 
+	std::vector<ScreenCoord> path;
+	std::vector<ScreenCoord> path_line;
+
+	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
+
+
+protected:
+	// Override callback function to customize functionality
+	void takeDamageCallback(int damage) override;
+	void selectCallback() override;
+
 private:
 
 	// Helper functions to calculate the screen position and movement of the player
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
+	std::vector<ScreenCoord> getPossibleMoves(Combat & combat);
+	void updatePossibleMoves(Combat & combat);
+	std::vector<ScreenCoord> possibleMoves;
+
 	// Pathfinding helper methods
-	void getPath(Combat & combat);
+	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
-	Sprite sprite_idle;
-	Sprite sprite_selected;
+	AnimatedSprite player_sprite;
 	Sprite valid_tile;
 
+	bool moved;
 };

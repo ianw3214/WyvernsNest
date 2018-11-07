@@ -9,7 +9,7 @@ public:
 	Sprite(const std::string& path);
 	~Sprite();
 
-	void render();
+	virtual void render();
 
 	// Sprite position
 	int x, y;

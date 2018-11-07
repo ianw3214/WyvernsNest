@@ -28,9 +28,10 @@ struct Vec2 {
 		return *this;
 	}
 
-	Vec2<T>& operator*(const T& rhs) {
-		*this *= rhs;
-		return *this;
+	Vec2<T> operator*(const T& rhs) {
+		Vec2<T> out(*this);
+		out *= rhs;
+		return out;
 	}
 
 	Vec2<T>& operator/=(const T& rhs) {
@@ -40,7 +41,8 @@ struct Vec2 {
 	}
 
 	Vec2<T>& operator/(const T& rhs) {
-		*this /= rhs;
+		Vec2<T> out(*this);
+		out /= rhs;
 		return *this;
 	}
 
@@ -67,10 +69,10 @@ struct Vec2 {
         return x + y;
     }
     T norm() {
-        T x = pow(this->m_values[0], 2);
-        T y = pow(this->m_values[1], 2);
+        T x = static_cast<T>(pow(this->m_values[0], 2));
+        T y = static_cast<T>(pow(this->m_values[1], 2));
 
-        return sqrt(x + y);
+        return static_cast<T>(sqrt(static_cast<double>(x) + static_cast<double>(y)));
     }
     Vec2 normalized() {
         return *this / norm();
@@ -137,8 +139,9 @@ struct Vec3 {
 	}
 
 	Vec3<T>& operator*(const T& rhs) {
-		*this *= rhs;
-		return *this;
+		Vec3<T> out(*this);
+		out *= rhs;
+		return out;
 	}
 
 	Vec3<T>& operator/=(const T& rhs) {
@@ -149,8 +152,9 @@ struct Vec3 {
 	}
 
 	Vec3<T>& operator/(const T& rhs) {
-		*this /= rhs;
-		return *this;
+		Vec3<T> out(*this);
+		out /= rhs;
+		return out;
 	}
 
 	Vec3<T>& operator+=(const Vec3<T>& rhs) {
@@ -180,11 +184,11 @@ struct Vec3 {
     }
 
     T norm() {
-        T x = pow(this->m_values[0], 2);
-        T y = pow(this->m_values[1], 2);
-        T z = pow(this->m_values[2], 2);
+        T x = static_cast<T>(pow(this->m_values[0], 2));
+        T y = static_cast<T>(pow(this->m_values[1], 2));
+        T z = static_cast<T>(pow(this->m_values[2], 2));
 
-        return sqrt(x + y + z);
+        return static_cast<T>(sqrt(static_cast<double>(x) + static_cast<double>(y) + static_cast<double>(z)));
     }
 
     Vec3 normalized() {

@@ -1,5 +1,7 @@
 #include "unit.hpp"
 
+#include "../util/attackloader.hpp"
+
 // TODO: Design better constructors
 
 // Construct a player unit by default
@@ -9,8 +11,8 @@ Unit::Unit() :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1("PUNCH", this, AttackType::MELEE, 0, new DamageEffect(5), 0),
-	attack2("RANGED", this, AttackType::RANGED, 2, new DamageEffect(5), 0),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
@@ -23,8 +25,8 @@ Unit::Unit(UnitType type) :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1("PUNCH", this, AttackType::MELEE, 0, new DamageEffect(5), 0),
-	attack2("RANGED", this, AttackType::RANGED, 2, new DamageEffect(5), 0),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
@@ -69,6 +71,10 @@ void Unit::calculateScreenPosition() {
 	shadow.setPos(position.x() * tile_width, position.y() * tile_height + tile_height / 2);
 }
 
+// Not implemented in base unit, should be implemented in specialized classes
+void Unit::takeDamageCallback(int damage) {}
+void Unit::selectCallback() {}
+
 void Unit::generateDefaultUnitData() {
 	// Default name
 	data.name = "BOB";
@@ -76,8 +82,17 @@ void Unit::generateDefaultUnitData() {
 	data.strength = 10;
 	data.dexterity = 10;
 	data.intelligence = 10;
-	data.constitution = 10;
+	data.constitution = 100;
 	// Default traits -> NOT YET IMPLEMENTED
+}
+
+void Unit::select() {
+	selected = true;
+	selectCallback();
+}
+
+void Unit::deselect() {
+	selected = false;
 }
 
 void Unit::takeDamage(int damage) {
@@ -86,6 +101,12 @@ void Unit::takeDamage(int damage) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
+	// TODO: use different logic for healing
+	else if (health > maxHealth) {
+		health = maxHealth;
+	}
+	// Call the virtualized callback function for subclasses to customize
+	takeDamageCallback(damage);
 }
 
 void Unit::renderHealth() {
