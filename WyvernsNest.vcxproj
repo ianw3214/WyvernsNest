@@ -70,8 +70,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)libs\SDL2_mixer-2.0.4\include;$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)libs\SDL2_mixer-2.0.4\lib\x86;$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
@@ -83,10 +83,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)libs\SDL2_mixer-2.0.4\include;$(SolutionDir)src\vendor;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2_mixer.lib;SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -131,6 +131,7 @@
     <ClCompile Include="src\engine\animatedSprite.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\entity.cpp" />
+    <ClCompile Include="src\engine\mixer.cpp" />
     <ClCompile Include="src\engine\opengl\indexBuffer.cpp" />
     <ClCompile Include="src\engine\opengl\shader.cpp" />
     <ClCompile Include="src\engine\opengl\texture.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="src\engine\core.hpp" />
     <ClInclude Include="src\engine\engine.hpp" />
     <ClInclude Include="src\engine\entity.hpp" />
+    <ClInclude Include="src\engine\mixer.hpp" />
     <ClInclude Include="src\engine\opengl\glwrappers.hpp" />
     <ClInclude Include="src\engine\opengl\indexBuffer.hpp" />
     <ClInclude Include="src\engine\opengl\shader.hpp" />
