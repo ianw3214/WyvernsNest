@@ -101,7 +101,7 @@ void Mixer::fadeOutAllMusic(int ms) {
 }
 
 /**
- *  `ms` is the number of milliseconds before the music should finish
+ *  `ms` is the number of milliseconds before reaching full volume
  *  `loops` is the number of times to repeat the audio. -1 loops infinitely,
  *  0 plays the audio one time, 1 plays twice, etc.
  */
