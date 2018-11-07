@@ -42,7 +42,7 @@ Attack::Attack(std::string name,
 		dynamic_cast<DamageEffect*>(effect)->damage = -1;
 	}
 }
-
+/*
 void Attack::update()
 {
 	if (attackStarted) {
@@ -65,7 +65,6 @@ bool Attack::attackStart(ScreenCoord pos, Combat & c)
 		attack_counter = 0;
 		target = pos;
 		combat = &c;
-
 		switch (type) {
 		case AttackType::SELF: {
 			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
@@ -93,6 +92,7 @@ bool Attack::attackStart(ScreenCoord pos, Combat & c)
 
 	return isValid(pos);
 }
+*/
 
 Attack::Attack(const Attack & other, Unit * source) :
 	name(other.name),
@@ -402,16 +402,7 @@ void Attack::attackAoE(ScreenCoord pos, Combat & combat) {
 void DamageEffect::attack(ScreenCoord pos, Combat & combat, int stat, double mult) {
 	Unit * unit = combat.getUnitAt(pos);
 	if (unit) {
-		unit->takeDamage(damage + stat * mult);
-		if (unit->getType() == UnitType::PLAYER) {
-			Player * player = dynamic_cast<Player*>(unit);
-			if (player->getState() == UnitState::DEAD) {
-				player->sprite_idle.animation_index = 5;
-			}
-			else {
-				player->sprite_idle.animation_index = 4;
-			}
-		}
+		unit->takeDamage(static_cast<int>(damage + stat * mult));
 		// Do something if the unit dies
 	}
 }
