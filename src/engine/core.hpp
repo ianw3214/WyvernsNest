@@ -120,7 +120,6 @@ namespace Core {
 		inline void fadeInAllMusic(const std::string &filePath, int ms, int loops = 0) {
 			Engine::get_instance().getMixer()->fadeInMusic(filePath, ms, loops);
 		}
-		
 	}
 
 }
