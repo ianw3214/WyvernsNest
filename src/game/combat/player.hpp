@@ -22,6 +22,16 @@ enum class PlayerAction {
 	ATTACK_2
 };
 
+// Enumeration to represent player animation states
+enum class PlayerAnim {
+	IDLE = 0,
+	SELECTED = 1,
+	ATTACK_MELEE = 2,
+	ATTACK_RANGED = 3,
+	TAKE_DAMAGE = 4,
+	DEAD = 5
+};
+
 class Combat;
 
 // TODO: update player so that the positions are calculated from the grid
@@ -41,8 +51,6 @@ public:
 	
 
 	void click(Vec2<int> to, Combat& combat);
-	void turnfOffAttacks();
-	void takeDamage(int damage);
 	int id;
 
 	// The action that is being expected from the player
@@ -55,9 +63,14 @@ public:
 
 	std::vector<ScreenCoord> path;
 	std::vector<ScreenCoord> path_line;
-	AnimatedSprite sprite_idle;
 
 	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
+
+
+protected:
+	// Override callback function to customize functionality
+	void takeDamageCallback(int damage) override;
+	void selectCallback() override;
 
 private:
 
@@ -74,7 +87,7 @@ private:
 	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
-	Sprite sprite_selected;
+	AnimatedSprite player_sprite;
 	Sprite valid_tile;
 
 	bool moved;

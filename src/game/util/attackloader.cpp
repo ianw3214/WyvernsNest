@@ -58,7 +58,6 @@ bool AttackLoader::loadAttack(const json & data) {
 		effects[0], 
 		aoe, 
 		affect_self);
-	std::cout << "TEST" << std::endl;
 	return true;
 }
 

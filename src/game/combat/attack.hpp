@@ -63,8 +63,10 @@ public:
 	// Constuctor that duplicates an attack but changes the source unit
 	Attack(const Attack& other, Unit * source);
 
+	/*
 	void update();
 	bool attackStart(ScreenCoord pos, Combat & combat);
+	*/
 
 	void attack(ScreenCoord pos, Combat& combat);
 	void renderValidGrid();
@@ -80,11 +82,13 @@ public:
 	// Other methods to make sure this class works properly
 	void setTileSize(int width, int height);
 
+	/*
 	bool attackStarted;
 	int attack_counter;
 	ScreenCoord target;
 	Combat * combat;
-	
+	*/
+
 private:
 	std::string name;
 	Unit * source;

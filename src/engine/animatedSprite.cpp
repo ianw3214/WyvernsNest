@@ -1,82 +1,88 @@
 #include "animatedSprite.hpp"
 #include "core.hpp"
 
-AnimatedSprite::AnimatedSprite(const std::string & path, int w, int h) :
+AnimatedSprite::AnimatedSprite(const std::string & path, int frame_w, int frame_h) :
 	Sprite(path),
-	counter(0)
+	counter(0),
+	frame_index(0),
+	animation_index(0)
 {
-	src_w = original_w  = w;
-	src_h = original_h  = h;
+	// Set the source w/h to be the same as an animation frame
+	src_w = frame_w;
+	src_h = frame_h;
 
-	frames_w = Core::getTexture(path)->getWidth() / w;
-	frames_h = Core::getTexture(path)->getHeight() / h;
-
-	addAnimation(1, 1);			//idle
-	addAnimation(0, 0);			//selected
-	addAnimation(2, 16);		//ATK MELEE
-	addAnimation(17, 31);		//ATK RANGED	
-	addAnimation(32, 34);		//TAKE DMG
-	addAnimation(32, 35);		//TAKE DAMAGE + DIE
-	addAnimation(35, 35);		//DEAD
-
-	animation_index = 0;
-	getFramePos();
+	// Calculate the number of sprites in the sprite sheet based on the input frame size and texture size
+	spriteSheetWidth = Core::getTexture(path)->getWidth() / frame_w;
+	spriteSheetHeight = Core::getTexture(path)->getHeight() / frame_h;
 }
 
-AnimatedSprite::~AnimatedSprite()
-{
+AnimatedSprite::~AnimatedSprite() {
+
 }
 
 void AnimatedSprite::render()
 {
+	// Only update the frame if the timer is up
+	// TODO: switch this to use a timer instead of tick counting
 	if (counter < 2) {
 		counter++;
-	}
-	else {
+	} else {
 		counter = 0;
 		frame_index++;
-		if (frame_index > frames[animation_index].y() - frames[animation_index].x()) {
-			//frame_index = frames[animation_index].x();
-			frame_index = 0;
-
-			ScreenCoord pos = getFramePos();
-			setSourcePos(pos.x(), pos.y());
-
-			if (animation_index == 2 || animation_index == 3 || animation_index == 4) {
-				animation_index = 0;
+		if (frame_index > frames[animation_index].y()) {
+			// Determine if we are done with the current animation state
+			if (!animations.empty()) {
+				animations.front().loops--;
+				// If we have no loops left, remove the animation state from the sprite
+				if (animations.front().loops == 0) {
+					animations.pop();
+				}
+				// If there is still an animtion state left, use that as the new animation index
+				if (!animations.empty()) animation_index = animations.front().animation_index;
 			}
-
-			if (animation_index == 5) {
-				animation_index = 6;
-				ScreenCoord pos = getFramePos();
-				setSourcePos(pos.x(), pos.y());
-			}
-
+			frame_index = frames[animation_index].x();
 		}
-		else {
-			ScreenCoord pos = getFramePos();
-			setSourcePos(pos.x(), pos.y());
-		}
-		//change the sprite
 
+		// Update the sprite source to the correct animation frame
+		updateSourcePosFromFrame();
 	}
 
+	// Actually draw the sprite
 	Core::Renderer::drawSprite(*this);
 }
 
-void AnimatedSprite::addAnimation(int start, int end)
-{
-	frames.push_back(ScreenCoord(start, end));
+void AnimatedSprite::addAnimation(unsigned int start, unsigned int end) {
+	frames.push_back(Vec2<unsigned int>(start, end));
 }
 
-ScreenCoord AnimatedSprite::getFramePos()
-{
-	int first = frames[animation_index].x();
-	int x = (first + frame_index) % frames_w;
-	int y = (first + frame_index) / frames_w;
-	//int y = 0;
+void AnimatedSprite::playAnimation(unsigned int animation, unsigned int loops) {
+	// Make sure the animation is valid
+	// TODO: better error handling
+	if (animation < 0 || animation >= frames.size()) return;
+	
+	// Reset the animation queue and set it to the new played animation
+	while (!animations.empty()) animations.pop();
+	queueAnimation(animation, loops);
 
-	y = frames_h - y - 1;
+	// Actually play the animation by setting it to the right frame
+	animation_index = animation;
+	frame_index = frames[animation_index].x();
+	updateSourcePosFromFrame();
+}
 
-	return ScreenCoord(x * src_w, y * src_h);
+void AnimatedSprite::queueAnimation(unsigned int animation, unsigned int loops) {
+	animations.push(AnimationState{ animation, loops });
+}
+
+// Helper function to calculate the source coordinates of the animation frame
+void AnimatedSprite::updateSourcePosFromFrame() {
+
+	int x = frame_index % spriteSheetWidth;
+	int y = frame_index / spriteSheetWidth;
+
+	// Dirty fix for inverted textures
+	// TODO: Fix this in engine renderer code
+	y = spriteSheetHeight - y - 1;
+
+	setSourcePos(x * src_w, y * src_h);
 }

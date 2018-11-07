@@ -55,7 +55,6 @@ ipch/
 
 # Library directory
 /libs/*
-!/libs/freetype
 
 # VScode folder
 .vs/
@@ -63,4 +62,6 @@ ipch/
 
 # DLL files
 *.dll
-!freetype.dll
+
+# ZIP files
+*.zip

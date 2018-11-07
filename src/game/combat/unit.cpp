@@ -71,6 +71,10 @@ void Unit::calculateScreenPosition() {
 	shadow.setPos(position.x() * tile_width, position.y() * tile_height + tile_height / 2);
 }
 
+// Not implemented in base unit, should be implemented in specialized classes
+void Unit::takeDamageCallback(int damage) {}
+void Unit::selectCallback() {}
+
 void Unit::generateDefaultUnitData() {
 	// Default name
 	data.name = "BOB";
@@ -82,15 +86,27 @@ void Unit::generateDefaultUnitData() {
 	// Default traits -> NOT YET IMPLEMENTED
 }
 
+void Unit::select() {
+	selected = true;
+	selectCallback();
+}
+
+void Unit::deselect() {
+	selected = false;
+}
+
 void Unit::takeDamage(int damage) {
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
+	// TODO: use different logic for healing
 	else if (health > maxHealth) {
 		health = maxHealth;
 	}
+	// Call the virtualized callback function for subclasses to customize
+	takeDamageCallback(damage);
 }
 
 void Unit::renderHealth() {
