@@ -5,6 +5,7 @@
 #include "renderer.hpp"
 #include "text/textRenderer.hpp"
 #include "textureManager.hpp"
+#include "mixer.hpp"
 #include "entity.hpp"
 #include "state.hpp"
 #include "sprite.hpp"
@@ -92,6 +93,25 @@ namespace Core {
 			Engine::get_instance().getTextRenderer()->setColour(colour); 
 		}
 
+	}
+
+	// Wrappers around mixer functionalities
+	namespace Mixer {
+		inline void loadAudio(const std::string &filePath, AudioType audioType) {
+			Engine::get_instance().getMixer()->loadAudio(filePath, audioType);
+		}
+
+		inline void playAudio(const std::string &filePath, int loops, float volume = 1) {
+			Engine::get_instance().getMixer()->playAudio(filePath, loops, volume);
+		}
+
+		inline void pauseAllAudio() {
+			Engine::get_instance().getMixer()->pauseAllAudio();
+		}
+
+		inline void resumeAllAudio() {
+			Engine::get_instance().getMixer()->resumeAllAudio();
+		}
 	}
 
 }

@@ -1,13 +1,13 @@
 # Makefile for macOS
 CXX = g++
-LIBS = -lGLEW -lSDL2 -lfreetype -L/usr/local/Cellar/sdl2/2.0.8/lib/ -L/usr/local/Cellar/glew/2.1.0/lib/ -L/usr/local/Cellar/freetype/2.9.1/lib/
-INCLUDE = -I/usr/local/Cellar/sdl2/2.0.8/include/SDL2/ -I/usr/local/Cellar/glew/2.1.0/include/ -Ilibs/stb_image/ -I/usr/local/Cellar/freetype/2.9.1/include/freetype2/
-LFLAGS = -std=c++11 -framework OpenGL -w $(LIBS) $(INCLUDE)
+LIBS = -lGLEW -lSDL2 -lSDL2_mixer -lfreetype -L/usr/local/Cellar/sdl2/2.0.8/lib/ -L/usr/local/Cellar/glew/2.1.0/lib/ -L/usr/local/Cellar/freetype/2.9.1/lib/ -L/usr/local/Cellar/sdl2_mixer/2.0.4/lib
+INCLUDE = -I/usr/local/Cellar/sdl2/2.0.8/include/SDL2/ -I /usr/local/Cellar/sdl2_mixer/2.0.4/include/SDL2 -I/usr/local/Cellar/glew/2.1.0/include/ -Ilibs/stb_image/ -I/usr/local/Cellar/freetype/2.9.1/include/freetype2/
+LFLAGS = -std=c++11 -framework OpenGL -w $(LIBS) $(INCLUDE) -D_DEBUG
 CFLAGS = $(LFLAGS) -o bin/objs/$@
-OBJS = engine.o entity.o indexBuffer.o shader.o texture.o vertexArray.o vertexBuffer.o renderer.o sprite.o state.o combat.o customization.o cutscene.o vec.o textRenderer.o font.o player.o grid.o enemy.o menu.o unit.o attack.o
+OBJS = mixer.o attackloader.o textureManager.o animatedSprite.o engine.o entity.o indexBuffer.o shader.o texture.o vertexArray.o vertexBuffer.o renderer.o sprite.o state.o combat.o customization.o cutscene.o vec.o textRenderer.o font.o player.o grid.o enemy.o menu.o unit.o attack.o
 BIN_OBJS = $(addprefix bin/objs/, $(OBJS))
 
-VPATH = src src/engine src/engine/opengl src/engine/text src/game src/game/combat src/math bin bin/objs
+VPATH = src src/engine src/engine/opengl src/engine/text src/game src/game/combat src/math bin bin/objs src/game/util
 TARGET = bin/game
 
 all: $(TARGET)
@@ -44,6 +44,10 @@ enemy.o: enemy.cpp core.hpp vec.hpp
 menu.o: menu.cpp core.hpp
 unit.o: unit.cpp core.hpp attack.hpp unitData.hpp
 attack.o: attack.cpp core.hpp vec.hpp
+attackloader.o: attackloader.cpp attack.hpp
+textureManager.o: textureManager.cpp
+animatedSprite.o: animatedSprite.cpp glwrappers.hpp vec.hpp sprite.hpp
+mixer.o: mixer.cpp
 
 .cpp.o:
 	$(CXX) $(CFLAGS) -c $<
