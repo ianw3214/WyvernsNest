@@ -1,31 +1,47 @@
 #pragma once
+
+#include <queue>
+
 #include "opengl/glwrappers.hpp"
 #include "../math/vec.hpp"
 #include "sprite.hpp"
 
+// Structure to represent a queued animation
+struct AnimationState {
+	unsigned int animation_index;
+	unsigned int loops;
+};
 
 class AnimatedSprite : public Sprite {
 public:
-	AnimatedSprite(const std::string & path, int w, int h);
+	// Constructor of animated sprite using the width/height of each animation frame
+	AnimatedSprite(const std::string& path, int frame_w, int frame_h);
 	~AnimatedSprite();
 
-	void render();
+	void render() override;
+	void addAnimation(unsigned int start, unsigned int end);
 
+	void playAnimation(unsigned int animation, unsigned int loops = 1);
+	void queueAnimation(unsigned int animation, unsigned int loops = 1);
+	
+	// Sprite sheet size in terms of number of sprites
+	int spriteSheetWidth;
+	int spriteSheetHeight;
 
-	int w, h;
-	int src_w, src_h;
-	int original_w, original_h;
+private:
 
-	std::vector<ScreenCoord> frames;
-	void addAnimation(int start, int end);
+	// Animated sprite information
+	std::vector<Vec2<unsigned int>> frames;
 
-	ScreenCoord getFramePos();
-
+	// Animated sprite state variables
 	int counter;
-	int frame_index;
-	int animation_index;
+	unsigned int frame_index;
+	unsigned int animation_index;
 
-	int frames_w;
-	int frames_h;
+	// Helper function to calculate animation frame coordinates
+	void updateSourcePosFromFrame();
+
+	// Queue of upcoming animations
+	std::queue<AnimationState> animations;
 
 };

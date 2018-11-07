@@ -36,9 +36,6 @@ public:
 	// The position of the unit in terms of screen coordinates
 	ScreenCoord screenPosition;
 
-	// A flag indicating whether the unit is selected
-	bool selected = false;
-
 	// Getter methods
 	inline UnitState getState() const { return state; }
 	inline UnitType getType() const { return type; }
@@ -50,18 +47,20 @@ public:
 	inline int getMoveSpeed() const { return move_speed; }
 	inline int getMaxHealth() const { return maxHealth; }
 
-
 	// Setter methods
 	void setTileSize(int width, int height);
 	void setTopMargin(int margin);
 	void setState(UnitState newState) { state = newState; }
 
-
 	// The health variables of the unit
 	int health;
 	int maxHealth;
-	void takeDamage(int damage);
 	void renderHealth();
+
+	// Utility functions common across all units
+	void select();
+	void deselect();
+	void takeDamage(int damage);
 
 	// The attacks of the unit
 	Attack attack1;
@@ -74,6 +73,7 @@ protected:
 
 	// Variables that contain various useful stats for the unit
 	int move_speed;
+	bool selected = false;
 	void loadPropertiesFromUnitData();
 
 	// State variable of the unit
@@ -92,6 +92,10 @@ protected:
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
+
+	// Virtual functions that units can override to customize functionality
+	virtual void takeDamageCallback(int damage);
+	virtual void selectCallback();
 
 	// Common sprites used by most units
 	Sprite shadow;

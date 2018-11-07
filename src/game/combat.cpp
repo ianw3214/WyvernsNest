@@ -161,18 +161,18 @@ Unit * Combat::getUnitAt(ScreenCoord at)
 	return nullptr;
 }
 
-// Returns the next logical unit in combat
-void Combat::nextUnitTurn()
-{
+// Choose the next unit in combat to take a turn
+void Combat::nextUnitTurn() {
+	// Increment the unit index to get the next logical unit in combat
 	unitIndex++;
 	if (unitIndex == units.size()) {
 		unitIndex = 0;
 	}
+	// Skip the units turn if its dead
 	if (units[unitIndex]->getState() == UnitState::DEAD) {
 		nextUnitTurn();
 		return;
-	}
-	else {
+	} else {
 		selectUnit(units[unitIndex]);
 	}
 	// If the current unit is an enemy, take its turn
@@ -186,15 +186,12 @@ void Combat::selectUnit(Unit * unit)
 {
 	if (current) {
 		current->setState(UnitState::IDLE);
-		current->selected = false;
+		current->deselect();
 	}
 
 	current = unit;
-	unit->selected = true;
+	unit->select();
 
-	if (unit->getType() == UnitType::PLAYER) {
-		dynamic_cast<Player*>(unit)->sprite_idle.animation_index = 1;
-	}
 }
 
 bool Combat::isPosEmpty(Vec2<int> pos) const {
