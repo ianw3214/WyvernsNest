@@ -7,6 +7,7 @@
 class Renderer;
 class TextRenderer;
 class TextureManager;
+class Mixer;
 
 class State;
 
@@ -35,6 +36,7 @@ public:
 	Renderer * getRenderer();
 	TextRenderer * getTextRenderer();
 	TextureManager * getTextureManager();
+	Mixer * getMixer();
 
 	// State changing functions
 	void setState(State * state);
@@ -53,6 +55,7 @@ private:
 	Renderer * m_renderer;
 	TextRenderer * m_textRenderer;
 	TextureManager * m_textureManager;
+	Mixer * m_mixer;
 
 	// SDL/OpenGL specific objects
 	SDL_Window * m_window;

@@ -19,6 +19,18 @@ Mixer::~Mixer() {
 }
 
 void Mixer::loadAudio(const std::string &filePath, AudioType audioType) {
+    auto music_idx = m_music.find(filePath);
+    if(music_idx != m_music.end()) {
+        // This has already been loaded
+        return;
+    }
+
+    auto chunk_idx = m_chunks.find(filePath);
+    if(chunk_idx != m_chunks.end()) {
+        // This has already been loaded
+        return;
+    }
+
     switch(audioType) {
     case AudioType::Chunk:
         {
@@ -71,4 +83,12 @@ void Mixer::playAudio(const std::string &filePath, int loops, float volume) {
             // TODO: error handling, couldn't play music
         }
     }
+}
+
+void Mixer::pauseAllAudio() {
+    Mix_PauseMusic();
+}
+
+void Mixer::resumeAllAudio() {
+    Mix_ResumeMusic();
 }
