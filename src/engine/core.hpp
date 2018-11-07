@@ -112,6 +112,14 @@ namespace Core {
 		inline void resumeAllAudio() {
 			Engine::get_instance().getMixer()->resumeAllAudio();
 		}
+
+		inline void fadeOutAllMusic(int ms) {
+			Engine::get_instance().getMixer()->fadeOutAllMusic();
+		}
+
+		inline void fadeInAllMusic(const std::string &filePath, int ms, int loops = 0) {
+			Engine::get_instance().getMixer()->fadeInMusic(filePath, ms, loops);
+		}
 	}
 
 }
