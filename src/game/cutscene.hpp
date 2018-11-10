@@ -13,6 +13,7 @@
 #pragma once
 
 #include "../engine/core.hpp"
+#include <ctime>
 
 class Cutscene : public State {
 
@@ -28,6 +29,7 @@ public:
 
 private:
 	State *m_state;
+	std::clock_t m_start;
 	Sprite *m_curr_img;
 	unsigned int m_position;
 	std::vector<Sprite *> m_sprites;

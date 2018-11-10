@@ -4,6 +4,7 @@
 
 #include "engine/core.hpp"
 #include "game/menu.hpp"
+#include "game/cutscene.hpp"
 
 #include "engine/mixer.hpp"
 
@@ -23,6 +24,7 @@ int main(int argc, char* argv[]) {
 
 	// Combat * state = new Combat();
 	Menu * state = new Menu();
+	// Cutscene *state = new Cutscene(state1); // Testing cutscene
 	Core::setState(state);
 
 	// Main engine loop
