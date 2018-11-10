@@ -3,7 +3,7 @@
 #include <iostream>
 #include <ctime>
 
-Cutscene::Cutscene(State * state, int scene_time) {
+Cutscene::Cutscene(State * state, int scene_time, bool timed_scene) {
 
 	// For testing purposes populate sprites with temp images
 	m_sprites.push_back(new Sprite("res/test.png"));
@@ -17,6 +17,7 @@ Cutscene::Cutscene(State * state, int scene_time) {
 	m_curr_img = m_sprites[m_position];
 	m_state = state;
 	m_start = std::clock();
+	m_timed_scene = timed_scene;
 }
 
 Cutscene::~Cutscene() {
@@ -35,7 +36,7 @@ void Cutscene::handleEvent(const SDL_Event& e) {
 }
 
 void Cutscene::update(int delta) {
-	if (((std::clock() - m_start) / (double)CLOCKS_PER_SEC) > m_scene_time) {
+	if (((std::clock() - m_start) / (double)CLOCKS_PER_SEC) > m_scene_time && m_timed_scene) {
 		if (m_position >= m_sprites.size() - 1) {
 			changeState(m_state);
 		}
