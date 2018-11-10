@@ -20,7 +20,7 @@ class Cutscene : public State {
 public:
 
 	// The constructor takes the next State to transition to as input
-	Cutscene(State * state);
+	Cutscene(State * state, int scene_time=5);
 	~Cutscene();
 
 	void handleEvent(const SDL_Event& e) override;
@@ -30,6 +30,7 @@ public:
 private:
 	State *m_state;
 	std::clock_t m_start;
+	int m_scene_time;
 	Sprite *m_curr_img;
 	unsigned int m_position;
 	std::vector<Sprite *> m_sprites;
