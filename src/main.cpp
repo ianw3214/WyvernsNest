@@ -6,7 +6,7 @@
 #include "game/menu.hpp"
 
 #include "engine/mixer.hpp"
-
+#include "game/skillTree.hpp"
 int main(int argc, char* argv[]) {
 
 	// Initialize the engine
@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
 
 	// Core::setDebugMode(true);
 
-	// Combat * state = new Combat();
-	Menu * state = new Menu();
+	SkillTree * state = new SkillTree();
+	// Menu * state = new Menu();
 	Core::setState(state);
 
 	// Main engine loop

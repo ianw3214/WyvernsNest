@@ -1,4 +1,5 @@
 #pragma once
+#include <cmath>
 
 // Templated vec2 data type
 template<typename T>

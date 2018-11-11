@@ -1,12 +1,11 @@
 # Makefile for macOS
 CXX = g++
 LIBS = -lGLEW -lSDL2 -lSDL2_mixer -lfreetype -L/usr/local/Cellar/sdl2/2.0.8/lib/ -L/usr/local/Cellar/glew/2.1.0/lib/ -L/usr/local/Cellar/freetype/2.9.1/lib/ -L/usr/local/Cellar/sdl2_mixer/2.0.4/lib
-INCLUDE = -I/usr/local/Cellar/sdl2/2.0.8/include/SDL2/ -I /usr/local/Cellar/sdl2_mixer/2.0.4/include/SDL2 -I/usr/local/Cellar/glew/2.1.0/include/ -Ilibs/stb_image/ -I/usr/local/Cellar/freetype/2.9.1/include/freetype2/
+INCLUDE = -Isrc/vendor -I/usr/local/Cellar/sdl2/2.0.8/include/SDL2/ -I /usr/local/Cellar/sdl2_mixer/2.0.4/include/SDL2 -I/usr/local/Cellar/glew/2.1.0/include/ -Ilibs/stb_image/ -I/usr/local/Cellar/freetype/2.9.1/include/freetype2/
 LFLAGS = -std=c++11 -framework OpenGL -w $(LIBS) $(INCLUDE) -D_DEBUG
 CFLAGS = $(LFLAGS) -o bin/objs/$@
-OBJS = mixer.o attackloader.o textureManager.o animatedSprite.o engine.o entity.o indexBuffer.o shader.o texture.o vertexArray.o vertexBuffer.o renderer.o sprite.o state.o combat.o customization.o cutscene.o vec.o textRenderer.o font.o player.o grid.o enemy.o menu.o unit.o attack.o
+OBJS = mixer.o attackloader.o textureManager.o animatedSprite.o engine.o entity.o indexBuffer.o shader.o texture.o vertexArray.o vertexBuffer.o renderer.o sprite.o state.o combat.o customization.o skillTree.o cutscene.o vec.o textRenderer.o font.o player.o grid.o enemy.o menu.o unit.o attack.o
 BIN_OBJS = $(addprefix bin/objs/, $(OBJS))
-
 VPATH = src src/engine src/engine/opengl src/engine/text src/game src/game/combat src/math bin bin/objs src/game/util
 TARGET = bin/game
 
@@ -36,6 +35,7 @@ sprite.o: sprite.cpp glwrappers.hpp
 state.o: state.cpp
 combat.o: combat.cpp core.hpp
 customization.o: customization.cpp core.hpp unitData.hpp
+skillTree.o: skillTree.cpp core.hpp unitData.hpp
 cutscene.o: cutscene.cpp core.hpp
 vec.o: vec.cpp
 player.o: player.cpp core.hpp vec.hpp attack.hpp
