@@ -6,7 +6,7 @@
 #include "game/menu.hpp"
 
 #include "engine/mixer.hpp"
-#include "game/skillTree.hpp"
+#include "game/customization.hpp"
 int main(int argc, char* argv[]) {
 
 	// Initialize the engine
@@ -21,7 +21,7 @@ int main(int argc, char* argv[]) {
 
 	// Core::setDebugMode(true);
 
-	SkillTree * state = new SkillTree();
+	Customization * state = new Customization();
 	// Menu * state = new Menu();
 	Core::setState(state);
 
