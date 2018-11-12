@@ -62,7 +62,6 @@ ipch/
 
 # DS files
 .DS_Store
-**/.DS_Store
 
 # DLL files
 *.dll
