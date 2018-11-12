@@ -6,6 +6,7 @@
 Node * example_tree;
 int screenWidth = 1280;
 int screenHeight = 720;
+
 int height;
 int *already_rendered; //holds the number of nodes already render at each depth 
 int *nodes_per_depth; //holds the total number of nodes at each depth
@@ -126,16 +127,18 @@ void renderNode(Node *node, int parent_x,int parent_y,int node_x,int node_y){
 	}else if(node->state == Visited){
 		//draw line connecting parent and child
 		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
-			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		Sprite sprite("res/test2.png");
+			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		
 		//draw node
+		Sprite sprite("res/test2.png");
 		sprite.setSize(node_width, node_height);
 		sprite.setPos(node_x, node_y);
 		sprite.render();
 	}else if(node->state == Reachable){
 		//draw line connecting parent and child
 		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
-			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		Sprite sprite("res/test3.png");
+			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		
 		//draw node
+		Sprite sprite("res/test3.png");
 		sprite.setSize(node_width, node_height);
 		sprite.setPos(node_x, node_y);
 		sprite.render();
