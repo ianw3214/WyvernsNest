@@ -17,9 +17,6 @@ public:
     virtual void render();
     virtual void update(int delta);
 
-    // Setter functions
-    inline void setCombatReference(Combat * combat) { this->combat = combat; }  
-
     // The accessor method for the combat state to call an enemy to take its turn
     void takeTurn();
 
@@ -35,8 +32,6 @@ private:
     // Enemy sprite
     Sprite sprite;
 
-    // Hold a reference to the combat state
-    Combat * combat;
 };
 ```
 
@@ -49,7 +44,7 @@ To create a custom enemy, the **sprite** needs to be changed to the desired enem
 The base unit class provides a **move** function that helps with unit movement:  
 
 ```c++
-bool move(Combat& combat, Vec2<int> pos);`  
+bool move(Vec2<int> pos);`  
 ```
 
 The function takes in a reference to the combat state in order to determine a valid path, as well as the target destination. It then sets the **path** variable of the unit to reflect the new path that the unit should be taking to reach the destination.  
@@ -64,7 +59,7 @@ std::vector<Player*> getPlayers() const;
 If you want to test if a path works without moving the enemy, the base unit class provides a **getPath** method that returns a valid path to the destination if it exists.
 
 ```c++
-std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
+std::vector<ScreenCoord> getPath(ScreenCoord to);
 ```
 
 ***
@@ -133,14 +128,14 @@ void Enemy::handleMovement() {
         x_offset = rand() % (getMoveSpeed() * 2 + 1) - getMoveSpeed();
         y_offset = getMoveSpeed() - std::abs(x_offset);
         // If we can find a path to the target location, then move to that location
-        if (getPath(*combat, position - Vec2<int>(x_offset, y_offset)).size() > 0) {
+        if (getPath(position - Vec2<int>(x_offset, y_offset)).size() > 0) {
             break;
         }
         tries--;
     }
     // If the movement fails, then directly execute the attack state
     // NOTE: if movement succeeds, then the handleAttack function doesn't need to be explicitly called
-    if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
+    if (!move(position - Vec2<int>(x_offset, y_offset))) {
         // Directly handle the attacks if no movement could be done
         handleAttack();
     }
@@ -177,5 +172,21 @@ void Enemy::handleAttack() {
     }
     // If no attacks could be done, set the unit to be at done state
     state = UnitState::DONE;
+}
+```
+
+To test the enemy AI, you can instantiate an enemy in the combat state constructor via hard code for now. The usage is as so:
+
+```c++
+Combat::Combat() :
+    current(nullptr)
+{
+    // ...
+
+    // The first argument is a pointer to the newly created enemy
+    // The last two arguments are the initial position of the enemy
+    addEnemy(new YOUR_ENEMY_CLASS(), 4, 4);
+
+    // ...
 }
 ```

@@ -19,9 +19,6 @@ public:
 	virtual void render();
 	virtual void update(int delta);
 
-	// Setter functions
-	inline void setCombatReference(Combat * combat) { this->combat = combat; }
-
 	void takeTurn();
 
 protected:
@@ -33,9 +30,6 @@ protected:
 
 	// Enemy sprite
 	Sprite sprite;
-
-	// Hold a reference to the combat state
-	Combat * combat;
 
 private:
 

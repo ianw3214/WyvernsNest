@@ -138,7 +138,7 @@ void Player::handleEvent(const SDL_Event & event)
 			if (event.key.keysym.sym == SDLK_KP_1) {
 				if (!moved) {
 					current_action = PlayerAction::MOVE;
-					updatePossibleMoves(*combat);
+					updatePossibleMoves();
 				}
 			}
 			// Attack 1 key
@@ -192,7 +192,7 @@ void Player::update(int delta) {
 	}
 }
 
-void Player::click(Vec2<int> to, Combat& combat)
+void Player::click(Vec2<int> to)
 {
 	if (state != UnitState::IDLE) return;
 	switch (current_action) {
@@ -201,13 +201,13 @@ void Player::click(Vec2<int> to, Combat& combat)
 		} break;
 		case PlayerAction::MOVE: {
 			// Move the player using the base unit move function
-			if (move(combat, to)) moved = true;
+			if (move(*combat, to)) moved = true;
 			current_action = PlayerAction::NONE;
 		} break;
 			// TODO: determine if an attack is valid, and don't execute the attack if it isn't
 		case PlayerAction::ATTACK_1: {
 			// do the action here
-			attack1.attack(to, combat);
+			attack1.attack(to, *combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -217,7 +217,7 @@ void Player::click(Vec2<int> to, Combat& combat)
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
-			attack2.attack(to, combat);
+			attack2.attack(to, *combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -231,11 +231,11 @@ void Player::click(Vec2<int> to, Combat& combat)
 	}
 }
 
-void Player::setPathLine(Combat & combat, Vec2<int> dest) {
-	path_line = getPath(combat, dest);
+void Player::setPathLine(Vec2<int> dest) {
+	path_line = getPath(*combat, dest);
 }
 
-std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
+std::vector<ScreenCoord> Player::getPossibleMoves() {
 	std::vector<std::vector<ScreenCoord>> open;
 	std::vector<ScreenCoord> seen;
 
@@ -257,7 +257,7 @@ std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
 
 			seen.push_back(end_position);
 
-			std::vector<ScreenCoord> successors = getValidNeighbours(end_position, combat);
+			std::vector<ScreenCoord> successors = getValidNeighbours(end_position, *combat);
 			for (ScreenCoord succ : successors) {
 				std::vector<ScreenCoord> s(n);
 				s.push_back(succ);
@@ -269,9 +269,9 @@ std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
 	return seen;
 }
 
-void Player::updatePossibleMoves(Combat & combat)
+void Player::updatePossibleMoves()
 {
-	possibleMoves = getPossibleMoves(combat);
+	possibleMoves = getPossibleMoves();
 }
 
 void Player::takeDamageCallback(int damage) {

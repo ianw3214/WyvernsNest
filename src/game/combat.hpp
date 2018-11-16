@@ -26,8 +26,10 @@ public:
 	// Utility function to get the unit at a grid position
 	Unit * getUnitAt(ScreenCoord at);
 
-	// Utility function to access Player units
+	// Other utility functions
 	std::vector<Player*> getPlayers() const;
+	void addPlayer(int x, int y);
+	void addEnemy(Enemy * enemy, int x, int y);
 
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
