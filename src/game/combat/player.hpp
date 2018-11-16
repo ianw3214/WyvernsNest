@@ -2,10 +2,10 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "../../engine/animatedSprite.hpp"
+
 #include "attack.hpp"
 #include "unit.hpp"
-#include "node.hpp"
-#include "../../engine/animatedSprite.hpp"
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
@@ -66,6 +66,10 @@ protected:
 	void selectCallback() override;
 
 private:
+
+	// The attacks of the player
+	Attack attack1;
+	Attack attack2;
 
 	// The outline of the player movement path to the cursor
 	std::vector<ScreenCoord> path_line;

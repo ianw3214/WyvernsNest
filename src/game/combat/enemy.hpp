@@ -2,7 +2,9 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+
 #include "unit.hpp"
+#include "attack.hpp"
 
 #define ENEMY_DEFAULT_MOVE_COUNTER		20
 #define ENEMY_DEFAULT_ATTACK_COUNTER	20
@@ -23,6 +25,9 @@ public:
 	void takeTurn();
 
 private:
+
+	// Basic bite attack of enemy
+	Attack bite;
 	
 	// Helper method to handle the movement portion of an enemy turn
 	void handleMovement();

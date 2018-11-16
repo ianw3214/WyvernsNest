@@ -63,10 +63,6 @@ public:
 	void takeDamage(int damage);
 	bool move(Combat& combat, Vec2<int> pos);
 
-	// The attacks of the unit
-	Attack attack1;
-	Attack attack2;
-
 	// Utility references to the combat state to access needed data
 	Combat * combat;
 
