@@ -82,7 +82,7 @@ protected:
 	inline bool compareCounter(int num) const { return state_counter >= num; }
 
 	// Variables to help keep track of unit movement
-	std::vector<ScreenCoord> path;
+	std::vector<Vec2<int>> path;
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;

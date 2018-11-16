@@ -159,6 +159,16 @@ Unit * Combat::getUnitAt(ScreenCoord at)
 	return nullptr;
 }
 
+std::vector<Player*> Combat::getPlayers() const {
+	std::vector<Player*> result;
+	for (Unit * unit : units) {
+		if (unit->getType() == UnitType::PLAYER) {
+			result.push_back(dynamic_cast<Player*>(unit));
+		}
+	}
+	return result;
+}
+
 // Choose the next unit in combat to take a turn
 void Combat::nextUnitTurn() {
 	// Increment the unit index to get the next logical unit in combat

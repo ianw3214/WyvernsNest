@@ -16,8 +16,8 @@ public:
 	Enemy();
 	~Enemy();
 
-	void render();
-	void update(int delta);
+	virtual void render();
+	virtual void update(int delta);
 
 	// Setter functions
 	inline void setCombatReference(Combat * combat) { this->combat = combat; }
@@ -30,10 +30,11 @@ private:
 	Attack bite;
 	
 	// Helper method to handle the movement portion of an enemy turn
-	void handleMovement();
+	virtual void handleMovement();
 	// Helper method to handle the attack portion of an enemy turn
-	void handleAttack();
+	virtual void handleAttack();
 
+	// Enemy sprite
 	Sprite sprite;
 
 	// Hold a reference to the combat state

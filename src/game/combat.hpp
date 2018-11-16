@@ -25,21 +25,26 @@ public:
 
 	// Utility function to get the unit at a grid position
 	Unit * getUnitAt(ScreenCoord at);
-	void nextUnitTurn();
-	void selectUnit(Unit * unit);
+
+	// Utility function to access Player units
+	std::vector<Player*> getPlayers() const;
 
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
-	Unit * current;
 
 private:
 
 	// Combat state variables
 	bool game_over;
 	bool game_win;
-	
+	Unit * current;
+
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
+
+	// Utility functions for turn ordering
+	void nextUnitTurn();
+	void selectUnit(Unit * unit);
 
 	// Reference to the current unit that is taking its action
 	int unitIndex;
