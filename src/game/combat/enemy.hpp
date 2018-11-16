@@ -24,10 +24,7 @@ public:
 
 	void takeTurn();
 
-private:
-
-	// Basic bite attack of enemy
-	Attack bite;
+protected:
 	
 	// Helper method to handle the movement portion of an enemy turn
 	virtual void handleMovement();
@@ -39,5 +36,10 @@ private:
 
 	// Hold a reference to the combat state
 	Combat * combat;
+
+private:
+
+	// Basic bite attack of enemy
+	Attack bite;
 
 };
