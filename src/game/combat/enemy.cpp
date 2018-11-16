@@ -4,7 +4,7 @@
 
 Enemy::Enemy() :
 	Unit(UnitType::ENEMY),
-	sprite("res/assets/WyvernFighter_Sprite.png")
+	sprite("res/assets/enemies/WyvernFighter_Sprite.png")
 {
 	sprite.setSize(sprite_width, sprite_height);
 

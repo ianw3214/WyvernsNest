@@ -6,8 +6,8 @@
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	player_sprite("res/FemaleattackTEST.png", 96, 96),
-	valid_tile("res/assets/valid.png")
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png")
 {
 	player_sprite.setSize(sprite_width, sprite_height);
 
@@ -22,8 +22,8 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	player_sprite("res/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/valid.png")
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png")
 {
 	player_sprite.setSize(300, sprite_height);
 	player_sprite.setSourceSize(96, 96);
