@@ -107,7 +107,11 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 }
 
 // Display the valid attack tiles on the grid
-void Attack::renderValidGrid() {
+void Attack::renderValidGrid(int tile_width, int tile_height) {
+
+	// Set the tile width/height before rendering
+	validSprite.setSize(tile_width, tile_height);
+
 	switch (type) {
 	case AttackType::SELF: {
 		// TODO: Somehow display the valid sprite
@@ -179,18 +183,24 @@ void Attack::renderValidGrid() {
 	}
 
 	//mouse rendering
-	renderValidTarget();
+	renderValidTarget(tile_width, tile_height);
 	
 }
 
-void Attack::renderValidTarget() {
+void Attack::renderValidTarget(int tile_width, int tile_height) {
+
+	// Set the tile width/height before rendering
+	validSprite.setSize(tile_width, tile_height);
+	targetValidSprite.setSize(tile_width, tile_height);
+	targetInvalidSprite.setSize(tile_width, tile_height);
+
+	// Get the current mouse position in the game
 	int mouseX; int mouseY;
 	SDL_GetMouseState(&mouseX, &mouseY);
 	int x = static_cast<int>(floor(mouseX / tile_width));
 	int y = static_cast<int>(floor(mouseY / tile_height));
-
-
-
+	
+	// Render the valid target based on whether it IS valid or not
 	switch (type) {
 	case AttackType::MELEE: {
 		if (isValid(ScreenCoord(x, y))) {
@@ -284,14 +294,6 @@ bool Attack::isValid(ScreenCoord pos) {
 		int y_diff = std::abs(pos.y() - source->position.y());
 		if (x_diff + y_diff == 1) return true;
 		return false;
-		/*
-		if ((pos.x() == source->position.x() + 1 || pos.x() == source->position.x() - 1) && pos.y() == source->position.y()) {
-			return true;
-		}
-		else if ((pos.y() == source->position.y() + 1 || pos.y() == source->position.y() - 1) && pos.x() == source->position.x()) {
-			return true;
-		}
-		*/
 	} break;
 	case AttackType::RANGED: {
 		int x_diff = std::abs(pos.x() - source->position.x());
@@ -328,14 +330,6 @@ bool Attack::isValid(ScreenCoord pos) {
 	return false;
 }
 
-void Attack::setTileSize(int width, int height) {
-	tile_width = width;
-	tile_height = height;
-	validSprite.setSize(tile_width, tile_height);
-	targetValidSprite.setSize(tile_width, tile_height);
-	targetInvalidSprite.setSize(tile_width, tile_height);
-}
-	
 void Attack::attackAoE(ScreenCoord pos, Combat & combat) {
 	for (int i = -aoe; i <= aoe; ++i) {
 		int height = aoe - std::abs(i);

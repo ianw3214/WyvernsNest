@@ -63,10 +63,6 @@ public:
 	void takeDamage(int damage);
 	bool move(Combat& combat, Vec2<int> pos);
 
-	// The attacks of the unit
-	Attack attack1;
-	Attack attack2;
-
 	// Utility references to the combat state to access needed data
 	Combat * combat;
 
@@ -86,7 +82,7 @@ protected:
 	inline bool compareCounter(int num) const { return state_counter >= num; }
 
 	// Variables to help keep track of unit movement
-	std::vector<ScreenCoord> path;
+	std::vector<Vec2<int>> path;
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;
