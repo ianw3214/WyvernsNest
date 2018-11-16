@@ -4,7 +4,8 @@
 #include "../../math/vec.hpp"
 #include "unit.hpp"
 
-#define ENEMY_DEFAULT_ATTACK_COUNTER 20
+#define ENEMY_DEFAULT_MOVE_COUNTER		20
+#define ENEMY_DEFAULT_ATTACK_COUNTER	20
 
 class Enemy : public Unit {
 
@@ -16,14 +17,21 @@ public:
 	void render();
 	void update(int delta);
 
-	void takeTurn(Combat& combat);
+	// Setter functions
+	inline void setCombatReference(Combat * combat) { this->combat = combat; }
 
-	int id;
-
-	bool isDead = false;
+	void takeTurn();
 
 private:
 	
+	// Helper method to handle the movement portion of an enemy turn
+	void handleMovement();
+	// Helper method to handle the attack portion of an enemy turn
+	void handleAttack();
+
 	Sprite sprite;
+
+	// Hold a reference to the combat state
+	Combat * combat;
 
 };
