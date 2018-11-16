@@ -66,6 +66,5 @@ private:
 
 	// Grid sprites
 	Sprite tilesheet;
-	Sprite selected;
 
 };

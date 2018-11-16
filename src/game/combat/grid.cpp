@@ -7,14 +7,12 @@ Grid::Grid() :
 	tilemap(DEFAULT_TILEMAP),
 	map_width(DEFAULT_MAP_WIDTH),
 	map_height(DEFAULT_MAP_HEIGHT),
-	tilesheet("res/assets/Tiles.png"), 
-	selected("res/test3.png") 
+	tilesheet("res/assets/tiles/tilesheet1.png")
 {
 	// Calculate the tile size based on the screen size
 	tile_width = Core::windowWidth() / map_width;
 	tile_height = Core::windowHeight() / map_height;
 	// Initialize the tile sprites to the tile width/height
-	selected.setSize(tile_width, tile_height);
 	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
 	tilesheet.setSize(tile_width, tile_height);
 
@@ -70,12 +68,6 @@ void Grid::render()
 			tilesheet.setSourcePos(INDEX_TO_X(index) * SOURCE_TILE_WIDTH, INDEX_TO_Y(index) * SOURCE_TILE_HEIGHT);
 			tilesheet.setPos(tile_width * x, tile_height * y);
 			tilesheet.render();
-			/*	RENDER THE SELECTED TILE
-			if (y == mousePos.y() && x == mousePos.x()) {
-				selected.setPos(tile_width * x , Core::windowHeight() - tile_height * (y + 1));
-				selected.render();
-			}
-			*/
 		}
 	}
 	// Render the debugging outline if set

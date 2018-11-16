@@ -6,8 +6,8 @@
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	player_sprite("res/FemaleattackTEST.png", 96, 96),
-	valid_tile("res/assets/valid.png")
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png")
 {
 	player_sprite.setSize(sprite_width, sprite_height);
 
@@ -22,8 +22,8 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
-	player_sprite("res/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/valid.png")
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png")
 {
 	player_sprite.setSize(300, sprite_height);
 	player_sprite.setSourceSize(96, 96);
@@ -184,7 +184,6 @@ void Player::update(int delta) {
 			// Do nothing by default
 		} break;
 	}
-
 }
 
 void Player::click(Vec2<int> to, Combat& combat)
@@ -195,6 +194,7 @@ void Player::click(Vec2<int> to, Combat& combat)
 			// do nothing
 		} break;
 		case PlayerAction::MOVE: {
+			/*
 			// Only move the player to empty positions
 			if (combat.isPosEmpty(to)) {
 				// Also check if the movement is valid first
@@ -214,7 +214,9 @@ void Player::click(Vec2<int> to, Combat& combat)
 						current_action = PlayerAction::NONE;
 					}
 				}
-			}
+			}*/
+			if (move(combat, to)) moved = true;
+			current_action = PlayerAction::NONE;
 		} break;
 			// TODO: determine if an attack is valid, and don't execute the attack if it isn't
 		case PlayerAction::ATTACK_1: {
@@ -243,29 +245,8 @@ void Player::click(Vec2<int> to, Combat& combat)
 	}
 }
 
-void Player::calculateScreenPositionMovement() {
-		screenPosition.x() += moveNext.x() * tile_width / 20;
-		screenPosition.y() += moveNext.y() * tile_height / 20;
-
-		//make the shadow move during movement
-		shadow.setPos(screenPosition.x() - (tile_width - sprite_width) / 2, screenPosition.y() - tile_height / 2 + sprite_height);
-
-}
-
-void Player::incrementMovement() {
-
-	position += moveNext;
-
-	//nothing left
-	if (path.size() <= 0) return;
-
-	ScreenCoord next = path[0];
-	path.erase(path.begin());
-
-	moveNext = ScreenCoord(next.x() - position.x(), next.y() - position.y());
-
-	calculateScreenPosition();
-
+void Player::setPathLine(Combat & combat, Vec2<int> dest) {
+	path_line = getPath(combat, dest);
 }
 
 std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
@@ -307,43 +288,6 @@ void Player::updatePossibleMoves(Combat & combat)
 	possibleMoves = getPossibleMoves(combat);
 }
 
-std::vector<ScreenCoord> Player::getPath(Combat& combat, ScreenCoord to) {
-	std::vector<std::vector<ScreenCoord>> open;
-
-	std::vector<ScreenCoord> root;
-	root.push_back(position);
-
-	open.push_back(root);
-	while (!(open.empty())) {
-		std::vector<ScreenCoord> n = heuristic(&open);
-		//std::vector<ScreenCoord> n = open[0];
-		//open.erase(*node);
-		std::vector<std::vector<ScreenCoord>>::iterator index = std::find(open.begin(), open.end(), n);
-		open.erase(index);
-
-		if (n.size() <= static_cast<unsigned int>(getMoveSpeed() + 1)) {
-			//continue;
-
-			ScreenCoord end_position = n.back();
-			if (end_position.x() == to.x() && end_position.y() == to.y()) {
-				//n is solution
-				return n;
-			}
-
-			std::vector<ScreenCoord> successors = getValidNeighbours(end_position, combat);
-			for (ScreenCoord succ : successors) {
-				std::vector<ScreenCoord> s(n);
-				s.push_back(succ);
-				open.push_back(s);
-			}
-		}
-	}
-
-	std::vector<ScreenCoord> result;
-	return result;
-	//no solution found
-}
-
 void Player::takeDamageCallback(int damage) {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::TAKE_DAMAGE));
 	// Decide what the next animation is based on whether the player is still alive or not
@@ -351,59 +295,6 @@ void Player::takeDamageCallback(int damage) {
 	else player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 }
 
-#include <iostream>
 void Player::selectCallback() {
-	std::cout << "TEST" << std::endl;
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::SELECTED));
-}
-
-std::vector<ScreenCoord> Player::heuristic(std::vector<std::vector<ScreenCoord>> * open) {
-	std::vector<ScreenCoord> smallest;
-	int smallest_dist = 99999;
-	for (std::vector<ScreenCoord> node : *open) {
-		ScreenCoord end_position = node.back();
-		int x_diff = std::abs(end_position.x() - moveTarget.x());
-		int y_diff = std::abs(end_position.y() - moveTarget.y());
-		ScreenCoord v(x_diff, y_diff);
-		if (v.norm() < smallest_dist) {
-			smallest_dist = v.norm();
-			smallest = node;
-		}
-	}
-
-	return smallest;
-}
-
-std::vector<ScreenCoord> Player::getValidNeighbours(ScreenCoord pos, Combat& combat) {
-
-	std::vector<ScreenCoord> neighbours;
-	ScreenCoord right(pos.x() + 1, pos.y());
-	ScreenCoord left(pos.x() - 1, pos.y());
-	ScreenCoord top(pos.x(), pos.y() - 1);
-	ScreenCoord bot(pos.x(), pos.y() + 1);
-
-	if (pos.x() > 0) {
-		if (combat.isPosEmpty(left)) {
-			neighbours.push_back(left);
-		}
-	}
-
-	if (pos.x() < combat.grid.map_width) {
-		if (combat.isPosEmpty(right)) {
-			neighbours.push_back(right);
-		}
-	}
-
-	if (pos.y() > 0) {
-		if (combat.isPosEmpty(bot)) {
-			neighbours.push_back(bot);
-		}
-	}
-
-	if (pos.y() < combat.grid.map_height) {
-		if (combat.isPosEmpty(top)) {
-			neighbours.push_back(top);
-		}
-	}
-	return neighbours;
 }
