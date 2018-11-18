@@ -11,7 +11,7 @@ Grid::Grid() :
 {
 	// Calculate the tile size based on the screen size
 	tile_width = Core::windowWidth() / map_width;
-	tile_height = Core::windowHeight() / map_height;
+	tile_height = (Core::windowHeight() / map_height) + 1;
 	// Initialize the tile sprites to the tile width/height
 	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
 	tilesheet.setSize(tile_width, tile_height);

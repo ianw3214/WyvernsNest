@@ -238,6 +238,15 @@ bool Unit::move(Combat & combat, Vec2<int> pos) {
 	return false;
 }
 
+void Unit::renderBottom() {
+	// For now, just render the shadow of the unit on the bottom
+	shadow.render();
+}
+
+void Unit::renderTop() {
+	// Let the unit subclasses handle this one
+}
+
 void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;

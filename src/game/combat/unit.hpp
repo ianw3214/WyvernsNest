@@ -36,6 +36,12 @@ public:
 	// The position of the unit in terms of screen coordinates
 	ScreenCoord screenPosition;
 
+	// Render methods
+	virtual void renderBottom();
+	// virtual void renderUnit();	<-- USE THE ORIGINAL ENTITY RENDER FUNCTION FOR THIS
+	virtual void renderTop();
+	virtual void renderHealth();
+
 	// Getter methods
 	UnitState getState() const { return state; }
 	UnitType getType() const { return type; }
@@ -56,7 +62,6 @@ public:
 	// The health variables of the unit
 	int health;
 	int maxHealth;
-	void renderHealth();
 
 	// Utility functions common across all units
 	void select();

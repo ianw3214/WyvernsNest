@@ -83,13 +83,19 @@ void Combat::update(int delta) {
 void Combat::render() {
 	Core::Renderer::clear();
 	grid.render();
-	// Render sprites in the order they appear in the grid
-	for (int i = 0; i < grid.map_height; ++i) {
-		for (Unit * unit : units) {
-			if (unit->position.y() == i) {
-				unit->render();
+	{	// --------- UNIT RENDERING CODE ---------
+		// Render the bottom of the units first
+		for (Unit * unit : units) unit->renderBottom();
+		// Render sprites in the order they appear in the grid
+		for (int i = 0; i < grid.map_height; ++i) {
+			for (Unit * unit : units) {
+				if (unit->position.y() == i) {
+					unit->render();
+				}
 			}
 		}
+		// Render the top of the units now
+		for (Unit * unit : units) unit->renderTop();
 	}
 	// Render the game over screen if the game is over
 	if (game_over) {
