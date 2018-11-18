@@ -46,11 +46,8 @@ Player::Player(int x, int y) :
 
 Player::~Player() {}
 
-void Player::render()
-{
-	// Render the shadow first
+void Player::renderBottom() {
 	shadow.render();
-
 	// Render the corresponding UI elements depending on the players current action
 	if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
 		renderValidMoves();
@@ -61,15 +58,21 @@ void Player::render()
 	if (current_action == PlayerAction::ATTACK_2) {
 		attack2.renderValidGrid(tile_width, tile_height);
 	}
+}
+
+void Player::render()
+{
 	// Render the actual player
 	player_sprite.setPos(screenPosition.x(), screenPosition.y());
 	player_sprite.render();
+}
+
+void Player::renderTop() {
 	// If it's the players turn, render player related UI
 	if (state == UnitState::IDLE && selected) {
 		renderTurnUI();
 	}
 	renderHealth();
-
 }
 
 void Player::renderTurnUI() {

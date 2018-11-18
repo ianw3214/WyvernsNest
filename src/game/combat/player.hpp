@@ -45,7 +45,9 @@ public:
 	void update(int delta);
 
 	// The render function and its' corresponding helper functions
-	void render();
+	virtual void renderBottom() override;
+	virtual void render() override;
+	virtual void renderTop() override;
 	void renderTurnUI();
 	void renderValidMoves();
 	

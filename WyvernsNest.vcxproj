@@ -179,6 +179,7 @@
     <ClInclude Include="src\engine\text\textRenderer.hpp" />
     <ClInclude Include="src\game\combat.hpp" />
     <ClInclude Include="src\game\combat\attack.hpp" />
+    <ClInclude Include="src\game\combat\attackEffects.hpp" />
     <ClInclude Include="src\game\combat\enemies\basicWarriorEnemy.hpp" />
     <ClInclude Include="src\game\combat\enemies\mageDudeEnemy.hpp" />
     <ClInclude Include="src\game\combat\enemy.hpp" />

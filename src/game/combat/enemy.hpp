@@ -16,7 +16,7 @@ public:
 	Enemy();
 	~Enemy();
 
-	virtual void render();
+	virtual void render() override;
 	virtual void update(int delta);
 
 	void takeTurn();

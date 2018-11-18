@@ -40,6 +40,12 @@ The [attacks.json file](../res/data/attacks.json) stores an array of JSON object
             "type": "damage",
             "damage": 3
         }
+    ],
+    "modifiers": [
+        {
+            "type": "INT",
+            "mod": 20.0
+        }
     ]
 }
 ```
@@ -48,6 +54,8 @@ Since the attack types and effects are incomplete, there is no documentation for
 
 Also, although *effects* are stored as an array in the JSON file, only one effect is stored in the attack in the game currently, so only the first effect in the array of effects will have an effect in game.
 
+The *modifiers* however is fully implemented in the game, so adding any amount of modifiers in the JSON file will reflect in game.
+
 ## Implementing effects
 
 To create a new effect, create a new class that overrides the base AttackEffect class:
@@ -55,12 +63,15 @@ To create a new effect, create a new class that overrides the base AttackEffect 
 ```c++
 class AttackEffect {
 public:
-    virtual void attack(ScreenCoord pos, Combat& combat, int stat, double mult) = 0;
+    virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) = 0;
 };
 ```
 
-The attack method is what is called when the attack is actually executed. The **pos** variable determines the tile that the effect is being executed on, the **combat** is a reference to the current combat state in case any utility methods are needed from there.  
-The **stat** and **mult** variables determine the modifiers for the attack. They will most likely be changed in the future, so it would be best to just copy what the other effects have done with these variables for now.
+The attack method is what is called when the attack is actually executed. The **pos** variable determines the tile that the effect is being executed on, the **combat** is a reference to the current combat state in case any utility methods are needed from there.
+
+Modifiers calculations are done in the effect when the attack executes. The decision to calculate modifiers dynamically rather than when the effect is initialized to generalize effect modifiers in the future for when there might be combat modifiers that come and go.  
+The effect modifiers can be accessed in the effect attack method from the *Attack reference* via the **attack.getEffectModifiers()** function call. The actual stat of the unit to the corresponding attack can be accessed by calling **attack.getSource()->getStat(modifier.stat)**.  
+Some attacks don't use the modifiers, for example if an attack generates terrain or something like that. In that case, the effect modifiers can be ignored.
 
 Below is an example implementation of a damage effect:
 
@@ -68,20 +79,22 @@ Below is an example implementation of a damage effect:
 // Attack effect that damages units
 class DamageEffect : public AttackEffect {
 public:
-    DamageEffect() : damage(1) {}
-    DamageEffect(int damage) : damage(damage) {}
-    void attack(ScreenCoord pos, Combat& combat, int stat, double mult);
-    int damage;
+    DamageEffect() : base_damage(1) {}
+    DamageEffect(int damage) : base_damage(damage) {}
+    virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
 
 private:
+    int base_damage;
 };
 
-// The implementation of the attack callback
-void DamageEffect::attack(ScreenCoord pos, Combat & combat, int stat, double mult) {
-    // Damage the unit if it exists at the position
+void DamageEffect::attack(ScreenCoord pos, Combat & combat, const Attack& attack) {
     Unit * unit = combat.getUnitAt(pos);
     if (unit) {
-        unit->takeDamage(static_cast<int>(damage + stat * mult));
+        int damage = base_damage;
+        for (EffectModifier modifier : attack.getEffectModifiers()) {
+            damage += static_cast<int>(attack.getSource()->getStat(modifier.stat) * modifier.modifier);
+        }
+        unit->takeDamage(damage);
     }
 }
 

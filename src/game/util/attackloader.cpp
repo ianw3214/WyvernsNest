@@ -58,6 +58,10 @@ bool AttackLoader::loadAttack(const json & data) {
 		effects[0], 
 		aoe, 
 		affect_self);
+	// Parse the modifiers here
+	for (const json& modifier : data["modifiers"]) {
+		attacks[name].addEffectModifier(parseModifier(modifier));
+	}
 	return true;
 }
 
@@ -71,6 +75,9 @@ AttackType AttackLoader::getTypeFromString(const std::string & str) const {
 	if (str == "self") {
 		return AttackType::SELF;
 	}
+	if (str == "pierce") {
+		return AttackType::PIERCE;
+	}
 	return AttackType::INVALID;
 }
 
@@ -80,4 +87,21 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 		return new DamageEffect(damage);
 	}
 	return nullptr;
+}
+
+EffectModifier AttackLoader::parseModifier(const json & data) const {
+	float mod = data["mod"];
+	if (data["type"] == "STR") {
+		return EffectModifier{ Stat::STR, mod };
+	}
+	if (data["type"] == "DEX") {
+		return EffectModifier{ Stat::DEX, mod };
+	}
+	if (data["type"] == "INT") {
+		return EffectModifier{ Stat::INT, mod };
+	}
+	if (data["type"] == "CON") {
+		return EffectModifier{ Stat::CON, mod };
+	}
+	return EffectModifier();
 }
