@@ -42,6 +42,14 @@ Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	loadPropertiesFromUnitData();
 }
 
+int Unit::getStat(Stat stat) const {
+	if (stat == Stat::STR) return getSTR();
+	if (stat == Stat::DEX) return getDEX();
+	if (stat == Stat::INT) return getINT();
+	if (stat == Stat::CON) return getCON();
+	return 0;
+}
+
 void Unit::setTileSize(int width, int height) {
 	tile_width = width;
 	tile_height = height;
@@ -199,12 +207,15 @@ void Unit::takeDamage(int damage) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
-	// TODO: use different logic for healing
-	else if (health > maxHealth) {
-		health = maxHealth;
-	}
 	// Call the virtualized callback function for subclasses to customize
 	takeDamageCallback(damage);
+}
+
+void Unit::heal(int health) {
+	this->health += health;
+	if (this->health > maxHealth) {
+		this->health = maxHealth;
+	}
 }
 
 bool Unit::move(Combat & combat, Vec2<int> pos) {

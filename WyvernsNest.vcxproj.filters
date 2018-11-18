@@ -203,5 +203,8 @@
     <ClInclude Include="src\game\combat\enemies\basicWarriorEnemy.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\game\combat\attackEffects.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -37,15 +37,16 @@ public:
 	ScreenCoord screenPosition;
 
 	// Getter methods
-	inline UnitState getState() const { return state; }
-	inline UnitType getType() const { return type; }
+	UnitState getState() const { return state; }
+	UnitType getType() const { return type; }
 	// Unit attribute getter methods
-	inline int getSTR() const { return data.strength; }
-	inline int getDEX() const { return data.dexterity; }
-	inline int getINT() const { return data.intelligence; }
-	inline int getCON() const { return data.constitution; }
-	inline int getMoveSpeed() const { return move_speed; }
-	inline int getMaxHealth() const { return maxHealth; }
+	int getStat(Stat stat) const;
+	int getSTR() const { return data.strength; }
+	int getDEX() const { return data.dexterity; }
+	int getINT() const { return data.intelligence; }
+	int getCON() const { return data.constitution; }
+	int getMoveSpeed() const { return move_speed; }
+	int getMaxHealth() const { return maxHealth; }
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -61,6 +62,7 @@ public:
 	void select();
 	void deselect();
 	void takeDamage(int damage);
+	void heal(int health);
 	bool move(Combat& combat, Vec2<int> pos);
 
 	// Utility references to the combat state to access needed data
