@@ -48,6 +48,7 @@ private:
 	bool loadAttack(const json& data);
 	AttackType getTypeFromString(const std::string& str) const;
 	AttackEffect * parseEffect(const json& data) const;
+	EffectModifier parseModifier(const json& data) const;
 
 	// The actual storage of the attacks
 	std::unordered_map<std::string, Attack> attacks;

@@ -36,16 +36,23 @@ public:
 	// The position of the unit in terms of screen coordinates
 	ScreenCoord screenPosition;
 
+	// Render methods
+	virtual void renderBottom();
+	// virtual void renderUnit();	<-- USE THE ORIGINAL ENTITY RENDER FUNCTION FOR THIS
+	virtual void renderTop();
+	virtual void renderHealth();
+
 	// Getter methods
-	inline UnitState getState() const { return state; }
-	inline UnitType getType() const { return type; }
+	UnitState getState() const { return state; }
+	UnitType getType() const { return type; }
 	// Unit attribute getter methods
-	inline int getSTR() const { return data.strength; }
-	inline int getDEX() const { return data.dexterity; }
-	inline int getINT() const { return data.intelligence; }
-	inline int getCON() const { return data.constitution; }
-	inline int getMoveSpeed() const { return move_speed; }
-	inline int getMaxHealth() const { return maxHealth; }
+	int getStat(Stat stat) const;
+	int getSTR() const { return data.strength; }
+	int getDEX() const { return data.dexterity; }
+	int getINT() const { return data.intelligence; }
+	int getCON() const { return data.constitution; }
+	int getMoveSpeed() const { return move_speed; }
+	int getMaxHealth() const { return maxHealth; }
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -55,17 +62,13 @@ public:
 	// The health variables of the unit
 	int health;
 	int maxHealth;
-	void renderHealth();
 
 	// Utility functions common across all units
 	void select();
 	void deselect();
 	void takeDamage(int damage);
+	void heal(int health);
 	bool move(Combat& combat, Vec2<int> pos);
-
-	// The attacks of the unit
-	Attack attack1;
-	Attack attack2;
 
 	// Utility references to the combat state to access needed data
 	Combat * combat;
@@ -86,7 +89,7 @@ protected:
 	inline bool compareCounter(int num) const { return state_counter >= num; }
 
 	// Variables to help keep track of unit movement
-	std::vector<ScreenCoord> path;
+	std::vector<Vec2<int>> path;
 	ScreenCoord moveTarget;
 	ScreenCoord moveDiff;
 	ScreenCoord moveNext;

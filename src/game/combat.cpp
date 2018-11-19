@@ -5,26 +5,11 @@
 Combat::Combat() :
 	current(nullptr)
 {
-	Player * player1 = new Player(0, 1);
-	Player * player2 = new Player(1, 2);
+	addPlayer(0, 1);
+	addPlayer(1, 2);
 
-	Enemy * enemy1 = new Enemy();
-	enemy1->position.x() = 2;
-	enemy1->position.y() = 2;
-	enemy1->setCombatReference(this);
-
-	player1->setTileSize(grid.tile_width, grid.tile_height);
-	player2->setTileSize(grid.tile_width, grid.tile_height);
-	enemy1->setTileSize(grid.tile_width, grid.tile_height);
-
-	addEntity(player1);
-	addEntity(player2);
-	addEntity(enemy1);
-
-	units.push_back(player1);
-	units.push_back(player2);
-	units.push_back(enemy1);
-
+	addEnemy(new Enemy(), 2, 2);
+	
 	// Keeping track of turn order
 	unitIndex = 0;
 	selectUnit(units[unitIndex]);
@@ -44,7 +29,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (current->getType() == UnitType::PLAYER) {
 			Player * player = dynamic_cast<Player*>(current);
-			player->click(grid.mousePos, *this);
+			player->click(grid.mousePos);
 		}
 	}
 	// Keep looking for win/lose conditions while the game hasn't ended
@@ -79,7 +64,7 @@ void Combat::update(int delta) {
 
 	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
 		Player * player = dynamic_cast<Player*>(current);
-		player->setPathLine(*this, grid.getMouseToGrid());
+		player->setPathLine(grid.getMouseToGrid());
 	}
 
 	// If the game isn't over, keep going with the turn order
@@ -98,13 +83,19 @@ void Combat::update(int delta) {
 void Combat::render() {
 	Core::Renderer::clear();
 	grid.render();
-	// Render sprites in the order they appear in the grid
-	for (int i = 0; i < grid.map_height; ++i) {
-		for (Unit * unit : units) {
-			if (unit->position.y() == i) {
-				unit->render();
+	{	// --------- UNIT RENDERING CODE ---------
+		// Render the bottom of the units first
+		for (Unit * unit : units) unit->renderBottom();
+		// Render sprites in the order they appear in the grid
+		for (int i = 0; i < grid.map_height; ++i) {
+			for (Unit * unit : units) {
+				if (unit->position.y() == i) {
+					unit->render();
+				}
 			}
 		}
+		// Render the top of the units now
+		for (Unit * unit : units) unit->renderTop();
 	}
 	// Render the game over screen if the game is over
 	if (game_over) {
@@ -157,6 +148,33 @@ Unit * Combat::getUnitAt(ScreenCoord at)
 		}
 	}
 	return nullptr;
+}
+
+std::vector<Player*> Combat::getPlayers() const {
+	std::vector<Player*> result;
+	for (Unit * unit : units) {
+		if (unit->getType() == UnitType::PLAYER) {
+			result.push_back(dynamic_cast<Player*>(unit));
+		}
+	}
+	return result;
+}
+
+void Combat::addPlayer(int x, int y) {
+	Player * player = new Player(x, y);
+	player->setTileSize(grid.tile_width, grid.tile_height);
+	addEntity(player);
+	units.push_back(player);
+}
+
+void Combat::addEnemy(Enemy * enemy, int x, int y) {
+	enemy->position.x() = x;
+	enemy->position.y() = y;
+	
+	enemy->setTileSize(grid.tile_width, grid.tile_height);
+	addEntity(enemy);
+	units.push_back(enemy);
+	return;
 }
 
 // Choose the next unit in combat to take a turn

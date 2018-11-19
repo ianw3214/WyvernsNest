@@ -15,11 +15,13 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
+	/*
 	// Example mixer usage
 	Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
 	Core::Mixer::playAudio("res/music/track1.wav", 1, 0.8f);
+	*/
 
-	// Core::setDebugMode(true);
+	Core::setDebugMode(true);
 
 	// Combat * state = new Combat();
 	Menu * state = new Menu();

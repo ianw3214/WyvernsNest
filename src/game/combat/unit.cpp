@@ -12,8 +12,6 @@ Unit::Unit() :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1(Attacks::get("PUNCH", this)),
-	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
@@ -26,8 +24,6 @@ Unit::Unit(UnitType type) :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1(Attacks::get("PUNCH", this)),
-	attack2(Attacks::get("RANGED", this)),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
@@ -40,19 +36,23 @@ Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	attack1(attack1),
-	attack2(attack2),
 	shadow("res/assets/shadow.png")
 {
   generateDefaultUnitData();
 	loadPropertiesFromUnitData();
 }
 
+int Unit::getStat(Stat stat) const {
+	if (stat == Stat::STR) return getSTR();
+	if (stat == Stat::DEX) return getDEX();
+	if (stat == Stat::INT) return getINT();
+	if (stat == Stat::CON) return getCON();
+	return 0;
+}
+
 void Unit::setTileSize(int width, int height) {
 	tile_width = width;
 	tile_height = height;
-	attack1.setTileSize(width, height);
-	attack2.setTileSize(width, height);
 	// Set the size of common sprites
 	shadow.setSize(width, height / 2);
 	// Recalculate the screen position based on the tile size
@@ -72,13 +72,10 @@ std::vector<ScreenCoord> Unit::getPath(Combat & combat, ScreenCoord to) {
 	open.push_back(root);
 	while (!(open.empty())) {
 		std::vector<ScreenCoord> n = heuristic(&open);
-		//std::vector<ScreenCoord> n = open[0];
-		//open.erase(*node);
 		std::vector<std::vector<ScreenCoord>>::iterator index = std::find(open.begin(), open.end(), n);
 		open.erase(index);
 
 		if (n.size() <= static_cast<unsigned int>(getMoveSpeed() + 1)) {
-			//continue;
 
 			ScreenCoord end_position = n.back();
 			if (end_position.x() == to.x() && end_position.y() == to.y()) {
@@ -95,9 +92,9 @@ std::vector<ScreenCoord> Unit::getPath(Combat & combat, ScreenCoord to) {
 		}
 	}
 
+	// No solution found
 	std::vector<ScreenCoord> result;
 	return result;
-	//no solution found
 }
 
 std::vector<ScreenCoord> Unit::heuristic(std::vector<std::vector<ScreenCoord>>* open) {
@@ -210,12 +207,15 @@ void Unit::takeDamage(int damage) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
-	// TODO: use different logic for healing
-	else if (health > maxHealth) {
-		health = maxHealth;
-	}
 	// Call the virtualized callback function for subclasses to customize
 	takeDamageCallback(damage);
+}
+
+void Unit::heal(int health) {
+	this->health += health;
+	if (this->health > maxHealth) {
+		this->health = maxHealth;
+	}
 }
 
 bool Unit::move(Combat & combat, Vec2<int> pos) {
@@ -236,6 +236,15 @@ bool Unit::move(Combat & combat, Vec2<int> pos) {
 		}
 	}
 	return false;
+}
+
+void Unit::renderBottom() {
+	// For now, just render the shadow of the unit on the bottom
+	shadow.render();
+}
+
+void Unit::renderTop() {
+	// Let the unit subclasses handle this one
 }
 
 void Unit::renderHealth() {
