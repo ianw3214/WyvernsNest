@@ -61,6 +61,7 @@ public:
 	void select();
 	void deselect();
 	void takeDamage(int damage);
+	bool move(Combat& combat, Vec2<int> pos);
 
 	// The attacks of the unit
 	Attack attack1;
@@ -83,6 +84,21 @@ protected:
 	inline void startCounter() { state_counter = 0; }
 	inline void incrementCounter() { state_counter++; }
 	inline bool compareCounter(int num) const { return state_counter >= num; }
+
+	// Variables to help keep track of unit movement
+	std::vector<ScreenCoord> path;
+	ScreenCoord moveTarget;
+	ScreenCoord moveDiff;
+	ScreenCoord moveNext;
+	// Helper variables for unit movement
+	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
+	// Pathfinding helper methods
+	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
+	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
+	// Helper functions to calculate the screen position and movement of the player
+	void calculateScreenPositionMovement();
+	void incrementMovement();
+
 
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();

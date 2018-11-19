@@ -45,27 +45,20 @@ public:
 		
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
+
+	// The render function and its' corresponding helper functions
 	void render();
 	void renderTurnUI();
 	void renderValidMoves();
 	
-
+	// The click function to handle player logic depending on player state when cursor clicked
 	void click(Vec2<int> to, Combat& combat);
-	int id;
+	
+	// Various helper methods
+	void setPathLine(Combat& combat, Vec2<int> dest);
 
 	// The action that is being expected from the player
 	PlayerAction current_action;
-
-	// Variables to help keep track of player movement
-	ScreenCoord moveTarget;
-	ScreenCoord moveDiff;
-	ScreenCoord moveNext;
-
-	std::vector<ScreenCoord> path;
-	std::vector<ScreenCoord> path_line;
-
-	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
-
 
 protected:
 	// Override callback function to customize functionality
@@ -74,17 +67,12 @@ protected:
 
 private:
 
-	// Helper functions to calculate the screen position and movement of the player
-	void calculateScreenPositionMovement();
-	void incrementMovement();
+	// The outline of the player movement path to the cursor
+	std::vector<ScreenCoord> path_line;
 
 	std::vector<ScreenCoord> getPossibleMoves(Combat & combat);
 	void updatePossibleMoves(Combat & combat);
 	std::vector<ScreenCoord> possibleMoves;
-
-	// Pathfinding helper methods
-	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
-	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
 	AnimatedSprite player_sprite;

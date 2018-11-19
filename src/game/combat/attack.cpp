@@ -34,65 +34,14 @@ Attack::Attack(std::string name,
 	effect(effect),
 	aoe(aoe),
 	affect_self(affect_self),
-	validSprite("res/assets/valid.png"),
-	targetValidSprite("res/assets/valid_circle.png"),
-	targetInvalidSprite("res/assets/invalid_circle.png")
+	validSprite("res/assets/tiles/valid.png"),
+	targetValidSprite("res/assets/tiles/valid_circle.png"),
+	targetInvalidSprite("res/assets/tiles/invalid_circle.png")
 {
 	if (type == AttackType::HEAL) {
 		dynamic_cast<DamageEffect*>(effect)->damage = -1;
 	}
 }
-/*
-void Attack::update()
-{
-	if (attackStarted) {
-		if (attack_counter < 15 * 2) {
-			attack_counter++;
-		}
-		else {
-			attack(target, *combat);
-			attackStarted = false;
-		}
-	}
-}
-
-bool Attack::attackStart(ScreenCoord pos, Combat & c)
-{
-
-
-	if (source->getType() == UnitType::PLAYER && isValid(pos)) {
-		attackStarted = true;
-		attack_counter = 0;
-		target = pos;
-		combat = &c;
-		switch (type) {
-		case AttackType::SELF: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
-		} break;
-		case AttackType::MELEE: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
-		} break;
-		case AttackType::RANGED: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
-		} break;
-		case AttackType::PIERCE: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
-		} break;
-		case AttackType::SPIN: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 2;
-		} break;
-		case AttackType::HEAL: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
-		} break;
-		case AttackType::BIG_AOE: {
-			dynamic_cast<Player*>(source)->sprite_idle.animation_index = 3;
-		} break;
-		}
-	}
-
-	return isValid(pos);
-}
-*/
 
 Attack::Attack(const Attack & other, Unit * source) :
 	name(other.name),
@@ -102,9 +51,9 @@ Attack::Attack(const Attack & other, Unit * source) :
 	effect(other.effect),
 	aoe(other.aoe),
 	affect_self(other.affect_self),
-	validSprite("res/assets/valid.png"),
-	targetValidSprite("res/assets/valid_circle.png"),
-	targetInvalidSprite("res/assets/invalid_circle.png")
+	validSprite("res/assets/tiles/valid.png"),
+	targetValidSprite("res/assets/tiles/valid_circle.png"),
+	targetInvalidSprite("res/assets/tiles/invalid_circle.png")
 {
 
 }

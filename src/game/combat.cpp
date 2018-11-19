@@ -11,6 +11,7 @@ Combat::Combat() :
 	Enemy * enemy1 = new Enemy();
 	enemy1->position.x() = 2;
 	enemy1->position.y() = 2;
+	enemy1->setCombatReference(this);
 
 	player1->setTileSize(grid.tile_width, grid.tile_height);
 	player2->setTileSize(grid.tile_width, grid.tile_height);
@@ -30,9 +31,6 @@ Combat::Combat() :
 
 	// Set the combat references of the units
 	for (Unit * unit : units) unit->combat = this;
-
-	// ----- DEBUGGING CODE -----
-	Attacks::get("test", nullptr);
 }
 
 Combat::~Combat() {
@@ -81,7 +79,7 @@ void Combat::update(int delta) {
 
 	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
 		Player * player = dynamic_cast<Player*>(current);
-		player->path_line = player->getPath(*this, grid.getMouseToGrid());
+		player->setPathLine(*this, grid.getMouseToGrid());
 	}
 
 	// If the game isn't over, keep going with the turn order
@@ -177,7 +175,7 @@ void Combat::nextUnitTurn() {
 	}
 	// If the current unit is an enemy, take its turn
 	if (current->getType() == UnitType::ENEMY) {
-		dynamic_cast<Enemy*>(current)->takeTurn(*this);
+		dynamic_cast<Enemy*>(current)->takeTurn();
 	}
 }
 
