@@ -3,94 +3,59 @@
 /*#######################
 ##   LOCAL VARIABLES   ##
 #########################*/
-Node * example_tree;
-int screenWidth = 1280;
-int screenHeight = 720;
 
-int height;
-int *already_rendered; //holds the number of nodes already render at each depth 
-int *nodes_per_depth; //holds the total number of nodes at each depth
-int node_height = 30;
-int node_width = 100;
-
+std::vector<Node> nodes; //list of all nodes in the tree
 
 /*#######################
 ##  HELPER FUNCTIONS   ##
 #########################*/
 //creates a new node
-Node* newNode(int data, int id, int children_count, Node *children,enum NodeStates state) { 
-	// Allocate memory for new node  
-	Node* node = (Node*)malloc(sizeof(Node)); 
-
-	// Assign data to this node 
-	node->data = data; 
-	node->id = id;
-	node->children_count=children_count;
-	// Initialize left and right children as NULL 
-	node->children = children; 
-	node->state=state;
-	return(node); 
-} 
-
-//returns the height of a tree. The heigh of a 1 node tree is 0.
-int treeHeight(Node * node) {
-    if (!node) return -1;
-	int max = -1;
-
-	//iterate through 
-	
-	for(size_t i = 0; i < node->children_count; i++)
-	{
-		if(treeHeight((node->children)+i)>max){
-			max = treeHeight((node->children)+i);
-		}
-	}
-	
-    return 1 + max;
-}
-
-//returns the number of nodes of a tree at targetDepth. Always call it with current_depth = 0
-//First node of tree is 0
-int numberOfNodesAt(Node * tree, int targetDepth, int current_depth){
-	//searches the tree recursively and adds +1 every time it finds a node with
-		//current_depth=targetdepth
-	int numberOfNodes=0;
-	
-	if (current_depth==targetDepth){
-		return 1;
-	}
-	else if (current_depth>targetDepth){
-		return 0;
-	}
-	
-	for(size_t i = 0; i < tree->children_count; i++) 
-	{
-			numberOfNodes+=numberOfNodesAt((tree->children + i),targetDepth,current_depth+1);
-	}
-
-	return numberOfNodes;
-	
-
-}
-
-//returns a clicked node if click x,y is within the node sprite (return NULL if node not found)
-Node *clickedNode(Node * tree, int x, int y){
-	// printf("x: %d, y : %d\n",x,y);
-	Node *clicked_node=NULL;
-	//iterate down the tree
-	//checks if click happened next to current node
-	if(x-tree->x_pos<node_width && x-tree->x_pos>0 && y-tree->y_pos<node_height && y-tree->y_pos>0){
-		return tree;
-	}else if(tree->children!=NULL){
+Node newNode(enum NodeStates state, std::string data, int id, std::string spritePath,
+	std::vector<int> children, int x_offset, int level) { 
 		
-		for(size_t i = 0; i < tree->children_count; i++)
-		{	
-			if(clickedNode(&tree->children[i],x,y)!=NULL){
-				clicked_node=clickedNode(&tree->children[i],x,y);
-			}
+
+	Node newNode;
+
+	newNode.state=state;
+	newNode.data=data;
+	newNode.id=id;
+	newNode.spritePath=spritePath;
+	newNode.children=children;
+	newNode.x_offset=x_offset;
+	newNode.level=level;
+	newNode.x_position=-1;
+	newNode.y_position=-1;
+
+	return(newNode); 
+} 
+Node * getNodeById(int id){
+	
+	for(size_t i = 0; i < nodes.size(); i++)
+	{
+		if(nodes.at(i).id==id){
+			return &nodes.at(i);
 		}
 	}
-	return clicked_node;
+	fprintf(stderr,("node with id " + std::to_string(id) + " wasn't found").c_str());
+	return NULL;
+	
+}
+// //returns the id of the clicked node. Return -1 if no node was clicked.
+int clickedNode(int x, int y){
+	int node_width = 100;
+	int node_height = 30;
+	//ITERATE THROUGH NODE LIST
+	
+	for(size_t i = 0; i < nodes.size(); i++)
+	{
+		if(x-nodes.at(i).x_position<=node_width && x-nodes.at(i).x_position>=0 
+			&& y-nodes.at(i).y_position<=node_height &&y-nodes.at(i).y_position>=0){
+			return nodes.at(i).id;
+		}
+	}
+
+	return -1;
+	
 }
 
 //if node is reachable then update it to visited and change children to reachable
@@ -98,68 +63,44 @@ void updateNodeState(Node * node){
 	if(node->state==Reachable){
 		node->state=Visited;
 		
-		for(size_t i = 0; i < node->children_count; i++)
-		{
-			node->children[i].state=Reachable;
-		}
+		//iterate thorugh node children and set them to reachable
 		
 	}else{
-		printf("Node is either unreachable or already visited\n");
+		fprintf(stderr,"Node is either unreachable or already visited\n");
 	}
 }
 
 //----------RENDERING FUNCTIONS---------
-//render node and line 
-void renderNode(Node *node, int parent_x,int parent_y,int node_x,int node_y){
+//render node along with children edges
+void renderNode(Node * node, int screenWidth){
+	int top_margin=100;
+	int node_width = 100;
+	int node_height = 30;
+	int x_pos = (screenWidth/2) + node->x_offset*200 - (node_width/2);
+	int y_pos = top_margin + (node->level*100);
 	//set x,y positions for node (data structure)
-	node->x_pos=node_x;
-	node->y_pos=node_y;
 
-	if(node->state==Unvisited){
-		//draw line connecting parent and child
-		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
-			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));
-		//draw node
-		Sprite sprite("res/test.png");
-		sprite.setSize(node_width, node_height);
-		sprite.setPos(node_x, node_y);
-		sprite.render();
-	}else if(node->state == Visited){
-		//draw line connecting parent and child
-		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
-			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		
-		//draw node
-		Sprite sprite("res/test2.png");
-		sprite.setSize(node_width, node_height);
-		sprite.setPos(node_x, node_y);
-		sprite.render();
-	}else if(node->state == Reachable){
-		//draw line connecting parent and child
-		Core::Renderer::drawLine(ScreenCoord(parent_x+(node_width/2), parent_y+(node_height/2)),
-			ScreenCoord(node_x+(node_width/2), node_y+(node_height/2)), Colour(1.0, 1.0, 1.0));		
-		//draw node
-		Sprite sprite("res/test3.png");
-		sprite.setSize(node_width, node_height);
-		sprite.setPos(node_x, node_y);
-		sprite.render();
+	//draw node
+	Sprite sprite(node->spritePath.c_str());
+	sprite.setSize(node_width, node_height);
+	sprite.setPos(x_pos, y_pos);
+	sprite.render();
+
+	//update location tracking (upper left corner)
+	node->x_position=x_pos;
+	node->y_position=y_pos;
+
+	//draw edges connecting nodes to children
+	int child_x=-1;
+	int child_y=-1;
+	for(size_t i = 0; i < node->children.size(); i++)
+	{	
+		int child_x = (screenWidth/2) + getNodeById(node->children.at(i))->x_offset*200;
+		int child_y = top_margin + getNodeById((node->children).at(i))->level*100;
+		Core::Renderer::drawLine(ScreenCoord(x_pos+(node_width/2),y_pos+node_height),ScreenCoord(child_x,child_y), Colour(1.0, 1.0, 1.0));	
+
 	}
-}
-
-//renders a tree. initial parameters: current_depth = 0. parent_x, parent_y = the origin of the tree
-void renderTree(Node *tree, int current_depth,int parent_x, int parent_y){
-	int node_offset = screenWidth/(nodes_per_depth[current_depth]+1);//The horizontal distance between nodes at the given depth
-	int x_position = (already_rendered[current_depth]+1)*node_offset;
-	int y_position = (current_depth+1)*100;
-
-	//render node and line 
-	renderNode(tree,parent_x,parent_y,x_position,y_position);
-	already_rendered[current_depth]++; //update the number of nodes rendered at that depth
-	//render children nodes
-	//recursively calls renderNode in the children of the current node
-	for(size_t i = 0; i < tree->children_count; i++){
-		renderTree(tree->children+i,current_depth+1,x_position,y_position);
-	}
-
+	
 }
 
 
@@ -170,39 +111,24 @@ SkillTree::SkillTree() {
 	//----------------------------------------------------//
 	//----example of how to make a tree (example_tree)----//
 	//----------------------------------------------------//
-	//depth4
-	Node *n11 = newNode(1, 11, 0, NULL,Unvisited);  
-	//depth3
-	Node *n5 = newNode(1, 5, 0, NULL,Unvisited);   
-	Node *n6 = newNode(1, 6, 0, NULL,Unvisited);   
-	Node *n7 = newNode(1, 7, 1, n11,Unvisited);   
-	Node *n8 = newNode(1, 8, 0, NULL,Unvisited);   
-	Node * children3 = (Node *) malloc(sizeof(Node)*4);
-	children3[0]=*n5;
-	children3[1]=*n6;
-	children3[2]=*n7;
-	children3[3]=*n8;
-	//depth2
-	Node *n9 = newNode(1, 9, 4, children3,Unvisited);   
-	Node *n10 = newNode(1, 10, 0, NULL,Unvisited);   
-	Node * children2 = (Node *) malloc(sizeof(Node)*2);
-	children2[0]=*n9;
-	children2[1]=*n10;
-	Node *n3 = newNode(1, 3, 0, NULL,Unvisited);
-	//depth1
-	Node *n1 = newNode(1, 1, 1, n3,Unvisited);   
-	Node *n2 = newNode(1, 2, 2, children2,Unvisited);   
-	Node * children1 = (Node *) malloc(sizeof(Node)*2);
-	children1[0]=*n1;
-	children1[1]=*n2;
-	//depth 0
-	example_tree = newNode(1, 0 , 2, children1,Reachable);
+	std::vector<int> children0 = {1,2}; //id of children
+	Node node0 = newNode(Visited,"Example data for node", 0,"res/test.png",children0,0,0);
 
-	//init local variables
-	height = treeHeight(example_tree);
-	already_rendered = (int *)malloc(sizeof(int)*(height+1));
-	nodes_per_depth = (int *)malloc(sizeof(int)*(height+1));
+	std::vector<int> children1 = {3,4}; //id of children
+	std::vector<int> children2; //id of children
+
+
+	Node node2 = newNode(Visited,"Example data for node", 2,"res/test.png",children1,-1,1);
+	Node node1 = newNode(Visited,"Example data for node", 1,"res/test.png",children2,1,1);
+
+	std::vector<int> no_children; 
+
+	Node node3 = newNode(Visited,"Example data for node", 3,"res/test.png",no_children,-2,2);
+	Node node4 = newNode(Visited,"Example data for node", 4,"res/test.png",no_children,0,2);
 	
+
+	nodes.push_back(node0); nodes.push_back(node1);nodes.push_back(node2); nodes.push_back(node3);
+	nodes.push_back(node4); 
 }
 
 SkillTree::~SkillTree() {
@@ -218,9 +144,10 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 		SDL_GetMouseState(&mouseX, &mouseY);
 
 		//call relevant functions to update selected node
-		Node * clicked_node=clickedNode(example_tree, mouseX,mouseY);
-		if(clicked_node!=NULL){
-			updateNodeState(clicked_node);
+		int node_id = clickedNode(mouseX,mouseY);
+		printf("%d\n",node_id);
+		if(node_id!=-1){
+			// printf("%d\n",node_id);
 		}
 	}
 }
@@ -230,12 +157,13 @@ void SkillTree::update(int delta) {
 }
 
 void SkillTree::render() {
-	//populates already_rendered and nodes_per_depth with initial values
-	for(size_t i = 0; i <= height; i++){
-		already_rendered[i]=0;
-		nodes_per_depth[i]=numberOfNodesAt(example_tree, i, 0);
+
+	
+	for(size_t i = 0; i < nodes.size(); i++)
+	{
+		renderNode(&nodes.at(i),screenWidth);
+
 	}
-	//renders tree
-	renderTree(example_tree,0,screenWidth/2,0);
+	
 	
 }

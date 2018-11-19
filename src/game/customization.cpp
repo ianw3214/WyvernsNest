@@ -3,6 +3,7 @@
 
 
 #include "customization.hpp"
+#include "skillTree.hpp"
 
 Customization::Customization() {
 
@@ -25,7 +26,12 @@ void Customization::generateDefaultUnitData() {
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
-
+if (e.type == SDL_KEYDOWN) {
+		// Move to the combat state upon ANY key press
+		changeState(new SkillTree());
+		// Set the text rendering colour back to normal
+		Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	}
 }
 
 void Customization::update(int delta) {
