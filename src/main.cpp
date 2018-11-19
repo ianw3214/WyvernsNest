@@ -3,7 +3,9 @@
 #include <iostream>
 
 #include "engine/core.hpp"
-#include "game/combat.hpp"
+#include "game/menu.hpp"
+
+#include "engine/mixer.hpp"
 
 int main(int argc, char* argv[]) {
 
@@ -13,7 +15,14 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Combat * state = new Combat();
+	// Example mixer usage
+	Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
+	Core::Mixer::playAudio("res/music/track1.wav", 1, 0.8f);
+
+	// Core::setDebugMode(true);
+
+	// Combat * state = new Combat();
+	Menu * state = new Menu();
 	Core::setState(state);
 
 	// Main engine loop

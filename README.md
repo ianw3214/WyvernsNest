@@ -18,7 +18,7 @@ A 2D turn-based fantasy strategy game
     * Please make sure your code compiles. We do not have an auto-build and test system in place yet.
 5. When done, create a pull request on the main project
     * Click Pull Requests -> New Pull Request -> compare across forks
-    * base fork should be ianw3214/WyvernsNest, and base should be your sub-team branch
+    * base fork should be ianw3214/WyvernsNest, and base should be dev
     * head fork should be [your-name]/WyvernsNest, and compare should be where you added your changes.
 6. Submit your pull request
     * Keep an eye on it. Changes may be requested.
@@ -35,7 +35,7 @@ Make sure Visual Studio is installed first.
 
 Clone the repository onto your machine.
 
-Download [this zip file](https://drive.google.com/file/d/1hAXUjqF0_p8v5UdK9ET0I-kugZknO9Fi/view?usp=sharing) and extract the lib folder into the same directory as your solution (*The libs folder should be at the same level as the .sln file*)
+Download [this zip file](https://drive.google.com/open?id=1Bl_tMIT3d_DK8HydmD-6zahEXXGmK_XR) and extract the lib folder into the same directory as your solution (*The libs folder should be at the same level as the .sln file*)
 
 Finally, move the two **dll** files from the libs folder into the root folder. (*The root folder should contain the .sln file, the libs folder, SDL2.dll and glew32.dll*)
 
@@ -146,3 +146,6 @@ void State::update(const SDL_Event& event) {
     }
 }
 ```
+
+
+This project uses the [FreeType text rendering library](https://www.freetype.org/).

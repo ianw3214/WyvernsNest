@@ -54,7 +54,7 @@ ipch/
 *.VC.VC.opendb
 
 # Library directory
-libs/
+/libs/*
 
 # VScode folder
 .vs/
@@ -62,3 +62,6 @@ libs/
 
 # DLL files
 *.dll
+
+# ZIP files
+*.zip
