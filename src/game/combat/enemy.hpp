@@ -2,9 +2,12 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
-#include "unit.hpp"
 
-#define ENEMY_DEFAULT_ATTACK_COUNTER 20
+#include "unit.hpp"
+#include "attack.hpp"
+
+#define ENEMY_DEFAULT_MOVE_COUNTER		20
+#define ENEMY_DEFAULT_ATTACK_COUNTER	20
 
 class Enemy : public Unit {
 
@@ -13,17 +16,24 @@ public:
 	Enemy();
 	~Enemy();
 
-	void render();
-	void update(int delta);
+	virtual void render() override;
+	virtual void update(int delta);
 
-	void takeTurn(Combat& combat);
+	void takeTurn();
 
-	int id;
+protected:
+	
+	// Helper method to handle the movement portion of an enemy turn
+	virtual void handleMovement();
+	// Helper method to handle the attack portion of an enemy turn
+	virtual void handleAttack();
 
-	bool isDead = false;
+	// Enemy sprite
+	Sprite sprite;
 
 private:
-	
-	Sprite sprite;
+
+	// Basic bite attack of enemy
+	Attack bite;
 
 };

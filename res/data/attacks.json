@@ -11,6 +11,12 @@
                     "type": "damage",
                     "damage": 3
                 }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
             ]
         },{
             "name": "RANGED",
@@ -22,6 +28,12 @@
                 {
                     "type": "damage",
                     "damage": 2
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 20.0
                 }
             ]
         }
