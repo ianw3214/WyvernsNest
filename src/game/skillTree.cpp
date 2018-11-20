@@ -4,36 +4,31 @@
 ##   LOCAL VARIABLES   ##
 #########################*/
 
-std::vector<Node> nodes; //list of all nodes in the tree
+ //list of all nodes in the tree
 
 /*#######################
 ##  HELPER FUNCTIONS   ##
 #########################*/
+
 //creates a new node
-Node newNode(enum NodeStates state, std::string data, int id, std::string spritePath,
-	std::vector<int> children, int x_offset, int level) { 
-		
+Node::Node(enum NodeStates n_state, std::string n_data, int n_id, std::string n_spritePath,
+	std::vector<int> n_children, int n_x_offset, int n_level){
+	state=n_state;
+	data=n_data;
+	id=n_id;
+	spritePath=n_spritePath;
+	children=n_children;
+	x_offset=n_x_offset;
+	level=n_level;
+	x_position=-1;
+	y_position=-1;
+}
 
-	Node newNode;
-
-	newNode.state=state;
-	newNode.data=data;
-	newNode.id=id;
-	newNode.spritePath=spritePath;
-	newNode.children=children;
-	newNode.x_offset=x_offset;
-	newNode.level=level;
-	newNode.x_position=-1;
-	newNode.y_position=-1;
-
-	return(newNode); 
-} 
 Node * getNodeById(int id){
 	
-	for(size_t i = 0; i < nodes.size(); i++)
-	{
-		if(nodes.at(i).id==id){
-			return &nodes.at(i);
+	for (Node& n : nodes){
+		if(n.id==id){
+			return & n;
 		}
 	}
 	fprintf(stderr,("node with id " + std::to_string(id) + " wasn't found").c_str());
@@ -44,13 +39,12 @@ Node * getNodeById(int id){
 int clickedNode(int x, int y){
 	int node_width = 100;
 	int node_height = 30;
-	//ITERATE THROUGH NODE LIST
 	
-	for(size_t i = 0; i < nodes.size(); i++)
-	{
-		if(x-nodes.at(i).x_position<=node_width && x-nodes.at(i).x_position>=0 
-			&& y-nodes.at(i).y_position<=node_height &&y-nodes.at(i).y_position>=0){
-			return nodes.at(i).id;
+	//check node which position is close to x,y
+	for (Node& n : nodes){
+		if(x-n.x_position<=node_width && x-n.x_position>=0 
+			&& y-n.y_position<=node_height &&y-n.y_position>=0){
+			return n.id;
 		}
 	}
 
@@ -63,7 +57,8 @@ void updateNodeState(Node * node){
 	if(node->state==Reachable){
 		node->state=Visited;
 		
-		//iterate thorugh node children and set them to reachable
+		
+		//ADD REACHABILITY FUNCTIONALITY
 		
 	}else{
 		fprintf(stderr,"Node is either unreachable or already visited\n");
@@ -93,10 +88,9 @@ void renderNode(Node * node, int screenWidth){
 	//draw edges connecting nodes to children
 	int child_x=-1;
 	int child_y=-1;
-	for(size_t i = 0; i < node->children.size(); i++)
-	{	
-		int child_x = (screenWidth/2) + getNodeById(node->children.at(i))->x_offset*200;
-		int child_y = top_margin + getNodeById((node->children).at(i))->level*100;
+	for (int& child_id : node->children){	
+		int child_x = (screenWidth/2) + getNodeById(child_id)->x_offset*200;
+		int child_y = top_margin + getNodeById(child_id)->level*100;
 		Core::Renderer::drawLine(ScreenCoord(x_pos+(node_width/2),y_pos+node_height),ScreenCoord(child_x,child_y), Colour(1.0, 1.0, 1.0));	
 
 	}
@@ -112,19 +106,19 @@ SkillTree::SkillTree() {
 	//----example of how to make a tree (example_tree)----//
 	//----------------------------------------------------//
 	std::vector<int> children0 = {1,2}; //id of children
-	Node node0 = newNode(Visited,"Example data for node", 0,"res/test.png",children0,0,0);
+	Node node0 = * new Node(Visited,"Example data for node", 0,"res/test.png",children0,0,0);
 
 	std::vector<int> children1 = {3,4}; //id of children
 	std::vector<int> children2; //id of children
 
 
-	Node node2 = newNode(Visited,"Example data for node", 2,"res/test.png",children1,-1,1);
-	Node node1 = newNode(Visited,"Example data for node", 1,"res/test.png",children2,1,1);
+	Node node2 = * new Node(Visited,"Example data for node", 2,"res/test.png",children1,-1,1);
+	Node node1 = * new Node(Visited,"Example data for node", 1,"res/test.png",children2,1,1);
 
 	std::vector<int> no_children; 
 
-	Node node3 = newNode(Visited,"Example data for node", 3,"res/test.png",no_children,-2,2);
-	Node node4 = newNode(Visited,"Example data for node", 4,"res/test.png",no_children,0,2);
+	Node node3 = * new Node(Visited,"Example data for node", 3,"res/test.png",no_children,-2,2);
+	Node node4 = * new Node(Visited,"Example data for node", 4,"res/test.png",no_children,0,2);
 	
 
 	nodes.push_back(node0); nodes.push_back(node1);nodes.push_back(node2); nodes.push_back(node3);
@@ -157,13 +151,10 @@ void SkillTree::update(int delta) {
 }
 
 void SkillTree::render() {
-
 	
-	for(size_t i = 0; i < nodes.size(); i++)
-	{
-		renderNode(&nodes.at(i),screenWidth);
+	for(Node &n:nodes){
+		renderNode(&n,screenWidth);
 
 	}
-	
 	
 }
