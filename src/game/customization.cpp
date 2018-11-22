@@ -50,36 +50,36 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 
 	//draw unit sprite
 	Sprite unitSprite("res/assets/players/MaleBase.png");
-	unitSprite.setSize(windowWidth/6, windowHeight/3);
+	unitSprite.setSize(Core::windowWidth()/6, Core::windowHeight()/3);
 	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
 	unitSprite.render();
 
 	//unit name
 	Core::Text_Renderer::setColour(Colour(0,0,0));
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render(unit.name, ScreenCoord(x+(windowWidth/4), y), 3.f);
+    Core::Text_Renderer::render(unit.name, ScreenCoord(x+(Core::windowWidth()/4), y), 3.f);
 
 	//attributes
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Strength: " + std::to_string(unit.strength), ScreenCoord(x+(windowWidth/5), y+(windowHeight/5)), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.dexterity), ScreenCoord(x+(windowWidth/5), y+(windowHeight/5)+30), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(windowWidth/5), y+(windowHeight/5)+60), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(windowWidth/5), y+(windowHeight/5)+90), 1.f);
+    Core::Text_Renderer::render("Strength: " + std::to_string(unit.strength), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+30), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+60), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
 
 	//link to skill tree
 	Sprite skillTreeLink("res/assets/UI/SkillTreeLink.png");
 	skillTreeLink.setSize(160, 60);
-	skillTreeLink.setPos(x+(windowWidth/3), y+(windowHeight/5)+100);
+	skillTreeLink.setPos(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100);
 	skillTreeLink.render();
-    Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(windowWidth/3), y+(windowHeight/5)+100), 1.5f);
+    Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100), 1.5f);
 }
 
 void Customization::render() {
 
 	renderUnit(0,0,unit1);
-	renderUnit(windowWidth/2,0,unit2);
-	renderUnit(0,(int) windowHeight/2,unit3);
-	renderUnit((int) windowWidth/2,(int) windowHeight/2,unit4);
+	renderUnit(Core::windowWidth()/2,0,unit2);
+	renderUnit(0,(int) Core::windowHeight()/2,unit3);
+	renderUnit((int) Core::windowWidth()/2,(int) Core::windowHeight()/2,unit4);
 
 }
 

@@ -17,8 +17,6 @@ public:
 
 private:
 
-	int windowWidth = 1280;
-	int windowHeight = 720;
 	UnitData unit1, unit2, unit3, unit4;
 
 	void displayUnitData(const UnitData& data);

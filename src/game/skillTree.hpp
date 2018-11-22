@@ -7,21 +7,16 @@
 
 class SkillTree : public State { 
 
-	public:
+public:
 
-		SkillTree();
-		~SkillTree();
+	SkillTree();
+	~SkillTree();
 
-		void handleEvent(const SDL_Event& e) override;
-		void update(int delta) override;
-		void render() override;
+	void handleEvent(const SDL_Event& e) override;
+	void update(int delta) override;
+	void render() override;
 
-	private:
-		//reachable nodes can be selected by the user in order to add them to the visited set
-
-		int screenWidth = 1280;
-		int screenHeight = 720; 
-
+private:
 };
 
 

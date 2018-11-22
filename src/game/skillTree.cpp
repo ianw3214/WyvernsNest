@@ -67,11 +67,11 @@ void updateNodeState(Node * node){
 
 //----------RENDERING FUNCTIONS---------
 //render node along with children edges
-void renderNode(Node * node, int screenWidth){
+void renderNode(Node * node){
 	int top_margin=100;
 	int node_width = 100;
 	int node_height = 30;
-	int x_pos = (screenWidth/2) + node->x_offset*200 - (node_width/2);
+	int x_pos = (Core::windowWidth()/2) + node->x_offset*200 - (node_width/2);
 	int y_pos = top_margin + (node->level*100);
 	//set x,y positions for node (data structure)
 
@@ -89,7 +89,7 @@ void renderNode(Node * node, int screenWidth){
 	int child_x=-1;
 	int child_y=-1;
 	for (int& child_id : node->children){	
-		int child_x = (screenWidth/2) + getNodeById(child_id)->x_offset*200;
+		int child_x = (Core::windowWidth()/2) + getNodeById(child_id)->x_offset*200;
 		int child_y = top_margin + getNodeById(child_id)->level*100;
 		Core::Renderer::drawLine(ScreenCoord(x_pos+(node_width/2),y_pos+node_height),ScreenCoord(child_x,child_y), Colour(1.0, 1.0, 1.0));	
 
@@ -153,8 +153,7 @@ void SkillTree::update(int delta) {
 void SkillTree::render() {
 	
 	for(Node &n:nodes){
-		renderNode(&n,screenWidth);
-
+		renderNode(&n);
 	}
 	
 }
