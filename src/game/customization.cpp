@@ -49,8 +49,8 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 		ScreenCoord(x+(Core::windowWidth()/2)-margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
 
 	//draw unit sprite
-	Sprite unitSprite("res/FemaleattackTEST.gif");
-	unitSprite.setSize(windowWidth/4, windowHeight/2.5);
+	Sprite unitSprite("res/assets/players/MaleBase.png");
+	unitSprite.setSize(windowWidth/6, windowHeight/3);
 	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
 	unitSprite.render();
 
@@ -67,11 +67,11 @@ void Customization::renderUnit(int x, int y, UnitData unit){
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(windowWidth/5), y+(windowHeight/5)+90), 1.f);
 
 	//link to skill tree
-	Sprite skillTreeLink("res/test8.png");
+	Sprite skillTreeLink("res/assets/UI/SkillTreeLink.png");
 	skillTreeLink.setSize(160, 60);
-	skillTreeLink.setPos(x+(windowWidth/2.9), y+(windowHeight/5)+100);
+	skillTreeLink.setPos(x+(windowWidth/3), y+(windowHeight/5)+100);
 	skillTreeLink.render();
-    Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(windowWidth/2.9), y+(windowHeight/5)+100), 1.5f);
+    Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(windowWidth/3), y+(windowHeight/5)+100), 1.5f);
 }
 
 void Customization::render() {
@@ -80,11 +80,6 @@ void Customization::render() {
 	renderUnit(windowWidth/2,0,unit2);
 	renderUnit(0,(int) windowHeight/2,unit3);
 	renderUnit((int) windowWidth/2,(int) windowHeight/2,unit4);
-	for(size_t i = 0; i < 4; i++)
-	{	
-		//Render the 4 units on screen
-	}
-	
 
 }
 
