@@ -2,9 +2,6 @@
 
 #include "../engine/core.hpp"
 #include "combat/grid.hpp"
-#include "combat/unit.hpp"
-#include "combat/player.hpp"
-#include "combat/enemy.hpp"
 
 #define GAME_OVER_MENU_WIDTH	800
 #define GAME_OVER_MENU_HEIGHT	400
@@ -16,6 +13,7 @@ class Combat : public State {
 public:
 
 	Combat();
+	Combat(const std::string& gridPath);
 	~Combat();
 
 	// Default state functions called from the state handler

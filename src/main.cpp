@@ -4,6 +4,7 @@
 
 #include "engine/core.hpp"
 #include "game/menu.hpp"
+#include "game/combat.hpp"
 
 #include "engine/mixer.hpp"
 
@@ -23,8 +24,8 @@ int main(int argc, char* argv[]) {
 
 	Core::setDebugMode(true);
 
-	// Combat * state = new Combat();
-	Menu * state = new Menu();
+	Combat * state = new Combat("res/data/levels/level1.json");
+	// Menu * state = new Menu();
 	Core::setState(state);
 
 	// Main engine loop

@@ -1,0 +1,10 @@
+{
+    "map": "map1.json",
+    "enemies": [
+        {
+            "type": "BABY GOOMBA",
+            "x": 4,
+            "y": 4
+        }
+    ]
+}
