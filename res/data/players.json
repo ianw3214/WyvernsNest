@@ -1,0 +1,18 @@
+{
+    "players": [
+        {
+            "name": "test",
+            "STR": 10,
+            "DEX": 10,
+            "CON": 10,
+            "INT": 10
+        },
+        {
+            "name": "test2",
+            "STR": 10,
+            "DEX": 10,
+            "CON": 10,
+            "INT": 10
+        }
+    ]
+}

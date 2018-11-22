@@ -5,24 +5,47 @@
 #include "customization.hpp"
 #include "skillTree.hpp"
 
-Customization::Customization() {
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-	//generate data for units
-	generateDefaultUnitData();
+Customization::Customization(const std::string& file) {
+	std::ifstream player_file(file);
+	if (player_file.is_open()) {
+		json data;
+		player_file >> data;
+		for (const json& unit : data["players"]) {
+			std::string name = unit["name"];
+			int STR = unit["STR"];
+			int DEX = unit["DEX"];
+			int INT = unit["INT"];
+			int CON = unit["CON"];
+			units.push_back(UnitData{ name, STR, DEX, INT, CON });
+		}
+	} else {
+		// generate data for units if not found
+		// TOOD: Save to a file
+		generateDefaultUnitData();
+	}
 }
 
 Customization::~Customization() {
 
 }
 
-//only generates dummy data right now
+// Only generates dummy data right now
+// Deprecated...
 void Customization::generateDefaultUnitData() {
 
+	// TODO: Generate a single default unit
+
+	/*
 	// Default attributes for each unit1
 	unit1.name = "BOB";unit1.strength = 10;unit1.dexterity = 3;unit1.intelligence = 4;unit1.constitution = 100;
 	unit2.name = "SAM";unit2.strength = 1;unit2.dexterity = 3;unit2.intelligence = 4;unit2.constitution = 100;
 	unit3.name = "TIM";unit3.strength = 10;unit3.dexterity = 3;unit3.intelligence = 4;unit3.constitution = 100;
 	unit4.name = "MR. CHERRY";unit4.strength = 40;unit4.dexterity = 3;unit4.intelligence = 4;unit4.constitution = 100;
+	*/
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
@@ -66,7 +89,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+60), 1.f);
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
 
-	//link to skill tree
+	// link to skill tree
 	Sprite skillTreeLink("res/assets/UI/SkillTreeLink.png");
 	skillTreeLink.setSize(160, 60);
 	skillTreeLink.setPos(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100);
@@ -76,10 +99,10 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 
 void Customization::render() {
 
-	renderUnit(0,0,unit1);
-	renderUnit(Core::windowWidth()/2,0,unit2);
-	renderUnit(0,(int) Core::windowHeight()/2,unit3);
-	renderUnit((int) Core::windowWidth()/2,(int) Core::windowHeight()/2,unit4);
+	if (units.size() > 0) renderUnit(0, 0, units[0]);
+	if (units.size() > 1) renderUnit(Core::windowWidth()/2, 0, units[1]);
+	if (units.size() > 2) renderUnit(0, (int) Core::windowHeight()/2, units[2]);
+	if (units.size() > 3) renderUnit((int) Core::windowWidth()/2, (int) Core::windowHeight()/2, units[3]);
 
 }
 

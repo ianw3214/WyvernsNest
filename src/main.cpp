@@ -28,9 +28,9 @@ int main(int argc, char* argv[]) {
 
 	Core::setDebugMode(true);
 
-	Combat * state = new Combat("res/data/levels/level1.json");
+	// Combat * state = new Combat("res/data/levels/level1.json");
 	// Combat * state = new Combat();
-	// Customization * state = new Customization();
+	Customization * state = new Customization();
 	// SkillTree * state = new SkillTree();
 	// Menu * state = new Menu();
 	Core::setState(state);

@@ -4,12 +4,14 @@
 
 #include "unitData.hpp"
 
+#define DEFAULT_SKILL_TREE_PATH		"res/data/tree.json"
 
 class SkillTree : public State { 
 
 public:
 
 	SkillTree();
+	SkillTree(const std::string& path);
 	~SkillTree();
 
 	void handleEvent(const SDL_Event& e) override;
@@ -19,12 +21,8 @@ public:
 private:
 };
 
-
-enum NodeStates { Visited,Reachable,Unvisited}; 
-
 class Node { 
 	public: 
-		enum NodeStates state; //visited, reachable or unvisited
 		std::string data; //data that shows when hovering on node
 		int id;
 		std::string spritePath; //path to sprite of the node e.g. 'res/fistbump.png'
@@ -37,7 +35,7 @@ class Node {
 		int y_position; //y position of node when rendeered. -1 by defaults
 	
 		//constructor 
-		Node(enum NodeStates state, std::string data, int id, std::string spritePath,
+		Node(std::string data, int id, std::string spritePath,
 			std::vector<int> children, int x_offset, int level);
 }; 
 
