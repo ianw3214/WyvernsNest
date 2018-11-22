@@ -10,8 +10,7 @@ class SkillTree : public State {
 
 public:
 
-	SkillTree();
-	SkillTree(const std::string& path);
+	SkillTree(const std::string& path = DEFAULT_SKILL_TREE_PATH);
 	~SkillTree();
 
 	void handleEvent(const SDL_Event& e) override;
