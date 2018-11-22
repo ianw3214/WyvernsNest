@@ -2,12 +2,12 @@
 
 #include "../enemy.hpp"
 
-class WarriorEnemy : public Enemy {
+class MageDudeEnemy : public Enemy {
 
 public:
 
-	WarriorEnemy();
-	~WarriorEnemy();
+	MageDudeEnemy();
+	~MageDudeEnemy();
 
 private:
 
