@@ -8,6 +8,8 @@
 
 // TODO: Implement loading unit stats and calculating health, speed, etc. accordingly
 // TODO: Base turn order off of unit stats
+// TODO: Somehow merge the selectUnit and nextUnitTurn functions
+// TODO: Fix attacks to not execute if not valid
 class Combat : public State {
 
 public:

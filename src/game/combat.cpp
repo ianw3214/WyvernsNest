@@ -21,6 +21,7 @@ Combat::Combat() :
 
 	// Keeping track of turn order
 	unitIndex = 0;
+	// nextUnitTurn();
 	selectUnit(units[unitIndex]);
 
 	for (Unit * unit : units) unit->combat = this;
@@ -36,6 +37,12 @@ Combat::Combat(const std::string & filePath) {
 
 		std::string grid_path = data["map"];
 		grid = Grid(std::string("res/data/maps/") + grid_path);
+		grid.isPosValid(Vec2<int>(0, 0));
+
+		// TODO: debugging code
+		// TODO: Load player from 'PLAYER DATA' file and 'PLAYER POSITION' property in file path
+		addPlayer(0, 1);
+		addPlayer(1, 2);
 
 		// Load the enemies into the combat state
 		json enemies = data["enemies"];
@@ -50,12 +57,9 @@ Combat::Combat(const std::string & filePath) {
 		}
 	}
 
-	// TODO: Load player from 'PLAYER DATA' file and 'PLAYER POSITION' property in file path
-	addPlayer(0, 1);
-	addPlayer(1, 2);
-
 	// Keeping track of turn order
 	unitIndex = 0;
+	// nextUnitTurn();
 	selectUnit(units[unitIndex]);
 
 	for (Unit * unit : units) unit->combat = this;
@@ -247,9 +251,9 @@ void Combat::selectUnit(Unit * unit)
 		current->setState(UnitState::IDLE);
 		current->deselect();
 	}
-
 	current = unit;
 	unit->select();
+
 }
 
 bool Combat::isPosEmpty(Vec2<int> pos) const {
