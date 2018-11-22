@@ -6,6 +6,9 @@
 #include "game/menu.hpp"
 
 #include "engine/mixer.hpp"
+#include "game/customization.hpp"
+#include "game/skillTree.hpp"
+
 
 int main(int argc, char* argv[]) {
 
@@ -21,7 +24,7 @@ int main(int argc, char* argv[]) {
 
 	// Core::setDebugMode(true);
 
-	// Combat * state = new Combat();
+	// SkillTree * state = new SkillTree();
 	Menu * state = new Menu();
 	Core::setState(state);
 
