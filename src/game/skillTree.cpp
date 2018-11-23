@@ -1,19 +1,16 @@
 #include "skillTree.hpp"
 
-/*#######################
-##   LOCAL VARIABLES   ##
-#########################*/
-
- //list of all nodes in the tree
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
 /*#######################
 ##  HELPER FUNCTIONS   ##
 #########################*/
 
 //creates a new node
-Node::Node(enum NodeStates n_state, std::string n_data, int n_id, std::string n_spritePath,
+Node::Node(std::string n_data, int n_id, std::string n_spritePath,
 	std::vector<int> n_children, int n_x_offset, int n_level){
-	state=n_state;
 	data=n_data;
 	id=n_id;
 	spritePath=n_spritePath;
@@ -52,26 +49,13 @@ int clickedNode(int x, int y){
 	
 }
 
-//if node is reachable then update it to visited and change children to reachable
-void updateNodeState(Node * node){
-	if(node->state==Reachable){
-		node->state=Visited;
-		
-		
-		//ADD REACHABILITY FUNCTIONALITY
-		
-	}else{
-		fprintf(stderr,"Node is either unreachable or already visited\n");
-	}
-}
-
 //----------RENDERING FUNCTIONS---------
 //render node along with children edges
-void renderNode(Node * node, int screenWidth){
+void renderNode(Node * node){
 	int top_margin=100;
 	int node_width = 100;
 	int node_height = 30;
-	int x_pos = (screenWidth/2) + node->x_offset*200 - (node_width/2);
+	int x_pos = (Core::windowWidth()/2) + node->x_offset*200 - (node_width/2);
 	int y_pos = top_margin + (node->level*100);
 	//set x,y positions for node (data structure)
 
@@ -89,7 +73,7 @@ void renderNode(Node * node, int screenWidth){
 	int child_x=-1;
 	int child_y=-1;
 	for (int& child_id : node->children){	
-		int child_x = (screenWidth/2) + getNodeById(child_id)->x_offset*200;
+		int child_x = (Core::windowWidth()/2) + getNodeById(child_id)->x_offset*200;
 		int child_y = top_margin + getNodeById(child_id)->level*100;
 		Core::Renderer::drawLine(ScreenCoord(x_pos+(node_width/2),y_pos+node_height),ScreenCoord(child_x,child_y), Colour(1.0, 1.0, 1.0));	
 
@@ -101,28 +85,27 @@ void renderNode(Node * node, int screenWidth){
 /*########################
 ##   CLASS FUNCTIONS    ##
 ##########################*/
-SkillTree::SkillTree() {
-	//----------------------------------------------------//
-	//----example of how to make a tree (example_tree)----//
-	//----------------------------------------------------//
-	std::vector<int> children0 = {1,2}; //id of children
-	Node node0 = * new Node(Visited,"Example data for node", 0,"res/test.png",children0,0,0);
 
-	std::vector<int> children1 = {3,4}; //id of children
-	std::vector<int> children2; //id of children
+SkillTree::SkillTree(const std::string & path) {
+	std::ifstream f(path);
+	json data;
+	f >> data;
 
+	for (const json& node : data["nodes"]) {
 
-	Node node2 = * new Node(Visited,"Example data for node", 2,"res/test.png",children1,-1,1);
-	Node node1 = * new Node(Visited,"Example data for node", 1,"res/test.png",children2,1,1);
+		int id = node["id"];
+		std::string data = node["data"];
+		std::string sprite = node["sprite"];
+		int x_offset = node["x_offset"];
+		int level = node["level"];
 
-	std::vector<int> no_children; 
-
-	Node node3 = * new Node(Visited,"Example data for node", 3,"res/test.png",no_children,-2,2);
-	Node node4 = * new Node(Visited,"Example data for node", 4,"res/test.png",no_children,0,2);
-	
-
-	nodes.push_back(node0); nodes.push_back(node1);nodes.push_back(node2); nodes.push_back(node3);
-	nodes.push_back(node4); 
+		// Construct the node object and add its children
+		Node obj = Node(data, id, sprite, std::vector<int>(), x_offset, level);
+		for (int child : node["children"]) {
+			obj.children.push_back(child);
+		}
+		nodes.push_back(obj);
+	}
 }
 
 SkillTree::~SkillTree() {
@@ -153,8 +136,7 @@ void SkillTree::update(int delta) {
 void SkillTree::render() {
 	
 	for(Node &n:nodes){
-		renderNode(&n,screenWidth);
-
+		renderNode(&n);
 	}
 	
 }

@@ -1,0 +1,28 @@
+{
+    "nodes": [
+        {
+            "id": 1,
+            "data": "placeholder",
+            "sprite": "path",
+            "children": [
+                2, 3
+            ],
+            "x_offset": 0,
+            "level": 0
+        },{
+            "id": 2,
+            "data": "placeholder",
+            "sprite": "path",
+            "children": [],
+            "x_offset": -1,
+            "level": 1
+        },{
+            "id": 3,
+            "data": "placeholder",
+            "sprite": "path",
+            "children": [],
+            "x_offset": 1,
+            "level": 1
+        }
+    ]
+}

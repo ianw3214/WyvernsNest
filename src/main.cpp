@@ -4,8 +4,10 @@
 
 #include "engine/core.hpp"
 #include "game/menu.hpp"
+#include "game/combat.hpp"
 
 #include "engine/mixer.hpp"
+#include "game/combat.hpp"
 #include "game/customization.hpp"
 #include "game/skillTree.hpp"
 
@@ -26,8 +28,11 @@ int main(int argc, char* argv[]) {
 
 	Core::setDebugMode(true);
 
+	// Combat * state = new Combat("res/data/levels/level1.json");
+	// Combat * state = new Combat();
+	Customization * state = new Customization();
 	// SkillTree * state = new SkillTree();
-	Menu * state = new Menu();
+	// Menu * state = new Menu();
 	Core::setState(state);
 
 	// Main engine loop

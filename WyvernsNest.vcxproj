@@ -154,6 +154,7 @@
     <ClCompile Include="src\game\cutscene.cpp" />
     <ClCompile Include="src\game\combat\grid.cpp" />
     <ClCompile Include="src\game\menu.cpp" />
+    <ClCompile Include="src\game\skillTree.cpp" />
     <ClCompile Include="src\game\util\attackloader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="src\game\cutscene.hpp" />
     <ClInclude Include="src\game\combat\grid.hpp" />
     <ClInclude Include="src\game\menu.hpp" />
+    <ClInclude Include="src\game\skillTree.hpp" />
     <ClInclude Include="src\game\unitData.hpp" />
     <ClInclude Include="src\game\util\attackloader.hpp" />
     <ClInclude Include="src\math\math.hpp" />
