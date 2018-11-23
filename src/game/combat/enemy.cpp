@@ -11,6 +11,14 @@ Enemy::Enemy() :
 	sprite.setSize(sprite_width, sprite_height);
 }
 
+Enemy::Enemy(UnitType type, const std::string& spritePath) :
+	Unit(type),
+	sprite(spritePath),
+	bite(Attacks::get("PUNCH", this))
+{
+	sprite.setSize(sprite_width, sprite_height);
+}
+
 Enemy::~Enemy()
 {
 }
