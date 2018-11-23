@@ -14,6 +14,7 @@ class Enemy : public Unit {
 public:
 
 	Enemy();
+	Enemy(UnitType type, const std::string& spritePath);
 	~Enemy();
 
 	virtual void render() override;
@@ -35,5 +36,5 @@ private:
 
 	// Basic bite attack of enemy
 	Attack bite;
-
+ 
 };
