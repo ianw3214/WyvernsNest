@@ -2,20 +2,20 @@
 
 #include "../engine/core.hpp"
 #include "combat/grid.hpp"
-#include "combat/unit.hpp"
-#include "combat/player.hpp"
-#include "combat/enemy.hpp"
 
 #define GAME_OVER_MENU_WIDTH	800
 #define GAME_OVER_MENU_HEIGHT	400
 
 // TODO: Implement loading unit stats and calculating health, speed, etc. accordingly
 // TODO: Base turn order off of unit stats
+// TODO: Somehow merge the selectUnit and nextUnitTurn functions
+// TODO: Fix attacks to not execute if not valid
 class Combat : public State {
 
 public:
 
 	Combat();
+	Combat(const std::string& gridPath);
 	~Combat();
 
 	// Default state functions called from the state handler
