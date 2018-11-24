@@ -93,6 +93,9 @@ void Player::renderTurnUI() {
 	pos.y() += UI_OPTION_HEIGHT;
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
 	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::NONE ? select : base);
+	Core::Text_Renderer::render("PASS", pos, 1.f);
 }
 
 void Player::renderValidMoves() {
@@ -151,6 +154,12 @@ void Player::handleEvent(const SDL_Event & event)
 			// Attack 2 key
 			if (event.key.keysym.sym == SDLK_KP_3) {
 				current_action = PlayerAction::ATTACK_2;
+			}
+
+			// Pass the turn
+			if (event.key.keysym.sym == SDLK_KP_4) {
+				current_action = PlayerAction::NONE;
+				state = UnitState::DONE;
 			}
 		}
 		
