@@ -33,9 +33,9 @@ Node * getNodeById(int id){
 	
 }
 // //returns the id of the clicked node. Return -1 if no node was clicked.
-int clickedNode(int x, int y){
-	int node_width = 100;
-	int node_height = 30;
+int nodeColliding(int x, int y){
+	int node_width = 50;
+	int node_height = 50;
 	
 	//check node which position is close to x,y
 	for (Node& n : nodes){
@@ -128,7 +128,7 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 		SDL_GetMouseState(&mouseX, &mouseY);
 
 		//call relevant functions to update selected node
-		int node_id = clickedNode(mouseX,mouseY);
+		int node_id = nodeColliding(mouseX,mouseY);
 		printf("%d\n",node_id);
 		if(node_id!=-1){
 			// printf("%d\n",node_id);
@@ -137,10 +137,8 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 }
 
 void SkillTree::update(int delta) {
-
 }
 
-#include <iostream>
 void SkillTree::render() {
 	// Render background sprite
 	base.render();
@@ -148,6 +146,20 @@ void SkillTree::render() {
 	// Render the nodes
 	for(Node &n:nodes){
 		renderNode(&n);
+	}
+
+	int mouseX;
+	int mouseY;
+	SDL_GetMouseState(&mouseX, &mouseY);
+
+	// Render a description of the node if is colliding with the mouse
+	int collidingNode = nodeColliding(mouseX, mouseY);
+	if (collidingNode != -1) {
+		Node * node = getNodeById(collidingNode);
+		// TODO: Render more descriptions and automatically calculate margins based on screen position
+		Core::Text_Renderer::setColour(Colour(.2f, .2f, .2f));
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+		Core::Text_Renderer::render(node->data, Vec2<int>(node->x_position + 50, node->y_position));
 	}
 	
 }
