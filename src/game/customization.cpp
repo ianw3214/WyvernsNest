@@ -11,7 +11,8 @@ using json = nlohmann::json;
 
 Customization::Customization(const std::string& file) :
 	base("res/assets/UI/UnitBase.png"),
-	empty("res/assets/UI/EmptyUnit.png")
+	empty("res/assets/UI/EmptyUnit.png"),
+	skillTreeButton("res/assets/UI/SkillTreeLink.png")
 {
 	std::ifstream player_file(file);
 	if (player_file.is_open()) {
@@ -57,6 +58,7 @@ void Customization::generateDefaultUnitData() {
 void Customization::initSprites() {
 	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
 	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+	skillTreeButton.setSize(160, 60);
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
@@ -107,10 +109,9 @@ void Customization::renderUnit(int x, int y, UnitData unit){
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
 
 	// link to skill tree
-	Sprite skillTreeLink("res/assets/UI/SkillTreeLink.png");
-	skillTreeLink.setSize(160, 60);
-	skillTreeLink.setPos(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100);
-	skillTreeLink.render();
+	
+	skillTreeButton.setPos(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100);
+	skillTreeButton.render();
     Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100), 1.5f);
 }
 

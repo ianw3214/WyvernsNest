@@ -18,6 +18,9 @@ public:
 	void render() override;
 
 private:
+	void initSprites();
+	// Sprites used to render the customization state
+	Sprite base;
 };
 
 class Node { 

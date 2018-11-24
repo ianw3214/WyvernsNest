@@ -31,5 +31,6 @@ private:
 	// Sprites used to render the customization state
 	Sprite base;
 	Sprite empty;
+	Sprite skillTreeButton;
 
 };

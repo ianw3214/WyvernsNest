@@ -52,9 +52,11 @@ int clickedNode(int x, int y){
 //----------RENDERING FUNCTIONS---------
 //render node along with children edges
 void renderNode(Node * node){
-	int top_margin=100;
-	int node_width = 100;
-	int node_height = 30;
+	int top_margin = 60;
+	// DEFAULT ALL NODES TO 50/50 FOR NOW
+	// TODO: Use a better system to render node sprites
+	int node_width = 50;
+	int node_height = 50;
 	int x_pos = (Core::windowWidth()/2) + node->x_offset*200 - (node_width/2);
 	int y_pos = top_margin + (node->level*100);
 	//set x,y positions for node (data structure)
@@ -86,7 +88,9 @@ void renderNode(Node * node){
 ##   CLASS FUNCTIONS    ##
 ##########################*/
 
-SkillTree::SkillTree(const std::string & path) {
+SkillTree::SkillTree(const std::string & path) :
+	base("res/assets/UI/SkillTreeBase.png")
+{
 	std::ifstream f(path);
 	json data;
 	f >> data;
@@ -106,6 +110,9 @@ SkillTree::SkillTree(const std::string & path) {
 		}
 		nodes.push_back(obj);
 	}
+
+	// Initialize skilltree state
+	initSprites();
 }
 
 SkillTree::~SkillTree() {
@@ -133,10 +140,18 @@ void SkillTree::update(int delta) {
 
 }
 
+#include <iostream>
 void SkillTree::render() {
-	
+	// Render background sprite
+	base.render();
+
+	// Render the nodes
 	for(Node &n:nodes){
 		renderNode(&n);
 	}
 	
+}
+
+void SkillTree::initSprites() {
+	base.setSize(Core::windowWidth(), Core::windowHeight());
 }
