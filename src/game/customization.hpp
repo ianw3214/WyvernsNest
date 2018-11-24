@@ -23,6 +23,13 @@ private:
 
 	void displayUnitData(const UnitData& data);
 	void renderUnit(int x, int y, UnitData unit);
+	void renderEmpty(int x, int y);
 	void generateDefaultUnitData();
+
+
+	void initSprites();
+	// Sprites used to render the customization state
+	Sprite base;
+	Sprite empty;
 
 };

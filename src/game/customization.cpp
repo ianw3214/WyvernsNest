@@ -9,7 +9,10 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-Customization::Customization(const std::string& file) {
+Customization::Customization(const std::string& file) :
+	base("res/assets/UI/UnitBase.png"),
+	empty("res/assets/UI/EmptyUnit.png")
+{
 	std::ifstream player_file(file);
 	if (player_file.is_open()) {
 		json data;
@@ -27,6 +30,9 @@ Customization::Customization(const std::string& file) {
 		// TOOD: Save to a file
 		generateDefaultUnitData();
 	}
+
+	// Initialize the rest of the state
+	initSprites();
 }
 
 Customization::~Customization() {
@@ -48,6 +54,11 @@ void Customization::generateDefaultUnitData() {
 	*/
 }
 
+void Customization::initSprites() {
+	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+}
+
 void Customization::handleEvent(const SDL_Event& e) {
 if (e.type == SDL_KEYDOWN) {
 		// Move to the combat state upon ANY key press
@@ -62,7 +73,12 @@ void Customization::update(int delta) {
 }
 //renders Unit data where x,y is the left top corner of the unit data box and unit is the unit to be render
 void Customization::renderUnit(int x, int y, UnitData unit){
+	// Render the base sprite first
+	base.setPos(x, y);
+	base.render();
+
 	int margin = 10;
+	/*	--------- NO NEED TO DRAW BORDER LINES, DONE IN BASE SPRITE -----------
 	//draw enclosing lines for unit data boxes
 	Core::Renderer::drawLine(ScreenCoord(x+margin, y+margin), ScreenCoord(x+(Core::windowWidth()/2)-margin,y+margin), Colour(0.0, 0.0, 0.0));
 	Core::Renderer::drawLine(ScreenCoord(x+margin, y+margin), ScreenCoord(x+margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
@@ -70,6 +86,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 		ScreenCoord(x+(Core::windowWidth()/2)-margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
 	Core::Renderer::drawLine(ScreenCoord(x+margin,y+(Core::windowHeight()/2)-margin), 
 		ScreenCoord(x+(Core::windowWidth()/2)-margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
+	*/
 
 	//draw unit sprite
 	Sprite unitSprite("res/assets/players/MaleBase.png");
@@ -97,12 +114,22 @@ void Customization::renderUnit(int x, int y, UnitData unit){
     Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100), 1.5f);
 }
 
+void Customization::renderEmpty(int x, int y) {
+	empty.setPos(x, y);
+	empty.render();
+}
+
 void Customization::render() {
 
+	// Render the units to the screen
 	if (units.size() > 0) renderUnit(0, 0, units[0]);
+	else (renderEmpty(0, 0));
 	if (units.size() > 1) renderUnit(Core::windowWidth()/2, 0, units[1]);
-	if (units.size() > 2) renderUnit(0, (int) Core::windowHeight()/2, units[2]);
-	if (units.size() > 3) renderUnit((int) Core::windowWidth()/2, (int) Core::windowHeight()/2, units[3]);
+	else (renderEmpty(Core::windowWidth() / 2, 0));
+	if (units.size() > 2) renderUnit(0, Core::windowHeight()/2, units[2]);
+	else (renderEmpty(0, Core::windowHeight() / 2));
+	if (units.size() > 3) renderUnit(Core::windowWidth()/2, Core::windowHeight()/2, units[3]);
+	else (renderEmpty(Core::windowWidth() / 2, Core::windowHeight() / 2));
 
 }
 
