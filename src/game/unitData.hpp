@@ -40,7 +40,14 @@ struct UnitData {
 	int intelligence;
 	int constitution;
 
+	// The EXP of the unit
+	int level;
+	int experience;
+
 	// Traits of the unit
 	std::vector<Trait> traits;
+
+	// Skill tree of the unit
+	std::vector<int> skillTree;
 
 };

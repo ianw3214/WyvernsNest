@@ -105,6 +105,15 @@
     <ClCompile Include="src\game\skillTree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\game\settingsmenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\creditsmenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\util\button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\engine.hpp">
@@ -216,6 +225,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\skillTree.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\settingsmenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\creditsmenu.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\util\button.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
