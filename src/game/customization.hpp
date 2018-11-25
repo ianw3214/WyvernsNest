@@ -6,6 +6,21 @@
 
 #define DEFAULT_PLAYER_FILE		"res/data/players.json"
 
+class ButtonData {
+public:
+	Vec2<int> position;
+	int width;
+	int height;
+
+	ButtonData(Vec2<int> position = Vec2<int>(0, 0), int width = 160, int height = 80);
+	~ButtonData();
+
+	void render();
+	bool colliding(ScreenCoord point);
+
+	Sprite default_sprite;
+};
+
 class Customization : public State {
 
 public:
@@ -26,11 +41,15 @@ private:
 	void renderEmpty(int x, int y);
 	void generateDefaultUnitData();
 
-
+	// Buttons used to bring to next state
+	ButtonData button1;
+	ButtonData button2;
+	ButtonData button3;
+	ButtonData button4;
+	
 	void initSprites();
 	// Sprites used to render the customization state
 	Sprite base;
 	Sprite empty;
-	Sprite skillTreeButton;
 
 };

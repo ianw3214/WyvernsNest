@@ -11,8 +11,7 @@ using json = nlohmann::json;
 
 Customization::Customization(const std::string& file) :
 	base("res/assets/UI/UnitBase.png"),
-	empty("res/assets/UI/EmptyUnit.png"),
-	skillTreeButton("res/assets/UI/SkillTreeLink.png")
+	empty("res/assets/UI/EmptyUnit.png")
 {
 	std::ifstream player_file(file);
 	if (player_file.is_open()) {
@@ -34,6 +33,16 @@ Customization::Customization(const std::string& file) :
 
 	// Initialize the rest of the state
 	initSprites();
+
+	ScreenCoord coord1 = ScreenCoord(0 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	button1 = ButtonData(coord1);
+	ScreenCoord coord2 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	button2 = ButtonData(coord2);
+	ScreenCoord coord3 = ScreenCoord(0 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	button3 = ButtonData(coord3);
+	ScreenCoord coord4 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	button4 = ButtonData(coord4);
+	
 }
 
 Customization::~Customization() {
@@ -58,15 +67,16 @@ void Customization::generateDefaultUnitData() {
 void Customization::initSprites() {
 	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
 	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
-	skillTreeButton.setSize(160, 60);
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
-	if (e.type == SDL_KEYDOWN) {
-		// Move to the combat state upon ANY key press
-		changeState(new SkillTree(0));
-		// Set the text rendering colour back to normal
-		Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		Vec2<int> mousePos;
+		SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+		if (button1.colliding(mousePos)) changeState(new SkillTree(0));
+		if (button2.colliding(mousePos)) changeState(new SkillTree(1));
+		if (button3.colliding(mousePos)) changeState(new SkillTree(2));
+		if (button4.colliding(mousePos)) changeState(new SkillTree(3));
 	}
 }
 
@@ -80,15 +90,6 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	base.render();
 
 	int margin = 10;
-	/*	--------- NO NEED TO DRAW BORDER LINES, DONE IN BASE SPRITE -----------
-	//draw enclosing lines for unit data boxes
-	Core::Renderer::drawLine(ScreenCoord(x+margin, y+margin), ScreenCoord(x+(Core::windowWidth()/2)-margin,y+margin), Colour(0.0, 0.0, 0.0));
-	Core::Renderer::drawLine(ScreenCoord(x+margin, y+margin), ScreenCoord(x+margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
-	Core::Renderer::drawLine(ScreenCoord(x+(Core::windowWidth()/2)-margin,y+ margin), 
-		ScreenCoord(x+(Core::windowWidth()/2)-margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
-	Core::Renderer::drawLine(ScreenCoord(x+margin,y+(Core::windowHeight()/2)-margin), 
-		ScreenCoord(x+(Core::windowWidth()/2)-margin,y+(Core::windowHeight()/2)-margin), Colour(0.0, 0.0, 0.0));
-	*/
 
 	//draw unit sprite
 	Sprite unitSprite("res/assets/players/MaleBase.png");
@@ -107,12 +108,6 @@ void Customization::renderUnit(int x, int y, UnitData unit){
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+30), 1.f);
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+60), 1.f);
     Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
-
-	// link to skill tree
-	
-	skillTreeButton.setPos(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100);
-	skillTreeButton.render();
-    Core::Text_Renderer::render("Skill Tree", ScreenCoord(x+(Core::windowWidth()/3), y+(Core::windowHeight()/5)+100), 1.5f);
 }
 
 void Customization::renderEmpty(int x, int y) {
@@ -132,8 +127,44 @@ void Customization::render() {
 	if (units.size() > 3) renderUnit(Core::windowWidth()/2, Core::windowHeight()/2, units[3]);
 	else (renderEmpty(Core::windowWidth() / 2, Core::windowHeight() / 2));
 
+	if (units.size() > 0) button1.render();
+	if (units.size() > 1) button2.render();
+	if (units.size() > 2) button3.render();
+	if (units.size() > 3) button4.render();
+
 }
 
 void Customization::displayUnitData(const UnitData & data) {
 	// Render the unit data to the window...
+}
+
+ButtonData::ButtonData(Vec2<int> position, int width, int height) :
+	default_sprite("res/assets/UI/SkillTreeLink.png"),
+	position(position),
+	width(width),
+	height(height)
+{
+	default_sprite.setSize(width, height);
+	default_sprite.setPos(position.x(), position.y());
+}
+
+ButtonData::~ButtonData() {
+
+}
+
+void ButtonData::render() {
+	default_sprite.render();
+	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
+	// TODO: calculate offset from window width/height somehow
+	Core::Text_Renderer::render("Skill Tree", position + Vec2<int>(25, 35), 1.0);
+}
+
+bool ButtonData::colliding(ScreenCoord point) {
+	if (point.x() >= position.x() && point.x() <= position.x() + width &&
+		point.y() >= position.y() && point.y() <= position.y() + height) 
+	{
+		return true;
+	}
+	return false;
 }

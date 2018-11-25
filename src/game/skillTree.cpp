@@ -6,9 +6,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-/*#######################
-##  HELPER FUNCTIONS   ##
-#########################*/
+#include "customization.hpp"
 
 //creates a new node
 Node::Node(std::string n_data, int n_id, std::string n_spritePath,
@@ -110,6 +108,29 @@ void SkillTree::updateReachableNodes() {
 	}
 }
 
+void SkillTree::returnToCustomization() {
+	// Save the changes made to the tree and return to the customization state
+	json data;
+	{	// Read player skill tree data from a file
+		std::ifstream f(DEFAULT_PLAYER_FILE);
+		f >> data;
+	}
+	// Find the player and change its selected nodes
+	int index = 0;
+	for (json& player : data["players"]) {
+		if (index == playerId) {
+			// Update the players children if it has been found
+			player["selected"] = selected;
+			break;
+		}
+	}
+	{	// Write the results to a file
+		std::ofstream f(DEFAULT_PLAYER_FILE);
+		f << data;
+	}
+	changeState(new Customization());
+}
+
 SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	playerId(playerId),
 	selected(selected),
@@ -177,6 +198,12 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 			if (std::find(reachable.begin(), reachable.end(), collidingNode) != reachable.end()) {
 				selectNode(collidingNode);
 			}
+		}
+	}
+
+	if (e.type == SDL_KEYDOWN) {
+		if (e.key.keysym.sym == SDLK_a) {
+			returnToCustomization();
 		}
 	}
 }

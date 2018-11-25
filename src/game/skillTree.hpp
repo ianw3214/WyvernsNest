@@ -60,4 +60,7 @@ private:
 	void renderNode(Node * node);
 	void selectNode(int id);
 	void updateReachableNodes();
+
+	// Other helper functions
+	void returnToCustomization();
 };
