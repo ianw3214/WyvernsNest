@@ -126,7 +126,7 @@ void SkillTree::returnToCustomization() {
 	}
 	{	// Write the results to a file
 		std::ofstream f(DEFAULT_PLAYER_FILE);
-		f << data;
+		f << data.dump(4);
 	}
 	changeState(new Customization());
 }

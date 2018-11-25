@@ -1,1 +1,26 @@
-{"players":[{"CON":10,"DEX":10,"INT":10,"STR":10,"name":"test","selected":[1,2,4]},{"CON":10,"DEX":10,"INT":10,"STR":10,"name":"test2","selected":[1]}]}
+{
+    "players": [
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "name": "test",
+            "selected": [
+                1,
+                2,
+                4
+            ]
+        },
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "name": "test2",
+            "selected": [
+                1
+            ]
+        }
+    ]
+}
