@@ -5,14 +5,16 @@
             "STR": 10,
             "DEX": 10,
             "CON": 10,
-            "INT": 10
+            "INT": 10,
+            "selected": [1, 2]
         },
         {
             "name": "test2",
             "STR": 10,
             "DEX": 10,
             "CON": 10,
-            "INT": 10
+            "INT": 10,
+            "selected": [1]
         }
     ]
 }
