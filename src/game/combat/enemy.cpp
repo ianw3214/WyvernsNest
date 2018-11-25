@@ -86,7 +86,7 @@ void Enemy::handleMovement() {
 	int tries = 20;
 	while (tries > 0) {
 		x_offset = rand() % (getMoveSpeed() * 2 + 1) - getMoveSpeed();
-		y_offset = getMoveSpeed() - std::abs(x_offset);
+		y_offset = rand() % (std::abs(getMoveSpeed() - std::abs(x_offset)) * 2 + 1) - std::abs(getMoveSpeed() - std::abs(x_offset));
 		if (getPath(*combat, position - Vec2<int>(x_offset, y_offset)).size() > 0) {
 			break;
 		}

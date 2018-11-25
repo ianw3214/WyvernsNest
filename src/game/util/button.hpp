@@ -19,4 +19,5 @@ public:
 	bool colliding(ScreenCoord point);
 
 	Sprite default_sprite;
+	Sprite hover_sprite;
 };

@@ -67,6 +67,8 @@ bool Grid::isPosEmpty(Vec2<int> pos) const {
 }
 
 bool Grid::isPosValid(Vec2<int> pos) const {
+	if (pos.x() < 0 || pos.x() >= map_width) return false;
+	if (pos.y() < 0 || pos.y() >= map_height) return false;
 	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
 }
 
