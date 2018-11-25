@@ -49,7 +49,7 @@ int SkillTree::nodeColliding(int x, int y) {
 //----------RENDERING FUNCTIONS---------
 // Render node along with children edges
 void SkillTree::renderNode(Node * node) {
-	int top_margin = 60;
+	int top_margin = 40;
 	// DEFAULT ALL NODES TO 50/50 FOR NOW
 	// TODO: Use a better system to render node sprites
 	int node_width = 50;
@@ -169,6 +169,7 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 				for (int child : player["selected"]) {
 					selected.push_back(child);
 				}
+				playerLevel = player["level"];
 				break;
 			}
 			index++;
@@ -178,6 +179,8 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	// Initialize skilltree state
 	initSprites();
 	updateReachableNodes();
+	backButton = ButtonData(ScreenCoord(Core::windowWidth() / 2 - 64, Core::windowHeight() - 90), 128, 64);
+	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png");
 }
 
 SkillTree::~SkillTree() {
@@ -192,17 +195,23 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 		int mouseY;
 		SDL_GetMouseState(&mouseX, &mouseY);
 
-		//call relevant functions to update selected node
-		int collidingNode = nodeColliding(mouseX,mouseY);
-		if (collidingNode != -1) {
-			if (std::find(reachable.begin(), reachable.end(), collidingNode) != reachable.end()) {
-				selectNode(collidingNode);
+		// If we can choose points AND the mouse clicked on a node, select it
+		if (playerLevel - selected.size() > 0) {
+			int collidingNode = nodeColliding(mouseX, mouseY);
+			if (collidingNode != -1) {
+				if (std::find(reachable.begin(), reachable.end(), collidingNode) != reachable.end()) {
+					selectNode(collidingNode);
+				}
 			}
+		}
+
+		if (backButton.colliding(ScreenCoord(mouseX, mouseY))) {
+			returnToCustomization();
 		}
 	}
 
 	if (e.type == SDL_KEYDOWN) {
-		if (e.key.keysym.sym == SDLK_a) {
+		if (e.key.keysym.sym == SDLK_RETURN) {
 			returnToCustomization();
 		}
 	}
@@ -235,6 +244,14 @@ void SkillTree::render() {
 		Core::Text_Renderer::render(node->data, Vec2<int>(node->x_position + 50, node->y_position));
 	}
 	
+	// Render buttons
+	backButton.render();
+
+	// Render UI
+	Core::Text_Renderer::setColour(Colour(.2f, .2f, .2f));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+	std::string text = std::string("Available skill points: ") + std::to_string(playerLevel - selected.size());
+	Core::Text_Renderer::render(text, ScreenCoord(10, Core::windowHeight() - 20));
 }
 
 void SkillTree::initSprites() {

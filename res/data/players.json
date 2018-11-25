@@ -5,11 +5,11 @@
             "DEX": 10,
             "INT": 10,
             "STR": 10,
+            "experience": 250,
+            "level": 1,
             "name": "test",
             "selected": [
-                1,
-                2,
-                4
+                1
             ]
         },
         {
@@ -17,6 +17,20 @@
             "DEX": 10,
             "INT": 10,
             "STR": 10,
+            "experience": 490,
+            "level": 1,
+            "name": "test2",
+            "selected": [
+                1
+            ]
+        },
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "experience": 300,
+            "level": 1,
             "name": "test2",
             "selected": [
                 1

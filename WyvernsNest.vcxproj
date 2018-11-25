@@ -158,6 +158,7 @@
     <ClCompile Include="src\game\settingsmenu.cpp" />
     <ClCompile Include="src\game\skillTree.cpp" />
     <ClCompile Include="src\game\util\attackloader.cpp" />
+    <ClCompile Include="src\game\util\button.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
@@ -197,6 +198,7 @@
     <ClInclude Include="src\game\skillTree.hpp" />
     <ClInclude Include="src\game\unitData.hpp" />
     <ClInclude Include="src\game\util\attackloader.hpp" />
+    <ClInclude Include="src\game\util\button.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />

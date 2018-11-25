@@ -3,6 +3,7 @@
 #include "../engine/core.hpp"
 
 #include "unitData.hpp"
+#include "util/button.hpp"
 
 #define DEFAULT_SKILL_TREE_PATH		"res/data/tree.json"
 #define DEFAULT_PLAYER_FILE			"res/data/players.json"
@@ -40,6 +41,7 @@ public:
 private:
 
 	int playerId;
+	int playerLevel;
 	int height;
 	// Keep track of all selected nodes
 	std::vector<int> selected;
@@ -50,6 +52,9 @@ private:
 	Sprite base;
 	Sprite sprite_empty;
 	Sprite sprite_reachable;
+
+	// Buttons
+	ButtonData backButton;
 
 	// List of all nodes
 	std::vector<Node> nodes;

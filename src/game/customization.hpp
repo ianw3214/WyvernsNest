@@ -2,23 +2,17 @@
 
 #include "../engine/core.hpp"
 
+#include "util/button.hpp"
 #include "unitData.hpp"
 
 #define DEFAULT_PLAYER_FILE		"res/data/players.json"
 
-class ButtonData {
+#define DEFAULT_MAX_EXP			500.f
+
+class SkillTreeLinkButton : public ButtonData {
 public:
-	Vec2<int> position;
-	int width;
-	int height;
-
-	ButtonData(Vec2<int> position = Vec2<int>(0, 0), int width = 160, int height = 80);
-	~ButtonData();
-
+	SkillTreeLinkButton(Vec2<int> position = Vec2<int>(0, 0), int width = 160, int height = 80);
 	void render();
-	bool colliding(ScreenCoord point);
-
-	Sprite default_sprite;
 };
 
 class Customization : public State {
@@ -42,10 +36,10 @@ private:
 	void generateDefaultUnitData();
 
 	// Buttons used to bring to next state
-	ButtonData button1;
-	ButtonData button2;
-	ButtonData button3;
-	ButtonData button4;
+	SkillTreeLinkButton button1;
+	SkillTreeLinkButton button2;
+	SkillTreeLinkButton button3;
+	SkillTreeLinkButton button4;
 	
 	void initSprites();
 	// Sprites used to render the customization state
