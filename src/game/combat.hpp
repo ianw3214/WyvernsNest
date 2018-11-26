@@ -25,7 +25,6 @@ class Combat : public State {
 
 public:
 
-	Combat();
 	Combat(const std::string& gridPath);
 	~Combat();
 

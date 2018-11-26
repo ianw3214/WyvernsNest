@@ -104,31 +104,63 @@ void Menu::render() {
 }
 
 void Menu::changeToCombatState() {
+	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
 	// Create a new save file for the user if it doesn't exist
 	if (!save_file.is_open()) {
-		std::ofstream new_save(USER_SAVE_LOCATION);
-		json outputData;
-		std::vector<json> initialPlayers;
-		json player;
-		player["STR"] = 10;
-		player["DEX"] = 10;
-		player["INT"] = 10;
-		player["CON"] = 10;
-		player["experience"] = 0;
-		player["level"] = 1;
-		// TODO: Randomize this
-		player["name"] = "DEFAULT";
-		std::vector<int> selected;
-		selected.push_back(1);
-		player["selected"] = selected;
-		initialPlayers.push_back(player);
-		outputData["players"] = initialPlayers;
-		// Write the initial data to the save file
-		new_save << outputData.dump(4);
+		initializeSaveFile();
 	}
-	changeState(new Combat("res/data/levels/level1.json"));
+	// Otherwise, validate the save file first
+	else {
+		std::ifstream old_save(USER_SAVE_LOCATION);
+		json inputData;
+		old_save >> inputData;
+		bool valid = true;
+		if (inputData.find("players") == inputData.end()) valid = false;
+		if (inputData.find("level") == inputData.end()) valid = false;
+		// Generate a new save file if the current one is corrupted
+		if (!valid) initializeSaveFile();
+		else level_id = inputData["level"];
+	}
+	// Change the state based on the level file
+	std::string combatLevelLocation;
+	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
+	json masterData;
+	masterFile >> masterData;
+	for (const json& level : masterData["levels"]) {
+		if (level["id"] == level_id) {
+			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
+			std::string name = level["file"];
+			combatLevelLocation = std::string("res/data/levels/") + name;
+		}
+	}
+
+	changeState(new Combat(combatLevelLocation));
 
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+}
+
+void Menu::initializeSaveFile() {
+	std::ofstream new_save(USER_SAVE_LOCATION);
+	json outputData;
+	std::vector<json> initialPlayers;
+	json player;
+	player["STR"] = 10;
+	player["DEX"] = 10;
+	player["INT"] = 10;
+	player["CON"] = 10;
+	player["experience"] = 0;
+	player["level"] = 1;
+	// TODO: Randomize this
+	player["name"] = "DEFAULT";
+	std::vector<int> selected;
+	selected.push_back(1);
+	player["selected"] = selected;
+	initialPlayers.push_back(player);
+	// Construct the actual save file data
+	outputData["players"] = initialPlayers;
+	outputData["level"] = 0;
+	// Write the initial data to the save file
+	new_save << outputData.dump(4);
 }

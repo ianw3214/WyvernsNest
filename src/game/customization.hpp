@@ -5,7 +5,7 @@
 #include "util/button.hpp"
 #include "unitData.hpp"
 
-#define DEFAULT_PLAYER_FILE		"res/data/players.json"
+#define DEFAULT_PLAYER_FILE		"res/data/save.json"
 
 #define DEFAULT_MAX_EXP			500.f
 

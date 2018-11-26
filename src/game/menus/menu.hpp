@@ -16,6 +16,7 @@
 // Other hard coded values
 // TODO: unify these variable locations somewhere, perhaps in a config file
 #define USER_SAVE_LOCATION		"res/data/save.json"
+#define MASTER_LEVEL_LOCATION	"res/data/levels/master.json"
 
 class Menu : public State {
 
@@ -46,4 +47,5 @@ private:
 
 	// Other helper methods
 	void changeToCombatState();
+	void initializeSaveFile();
 };

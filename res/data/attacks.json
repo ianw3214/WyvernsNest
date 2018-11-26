@@ -21,15 +21,11 @@
         },{
             "name": "RANGED",
             "type": "ranged",
-            "range": 2,
+            "range": 10,
             "aoe": 0,
             "affect_self": true,
             "effects": [
                 {
-                    "type": "burn",
-                    "damage": 3,
-                    "ticks": 3
-                },{
                     "type": "damage",
                     "damage": 2
                 }
