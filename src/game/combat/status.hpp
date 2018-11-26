@@ -41,7 +41,7 @@ private:
 
 class StatBuffStatus : public Status {
 public:
-	StatBuffStatus(Stat stat, float added_percent = .2f, bool infinite = false, int turns = 1, Unit * target = nullptr);
+	StatBuffStatus(Stat stat, float added_percent = .2f, int turns = 1, bool infinite = false,  Unit * target = nullptr);
 	void affectUnit() override;
 
 	virtual float getStatModifier(Stat stat) const override;

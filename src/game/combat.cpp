@@ -213,10 +213,6 @@ void Combat::addPlayer(int x, int y) {
 	player->setTileSize(grid.tile_width, grid.tile_height);
 	addEntity(player);
 	units.push_back(player);
-
-	// TODO: Temporary debugging code
-	player->addStatus(new BurnStatus(10, 3));
-	player->addStatus(new StatBuffStatus(Stat::STR, 30.f, true));
 }
 
 void Combat::addEnemy(Enemy * enemy, int x, int y) {

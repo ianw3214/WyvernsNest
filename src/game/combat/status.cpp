@@ -15,7 +15,7 @@ void BurnStatus::affectUnit() {
 	if (target) target->takeDamage(damage);
 }
 
-StatBuffStatus::StatBuffStatus(Stat stat, float added_percent, bool infinite, int turns, Unit * target) :
+StatBuffStatus::StatBuffStatus(Stat stat, float added_percent, int turns, bool infinite, Unit * target) :
 	Status(StatusType::STAT_BUFF, turns, infinite, target), stat(stat), added_percent(added_percent) {}
 
 void StatBuffStatus::affectUnit() {

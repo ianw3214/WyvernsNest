@@ -54,6 +54,21 @@
                 }
             ],
             "modifiers": []
+        },{
+            "name": "SELF STR BUFF",
+            "type": "self",
+            "range": 0,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.2,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": []
         }
     ]
 }

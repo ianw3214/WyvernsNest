@@ -43,9 +43,23 @@ private:
 
 class BurnEffect : public AttackEffect {
 public:
-	BurnEffect(int damage = 1, int ticks = 1) : burn_damage(damage), ticks(ticks) {}
+	BurnEffect(int damage = 1, int ticks = 1, bool infinite = false) : 
+		burn_damage(damage), ticks(ticks), infinite(infinite) {}
 	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
 private:
 	int burn_damage;
 	int ticks;
+	bool infinite;
+};
+
+class StatBuffEffect : public AttackEffect {
+public:
+	StatBuffEffect(Stat stat, float percent, int ticks, bool infinite = false) : 
+		stat(stat), percent(percent), ticks(ticks), infinite(infinite) {}
+	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
+private:
+	Stat stat;
+	float percent;
+	int ticks;
+	bool infinite;
 };

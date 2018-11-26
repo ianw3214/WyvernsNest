@@ -89,7 +89,19 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 	if (data["type"] == "burn") {
 		int damage = data["damage"];
 		int ticks = data["ticks"];
+		// TODO: Add ability to add infinite effect in file
 		return new BurnEffect(damage, ticks);
+	}
+	if (data["type"] == "buff") {
+		Stat stat;
+		if (data["stat"] == "STR") stat = Stat::STR;
+		if (data["stat"] == "DEX") stat = Stat::DEX;
+		if (data["stat"] == "INT") stat = Stat::INT;
+		if (data["stat"] == "CON") stat = Stat::CON;
+		float added_percent = data["percent"];
+		int ticks = data["ticks"];
+		// TODO: Add ability to add infinite effect in file
+		return new StatBuffEffect(stat, added_percent, ticks, false);
 	}
 	return nullptr;
 }

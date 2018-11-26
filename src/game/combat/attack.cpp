@@ -264,6 +264,14 @@ void BurnEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attack) {
 	Unit * unit = combat.getUnitAt(pos);
 	if (unit) {
 		// TODO: Add modifiers (or don't)
-		unit->addStatus(new BurnStatus(burn_damage, ticks, unit));
+		unit->addStatus(new BurnStatus(burn_damage, ticks, infinite, unit));
+	}
+}
+
+void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attack) {
+	Unit * unit = combat.getUnitAt(pos);
+	if (unit) {
+		// TODO: Add modifiers (or don't)
+		unit->addStatus(new StatBuffStatus(stat, percent, ticks, infinite, unit));
 	}
 }
