@@ -37,7 +37,6 @@ Combat::Combat(const std::string & filePath) {
 
 		std::string grid_path = data["map"];
 		grid = Grid(std::string("res/data/maps/") + grid_path);
-		grid.isPosValid(Vec2<int>(0, 0));
 
 		// TODO: debugging code
 		// TODO: Load player from 'PLAYER DATA' file and 'PLAYER POSITION' property in file path

@@ -13,7 +13,7 @@ Grid::Grid() :
 	map_height(DEFAULT_MAP_HEIGHT),
 	tilesheet("res/assets/tiles/tilesheet1.png")
 {
-	init();
+	init(SOURCE_TILE_WIDTH);
 }
 
 // Constructor to load the grid from file data
@@ -33,7 +33,7 @@ Grid::Grid(std::string file) : tilesheet("INVALID") {
 	}
 
 	// Initialize other grid attributes based on current map attributes
-	init();
+	init(data["tilewidth"]);
 }
 
 Grid::~Grid() {
@@ -74,12 +74,12 @@ bool Grid::isPosValid(Vec2<int> pos) const {
 
 // TODO: Add option to vary source tile width/height
 // TODO: Add option to load collision map through file
-void Grid::init() {
+void Grid::init(int source_tile_width) {
 	// Calculate the tile size based on the screen size
 	tile_width = Core::windowWidth() / map_width;
 	tile_height = (Core::windowHeight() / map_height) + 1;
 	// Initialize the tile sprites to the tile width/height
-	tilesheet.setSourceSize(SOURCE_TILE_WIDTH, SOURCE_TILE_HEIGHT);
+	tilesheet.setSourceSize(source_tile_width, source_tile_width);
 	tilesheet.setSize(tile_width, tile_height);
 
 	// Fill the grid with no collisions and add the buffer space on top
@@ -97,7 +97,7 @@ void Grid::render()
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
 			int index = tilemap[TILE_INDEX(x, y)];
-			tilesheet.setSourcePos(INDEX_TO_X(index) * SOURCE_TILE_WIDTH, INDEX_TO_Y(index) * SOURCE_TILE_HEIGHT);
+			tilesheet.setSourcePos(INDEX_TO_X(index) * SOURCE_TILE_WIDTH, INDEX_TO_Y(index) * SOURCE_TILE_WIDTH);
 			tilesheet.setPos(tile_width * x, tile_height * y);
 			tilesheet.render();
 		}

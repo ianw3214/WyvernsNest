@@ -6,7 +6,6 @@
 #include "enemy.hpp"
 
 #define SOURCE_TILE_WIDTH 32
-#define SOURCE_TILE_HEIGHT 32
 #define SOURCE_WIDTH 6
 #define SOURCE_HEIGHT 4
 #define INDEX_TO_X(i) (i % SOURCE_WIDTH)
@@ -65,7 +64,7 @@ public:
 
 private:
 
-	void init();
+	void init(int source_tile_width);
 
 	// Grid sprites
 	Sprite tilesheet;

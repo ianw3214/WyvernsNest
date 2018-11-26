@@ -15,7 +15,7 @@ void Menu::handleEvent(const SDL_Event & e) {
 	if (e.type == SDL_KEYDOWN) {
 		// Move to the combat state upon A-key press
 		if (e.key.keysym.sym == SDLK_a) {
-			changeState(new Combat());
+			changeState(new Combat("res/data/levels/level1.json"));
 			// Set the text rendering colour back to normal
 			Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 		}
