@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "engine/core.hpp"
-#include "game/menu.hpp"
+#include "game/menus/menu.hpp"
 #include "game/combat.hpp"
 
 #include "engine/mixer.hpp"

@@ -38,6 +38,7 @@ void Enemy::render()
 }
 
 void Enemy::update(int delta) {
+	Unit::update(delta);
 	switch (state) {
 	case UnitState::IDLE: {
 		// Do nothing when idling

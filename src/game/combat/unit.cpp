@@ -192,9 +192,19 @@ void Unit::generateDefaultUnitData() {
 	// Default traits -> NOT YET IMPLEMENTED
 }
 
+void Unit::addStatus(Status * status) {
+	statusList.push_back(status);
+	status->setTarget(this);
+}
+
 void Unit::select() {
 	selected = true;
 	selectCallback();
+	for (auto it = statusList.begin(); it != statusList.end(); ++it) {
+		if (!(*it)->tick()) {
+			statusList.erase(it);
+		}
+	}
 }
 
 void Unit::deselect() {

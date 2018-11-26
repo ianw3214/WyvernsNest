@@ -1,6 +1,6 @@
 #include "menu.hpp"
 #include "settingsmenu.hpp"
-#include "combat.hpp"
+#include "../combat.hpp"
 #include "creditsmenu.hpp"
 
 Menu::Menu() :

@@ -2,8 +2,6 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
-#include "player.hpp"
-#include "enemy.hpp"
 
 #define SOURCE_TILE_WIDTH 32
 

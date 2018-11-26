@@ -5,6 +5,8 @@
 #include "combat/player.hpp"
 #include "combat/enemy.hpp"
 
+#include "combat/status.hpp"
+
 #include <fstream>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
@@ -211,6 +213,9 @@ void Combat::addPlayer(int x, int y) {
 	player->setTileSize(grid.tile_width, grid.tile_height);
 	addEntity(player);
 	units.push_back(player);
+
+	// TODO: Temporary debugging code
+	player->addStatus(new BurnStatus(10, 3));
 }
 
 void Combat::addEnemy(Enemy * enemy, int x, int y) {

@@ -168,6 +168,8 @@ void Player::handleEvent(const SDL_Event & event)
 }
 
 void Player::update(int delta) {
+	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
+	Unit::update(delta);
 	// Update the player based on its current state	
 	switch (state) {
 		case UnitState::IDLE: {

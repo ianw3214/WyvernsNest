@@ -2,7 +2,10 @@
 
 #include "../../engine/core.hpp"
 
+#include <list>
+
 #include "attack.hpp"
+#include "status.hpp"
 #include "../unitData.hpp"
 
 #define DEFAULT_SPRITE_WIDTH 200
@@ -63,6 +66,9 @@ public:
 	int health;
 	int maxHealth;
 
+	// Utility status effect functions
+	void addStatus(Status * status);
+
 	// Utility functions common across all units
 	void select();
 	void deselect();
@@ -102,7 +108,6 @@ protected:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
-
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();
 
@@ -127,5 +132,8 @@ private:
 	// The unit data of the unit
 	UnitData data;
 	void generateDefaultUnitData();
+
+	// The status effects of the unit
+	std::list<Status*> statusList;
 
 };
