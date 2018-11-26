@@ -26,6 +26,10 @@
             "affect_self": true,
             "effects": [
                 {
+                    "type": "burn",
+                    "damage": 3,
+                    "ticks": 3
+                },{
                     "type": "damage",
                     "damage": 2
                 }
@@ -36,6 +40,20 @@
                     "mod": 20.0
                 }
             ]
+        },{
+            "name": "BURN",
+            "type": "ranged",
+            "range": 3,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "burn",
+                    "damage": 3,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": []
         }
     ]
 }

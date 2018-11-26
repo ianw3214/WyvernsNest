@@ -2,7 +2,7 @@
 
 #include "../../engine/core.hpp"
 
-#include <list>
+#include <vector>
 
 #include "attack.hpp"
 #include "status.hpp"
@@ -133,7 +133,8 @@ private:
 	UnitData data;
 	void generateDefaultUnitData();
 
+	public:
 	// The status effects of the unit
-	std::list<Status*> statusList;
+	std::vector<Status*> statusList;
 
 };

@@ -86,6 +86,11 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 		int damage = data["damage"];
 		return new DamageEffect(damage);
 	}
+	if (data["type"] == "burn") {
+		int damage = data["damage"];
+		int ticks = data["ticks"];
+		return new BurnEffect(damage, ticks);
+	}
 	return nullptr;
 }
 

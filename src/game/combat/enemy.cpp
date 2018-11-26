@@ -35,6 +35,9 @@ void Enemy::render()
 
 	renderHealth();
 
+	if (statusList.size() > 0) {
+		Core::Text_Renderer::render("DEBUG: " + std::to_string(statusList.size()), ScreenCoord(100, 100));
+	}
 }
 
 void Enemy::update(int delta) {

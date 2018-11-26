@@ -200,10 +200,15 @@ void Unit::addStatus(Status * status) {
 void Unit::select() {
 	selected = true;
 	selectCallback();
-	for (auto it = statusList.begin(); it != statusList.end(); ++it) {
-		if (!(*it)->tick()) {
-			statusList.erase(it);
+	std::vector<int> removeIndex;
+	removeIndex.reserve(statusList.size());
+	for (int i = 0; i < statusList.size(); ++i) {
+		if (!(statusList[i]->tick())) {
+			removeIndex.push_back(i);
 		}
+	}
+	for (int i : removeIndex) {
+		statusList.erase(statusList.begin() + i);
 	}
 }
 
