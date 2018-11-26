@@ -234,7 +234,7 @@ void Unit::select() {
 	selectCallback();
 	std::vector<int> removeIndex;
 	removeIndex.reserve(statusList.size());
-	for (int i = 0; i < statusList.size(); ++i) {
+	for (unsigned int i = 0; i < statusList.size(); ++i) {
 		if (!(statusList[i]->tick())) {
 			removeIndex.push_back(i);
 		}

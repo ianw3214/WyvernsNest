@@ -81,6 +81,11 @@ public:
 
 protected:
 
+	void setData(UnitData data) { 
+		this->data = data;
+		loadPropertiesFromUnitData();
+	}
+
 	// Variables that contain various useful stats for the unit
 	int move_speed;
 	bool selected = false;

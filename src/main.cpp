@@ -11,7 +11,6 @@
 #include "game/customization.hpp"
 #include "game/skillTree.hpp"
 
-
 int main(int argc, char* argv[]) {
 
 	// Initialize the engine

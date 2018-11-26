@@ -3,6 +3,10 @@
 #include "../combat.hpp"
 #include "creditsmenu.hpp"
 
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 Menu::Menu() :
 	background("res/assets/menu/background.png"),
 	highlight("res/assets/menu/blur.png")
@@ -41,9 +45,7 @@ void Menu::handleEvent(const SDL_Event & e) {
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			switch (selected_option) {
 			case 0: {
-				changeState(new Combat("res/data/levels/level1.json"));
-				// Set the text rendering colour back to normal
-				Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+				changeToCombatState();
 			} break;
 			case 1: {
 				changeState(new SettingsMenu());
@@ -76,7 +78,6 @@ void Menu::render() {
 		Core::Text_Renderer::render("Press any key to begin", pos, 2.f);
 	}
 	*/
-
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	ScreenCoord version_pos(10, Core::windowHeight() - 40);
@@ -100,4 +101,34 @@ void Menu::render() {
 		}
 		Core::Text_Renderer::render(buttons[i], buttonCoords[i], 2.f);
 	}
+}
+
+void Menu::changeToCombatState() {
+	std::ifstream save_file(USER_SAVE_LOCATION);
+	// Create a new save file for the user if it doesn't exist
+	if (!save_file.is_open()) {
+		std::ofstream new_save(USER_SAVE_LOCATION);
+		json outputData;
+		std::vector<json> initialPlayers;
+		json player;
+		player["STR"] = 10;
+		player["DEX"] = 10;
+		player["INT"] = 10;
+		player["CON"] = 10;
+		player["experience"] = 0;
+		player["level"] = 1;
+		// TODO: Randomize this
+		player["name"] = "DEFAULT";
+		std::vector<int> selected;
+		selected.push_back(1);
+		player["selected"] = selected;
+		initialPlayers.push_back(player);
+		outputData["players"] = initialPlayers;
+		// Write the initial data to the save file
+		new_save << outputData.dump(4);
+	}
+	changeState(new Combat("res/data/levels/level1.json"));
+
+	// Set the text rendering colour back to normal
+	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 }

@@ -8,16 +8,18 @@
 #include "combat/status.hpp"
 
 #include <fstream>
-#include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+// DEPRECATED CONSTRUCTOR
 Combat::Combat() :
 	current(nullptr)
 {
 	grid = Grid("res/data/maps/map1.json");
 
+	/*
 	addPlayer(0, 1);
 	addPlayer(1, 2);
+	*/
 
 	addEnemy(new Enemy(), 2, 2);
 
@@ -40,10 +42,21 @@ Combat::Combat(const std::string & filePath) {
 		std::string grid_path = data["map"];
 		grid = Grid(std::string("res/data/maps/") + grid_path);
 
-		// TODO: debugging code
-		// TODO: Load player from 'PLAYER DATA' file and 'PLAYER POSITION' property in file path
-		addPlayer(0, 1);
-		addPlayer(1, 2);
+		// Load the player data from file
+		std::ifstream save(USER_SAVE_LOCATION_COMBAT);
+		json save_data;
+		save >> save_data;
+		std::vector<json> player_data = save_data["players"];
+		
+		// Load the players into the combat state
+		json player_spawns = data["player_spawns"];
+		unsigned int index = 0;
+		for (const json& spawn : player_spawns) {
+			if (index < player_data.size()) {
+				addPlayer(spawn["x"], spawn["y"], player_data[index]);
+				index++;
+			}
+		}
 
 		// Load the enemies into the combat state
 		json enemies = data["enemies"];
@@ -208,8 +221,8 @@ std::vector<Player*> Combat::getPlayers() const {
 	return result;
 }
 
-void Combat::addPlayer(int x, int y) {
-	Player * player = new Player(x, y);
+void Combat::addPlayer(int x, int y, const json& data) {
+	Player * player = new Player(x, y, data);
 	player->setTileSize(grid.tile_width, grid.tile_height);
 	addEntity(player);
 	units.push_back(player);

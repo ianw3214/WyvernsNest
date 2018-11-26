@@ -1,0 +1,16 @@
+{
+    "players": [
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "experience": 0,
+            "level": 1,
+            "name": "DEFAULT",
+            "selected": [
+                1
+            ]
+        }
+    ]
+}

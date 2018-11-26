@@ -13,6 +13,10 @@
 // Hard coded button values
 #define NUM_BUTTONS 4
 
+// Other hard coded values
+// TODO: unify these variable locations somewhere, perhaps in a config file
+#define USER_SAVE_LOCATION		"res/data/save.json"
+
 class Menu : public State {
 
 public:
@@ -39,4 +43,7 @@ private:
 	// The buttons to move to next states
 	std::vector<std::string> buttons;
 	std::vector<ScreenCoord> buttonCoords;
+
+	// Other helper methods
+	void changeToCombatState();
 };

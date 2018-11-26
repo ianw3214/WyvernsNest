@@ -5,8 +5,13 @@
 
 #include "combat/grid.hpp"
 
+#include <nlohmann/json.hpp>
+
 #define GAME_OVER_MENU_WIDTH	800
 #define GAME_OVER_MENU_HEIGHT	400
+
+// Other hard coded values
+#define USER_SAVE_LOCATION_COMBAT "res/data/save.json"
 
 class Unit;
 class Player;
@@ -34,7 +39,7 @@ public:
 
 	// Other utility functions
 	std::vector<Player*> getPlayers() const;
-	void addPlayer(int x, int y);
+	void addPlayer(int x, int y, const nlohmann::json& data);
 	void addEnemy(Enemy * enemy, int x, int y);
 
 	Grid grid;

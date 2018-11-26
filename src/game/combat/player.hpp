@@ -7,6 +7,8 @@
 #include "attack.hpp"
 #include "unit.hpp"
 
+#include <nlohmann/json.hpp>
+
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
@@ -39,6 +41,8 @@ public:
 
 	Player();
 	Player(int x, int y);
+	Player(int x, int y, const nlohmann::json& data);
+
 	~Player();
 		
 	void handleEvent(const SDL_Event& event);
@@ -67,6 +71,9 @@ protected:
 
 private:
 
+	// helper variables
+	void init();
+
 	// The attacks of the player
 	Attack attack1;
 	Attack attack2;
@@ -74,6 +81,7 @@ private:
 	// The outline of the player movement path to the cursor
 	std::vector<ScreenCoord> path_line;
 
+	// Movement helper functions
 	std::vector<ScreenCoord> getPossibleMoves();
 	void updatePossibleMoves();
 	std::vector<ScreenCoord> possibleMoves;
