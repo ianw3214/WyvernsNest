@@ -85,6 +85,7 @@ void Player::renderTurnUI() {
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
 	Core::Text_Renderer::render("MOVE", pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
@@ -94,7 +95,7 @@ void Player::renderTurnUI() {
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
 	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::NONE ? select : base);
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, base);
 	Core::Text_Renderer::render("PASS", pos, 1.f);
 }
 

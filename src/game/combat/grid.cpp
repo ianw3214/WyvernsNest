@@ -9,6 +9,7 @@ using json = nlohmann::json;
 
 Grid::Grid() :
 	tilemap(DEFAULT_TILEMAP),
+	collisionmap(DEFAULT_COLLISIONMAP),
 	map_width(DEFAULT_MAP_WIDTH),
 	map_height(DEFAULT_MAP_HEIGHT),
 	tilesheet("res/assets/tiles/tilesheet1.png")
@@ -27,9 +28,15 @@ Grid::Grid(std::string file) : tilesheet("INVALID") {
 	// Get the map width and height
 	map_width  = data["width"];
 	map_height = data["height"];
+	// Load the tilesheet data
 	tilesheet = Sprite(data["tilesheet"]);
+	source_width = data["tilesheet_width"];
+	source_height = data["tilesheet_height"];
 	for (int tile : data["tilemap"]) {
 		tilemap.push_back(tile);
+	}
+	for (int collision : data["collisionmap"]) {
+		collisionmap.push_back(collision);
 	}
 
 	// Initialize other grid attributes based on current map attributes
@@ -63,7 +70,7 @@ bool Grid::isMousePosValid()
 bool Grid::isPosEmpty(Vec2<int> pos) const {
 	if (TILE_INDEX(pos.x(), pos.y()) < 0) return false;
 	if (TILE_INDEX(pos.x(), pos.y()) >= map_width * map_height) return false;
-	return !collisionmap[TILE_INDEX(pos.x(), pos.y())];
+	return collisionmap[TILE_INDEX(pos.x(), pos.y())] == 0;
 }
 
 bool Grid::isPosValid(Vec2<int> pos) const {
@@ -81,15 +88,18 @@ void Grid::init(int source_tile_width) {
 	// Initialize the tile sprites to the tile width/height
 	tilesheet.setSourceSize(source_tile_width, source_tile_width);
 	tilesheet.setSize(tile_width, tile_height);
-
-	// Fill the grid with no collisions and add the buffer space on top
-	for (unsigned int i = 0; i < tilemap.size(); ++i) {
-		if (i < static_cast<unsigned int>(map_width)) collisionmap.push_back(true);
-		else collisionmap.push_back(false);
-	}
+	source_tile_size = source_tile_width;
 
 	// Debugging code
 	renderOutline = true;
+}
+
+int Grid::indexToX(int index) const {
+	return index % source_width;
+}
+
+int Grid::indexToY(int index) const {
+	return source_height - (index / source_width) - 1;
 }
 
 void Grid::render()
@@ -97,7 +107,7 @@ void Grid::render()
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
 			int index = tilemap[TILE_INDEX(x, y)];
-			tilesheet.setSourcePos(INDEX_TO_X(index) * SOURCE_TILE_WIDTH, INDEX_TO_Y(index) * SOURCE_TILE_WIDTH);
+			tilesheet.setSourcePos(indexToX(index) * source_tile_size, indexToY(index) * source_tile_size);
 			tilesheet.setPos(tile_width * x, tile_height * y);
 			tilesheet.render();
 		}
