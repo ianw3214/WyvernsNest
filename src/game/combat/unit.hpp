@@ -50,10 +50,10 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
-	int getSTR() const { return data.strength; }
-	int getDEX() const { return data.dexterity; }
-	int getINT() const { return data.intelligence; }
-	int getCON() const { return data.constitution; }
+	int getSTR() const;
+	int getDEX() const;
+	int getINT() const;
+	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
 

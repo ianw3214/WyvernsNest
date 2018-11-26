@@ -50,6 +50,38 @@ int Unit::getStat(Stat stat) const {
 	return 0;
 }
 
+int Unit::getSTR() const {
+	float percent_modifier = 1.f;
+	for (const Status * status : statusList) {
+		percent_modifier += status->getStatModifier(Stat::STR);
+	}
+	return static_cast<int>(static_cast<float>(data.strength) * percent_modifier);
+}
+
+int Unit::getDEX() const {
+	float percent_modifier = 1.f;
+	for (const Status * status : statusList) {
+		percent_modifier += status->getStatModifier(Stat::DEX);
+	}
+	return static_cast<int>(static_cast<float>(data.dexterity) * percent_modifier);
+}
+
+int Unit::getINT() const {
+	float percent_modifier = 1.f;
+	for (const Status * status : statusList) {
+		percent_modifier += status->getStatModifier(Stat::INT);
+	}
+	return static_cast<int>(static_cast<float>(data.intelligence) * percent_modifier);
+}
+
+int Unit::getCON() const {
+	float percent_modifier = 1.f;
+	for (const Status * status : statusList) {
+		percent_modifier += status->getStatModifier(Stat::CON);
+	}
+	return static_cast<int>(static_cast<float>(data.constitution) * percent_modifier);
+}
+
 void Unit::setTileSize(int width, int height) {
 	tile_width = width;
 	tile_height = height;
