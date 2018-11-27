@@ -56,17 +56,17 @@ Player::Player(int x, int y, const nlohmann::json& data) :
 
 Player::~Player() {}
 
-void Player::renderBottom() {
+void Player::renderBottom(Combat * combat) {
 	shadow.render();
 	// Render the corresponding UI elements depending on the players current action
 	if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
 		renderValidMoves();
 	}
 	if (current_action == PlayerAction::ATTACK_1) {
-		attack1.renderValidGrid(tile_width, tile_height);
+		attack1.renderValidGrid(tile_width, tile_height, *combat);
 	}
 	if (current_action == PlayerAction::ATTACK_2) {
-		attack2.renderValidGrid(tile_width, tile_height);
+		attack2.renderValidGrid(tile_width, tile_height, *combat);
 	}
 }
 
@@ -77,7 +77,7 @@ void Player::render()
 	player_sprite.render();
 }
 
-void Player::renderTop() {
+void Player::renderTop(Combat * combat) {
 	// If it's the players turn, render player related UI
 	if (state == UnitState::IDLE && selected) {
 		renderTurnUI();
@@ -171,6 +171,7 @@ void Player::handleEvent(const SDL_Event & event)
 			if (event.key.keysym.sym == SDLK_KP_4) {
 				current_action = PlayerAction::NONE;
 				state = UnitState::DONE;
+				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 			}
 		}
 		
