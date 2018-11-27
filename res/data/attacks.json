@@ -65,6 +65,33 @@
                 }
             ],
             "modifiers": []
+        },{
+            "name": "FIREBALL",
+            "type": "ranged",
+            "range": 4,
+            "aoe": 1,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 2
+                }
+            ],
+            "modifiers": []
+        },{
+            "name": "DRAGONS RAGE",
+            "type": "ranged",
+            "range": 1,
+            "aoe": 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.2,
+                    "ticks": 3                }
+            ],
+            "modifiers": []
         }
     ]
 }
