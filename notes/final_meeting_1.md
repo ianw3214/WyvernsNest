@@ -24,9 +24,9 @@
 - **Settings** menu
   - Change window size
   - Change music / sound effect volume
-- **Credits** menu
-  - Setup basic structure to easily fill out names -> role
-- **Back** to main menu button for both
+- ~~**Credits** menu~~
+  - ~~Setup basic structure to easily fill out names -> role~~
+- ~~**Back** to main menu button for both~~
 
 ## Combat state
 
@@ -50,4 +50,4 @@
 - Game balance
 - Change escape key to **NOT** exit the game
 - Clean up a bunch of **TODOs** in the code
-- Implement EXP -> Store EXP gained in the level code
+- ~~Implement EXP -> Store EXP gained in the level code~~

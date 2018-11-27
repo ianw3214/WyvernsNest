@@ -159,11 +159,11 @@ void Player::handleEvent(const SDL_Event & event)
 				}
 			}
 			// Attack 1 key
-			if (event.key.keysym.sym == SDLK_KP_2) {
+			if (event.key.keysym.sym == SDLK_2) {
 				current_action = PlayerAction::ATTACK_1;
 			}
 			// Attack 2 key
-			if (event.key.keysym.sym == SDLK_KP_3) {
+			if (event.key.keysym.sym == SDLK_3) {
 				current_action = PlayerAction::ATTACK_2;
 			}
 
