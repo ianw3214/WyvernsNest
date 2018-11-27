@@ -68,3 +68,6 @@ ipch/
 
 # ZIP files
 *.zip
+
+# ASESprite files
+*.aseprite

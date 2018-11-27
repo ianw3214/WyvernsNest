@@ -13,14 +13,7 @@ Player::Player() :
 	attack1(Attacks::get("PUNCH", this)),
 	attack2(Attacks::get("RANGED", this))
 {
-	player_sprite.setSize(sprite_width, sprite_height);
-
-	player_sprite.addAnimation(1, 1);		// IDLE
-	player_sprite.addAnimation(0, 0);		// SELECTED
-	player_sprite.addAnimation(2, 16);		// ATK MELEE
-	player_sprite.addAnimation(17, 31);		// ATK RANGED	
-	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
-	player_sprite.addAnimation(35, 35);		// DEAD
+	init();
 }
 
 Player::Player(int x, int y) :
@@ -31,17 +24,34 @@ Player::Player(int x, int y) :
 	attack1(Attacks::get("PUNCH", this)),
 	attack2(Attacks::get("RANGED", this))
 {
-	player_sprite.setSize(300, sprite_height);
-	player_sprite.setSourceSize(96, 96);
 	position.x() = x;
 	position.y() = y;
 
-	player_sprite.addAnimation(1, 1);		// IDLE
-	player_sprite.addAnimation(0, 0);		// SELECTED
-	player_sprite.addAnimation(2, 16);		// ATK MELEE
-	player_sprite.addAnimation(17, 31);		// ATK RANGED	
-	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
-	player_sprite.addAnimation(35, 35);		// DEAD
+	init();
+}
+
+Player::Player(int x, int y, const nlohmann::json& data) :
+	Unit(UnitType::PLAYER),
+	current_action(PlayerAction::NONE),
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png"),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this))
+{
+	position.x() = x;
+	position.y() = y;
+
+	init();
+
+	// Load the unit data from the file
+	UnitData unitData;
+	unitData.strength		= data["STR"];
+	unitData.dexterity		= data["DEX"];
+	unitData.intelligence	= data["INT"];
+	unitData.constitution	= data["CON"];
+	unitData.experience		= data["experience"];
+	unitData.level			= data["level"];
+	// TODO: Load attacks from here
 }
 
 Player::~Player() {}
@@ -85,6 +95,7 @@ void Player::renderTurnUI() {
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
 	Core::Text_Renderer::render("MOVE", pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
@@ -94,7 +105,7 @@ void Player::renderTurnUI() {
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
 	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::NONE ? select : base);
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, base);
 	Core::Text_Renderer::render("PASS", pos, 1.f);
 }
 
@@ -167,6 +178,8 @@ void Player::handleEvent(const SDL_Event & event)
 }
 
 void Player::update(int delta) {
+	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
+	Unit::update(delta);
 	// Update the player based on its current state	
 	switch (state) {
 		case UnitState::IDLE: {
@@ -198,6 +211,9 @@ void Player::update(int delta) {
 				incrementCounter();
 			}
 		} break;
+		case UnitState::DONE: {
+			moved = false;
+		}
 		default: {
 			// Do nothing by default
 		} break;
@@ -295,4 +311,17 @@ void Player::takeDamageCallback(int damage) {
 
 void Player::selectCallback() {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::SELECTED));
+}
+
+void Player::init() {
+	// TODO: not sure why this is broken??? -> player rendering not centered
+	player_sprite.setSize(sprite_width, sprite_height);
+	player_sprite.setSourceSize(96, 96);
+
+	player_sprite.addAnimation(1, 1);		// IDLE
+	player_sprite.addAnimation(0, 0);		// SELECTED
+	player_sprite.addAnimation(2, 16);		// ATK MELEE
+	player_sprite.addAnimation(17, 31);		// ATK RANGED	
+	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
+	player_sprite.addAnimation(35, 35);		// DEAD
 }

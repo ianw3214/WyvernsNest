@@ -112,7 +112,7 @@ void SkillTree::returnToCustomization() {
 	// Save the changes made to the tree and return to the customization state
 	json data;
 	{	// Read player skill tree data from a file
-		std::ifstream f(DEFAULT_PLAYER_FILE);
+		std::ifstream f(DEFAULT_PLAYER_FILE_SKILLTREE);
 		f >> data;
 	}
 	// Find the player and change its selected nodes
@@ -125,7 +125,7 @@ void SkillTree::returnToCustomization() {
 		}
 	}
 	{	// Write the results to a file
-		std::ofstream f(DEFAULT_PLAYER_FILE);
+		std::ofstream f(DEFAULT_PLAYER_FILE_SKILLTREE);
 		f << data.dump(4);
 	}
 	changeState(new Customization());
@@ -180,7 +180,7 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	initSprites();
 	updateReachableNodes();
 	backButton = ButtonData(ScreenCoord(Core::windowWidth() / 2 - 64, Core::windowHeight() - 90), 128, 64);
-	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png");
+	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButtonHover.png", "res/assets/UI/BackButton.png");
 }
 
 SkillTree::~SkillTree() {

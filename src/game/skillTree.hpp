@@ -5,8 +5,8 @@
 #include "unitData.hpp"
 #include "util/button.hpp"
 
-#define DEFAULT_SKILL_TREE_PATH		"res/data/tree.json"
-#define DEFAULT_PLAYER_FILE			"res/data/players.json"
+#define DEFAULT_SKILL_TREE_PATH			"res/data/tree.json"
+#define DEFAULT_PLAYER_FILE_SKILLTREE	"res/data/save.json"
 
 class Node {
 public:

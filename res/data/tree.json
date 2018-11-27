@@ -19,7 +19,7 @@
             "level": 1
         },{
             "id": 3,
-            "data": "placeholder",
+            "data": "BASIC RANGED AOE",
             "sprite": "res/assets/UI/NodeBase.png",
             "children": [6, 7],
             "x_offset": 2,

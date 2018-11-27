@@ -2,7 +2,10 @@
 
 #include "../../engine/core.hpp"
 
+#include <vector>
+
 #include "attack.hpp"
+#include "status.hpp"
 #include "../unitData.hpp"
 
 #define DEFAULT_SPRITE_WIDTH 200
@@ -47,10 +50,10 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
-	int getSTR() const { return data.strength; }
-	int getDEX() const { return data.dexterity; }
-	int getINT() const { return data.intelligence; }
-	int getCON() const { return data.constitution; }
+	int getSTR() const;
+	int getDEX() const;
+	int getINT() const;
+	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
 
@@ -63,6 +66,9 @@ public:
 	int health;
 	int maxHealth;
 
+	// Utility status effect functions
+	void addStatus(Status * status);
+
 	// Utility functions common across all units
 	void select();
 	void deselect();
@@ -74,6 +80,11 @@ public:
 	Combat * combat;
 
 protected:
+
+	void setData(UnitData data) { 
+		this->data = data;
+		loadPropertiesFromUnitData();
+	}
 
 	// Variables that contain various useful stats for the unit
 	int move_speed;
@@ -102,7 +113,6 @@ protected:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
-
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();
 
@@ -127,5 +137,9 @@ private:
 	// The unit data of the unit
 	UnitData data;
 	void generateDefaultUnitData();
+
+	public:
+	// The status effects of the unit
+	std::vector<Status*> statusList;
 
 };
