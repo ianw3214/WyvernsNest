@@ -52,9 +52,10 @@ public:
 	void addEffectModifier(Stat stat, float multiplier);
 
 	// Utility methods
-	void renderValidGrid(int tile_width, int tile_height);
-	void renderValidTarget(int tile_width, int tile_height);
-	bool isValid(ScreenCoord pos);
+	void renderValidGrid(int tile_width, int tile_height, const Combat& combat);
+	void renderValidTarget(int tile_width, int tile_height, const Combat& combat);
+	void renderValidSprite(int tile_width, int tile_height, int x, int y, const Combat& combat);
+	bool isValid(ScreenCoord pos, const Combat& combat);
 	const Unit * getSource() const { return source; }
 
 	// Getter functions for attack properties
