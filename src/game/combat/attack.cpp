@@ -203,19 +203,19 @@ bool Attack::isValid(ScreenCoord pos, const Combat& combat) {
 	case AttackType::MELEE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return combat.grid.isPosValid(source->position + Vec2<int>(x_diff, y_diff));
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::RANGED: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff <= range) return combat.grid.isPosValid(source->position + Vec2<int>(x_diff, y_diff));
+		if (x_diff + y_diff <= range) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::PIERCE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return combat.grid.isPosValid(source->position + Vec2<int>(x_diff, y_diff));
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	}
