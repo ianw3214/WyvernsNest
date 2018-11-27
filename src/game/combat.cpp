@@ -5,6 +5,7 @@
 #include "combat/player.hpp"
 #include "combat/enemy.hpp"
 #include "combat/status.hpp"
+#include "combat/enemies/mageDudeEnemy.hpp"
 
 #include "customization.hpp"
 
@@ -46,6 +47,12 @@ Combat::Combat(const std::string & filePath) {
 				int x = enemy["x"];
 				int y = enemy["y"];
 				Enemy * unit = new Enemy();
+				addEnemy(unit, x, y);
+			}
+			else if (type == "MAGE DUDE") {
+				int x = enemy["x"];
+				int y = enemy["y"];
+				Enemy *unit = new MageDudeEnemy();
 				addEnemy(unit, x, y);
 			}
 		}
