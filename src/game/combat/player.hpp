@@ -12,10 +12,6 @@
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
-#define UI_X_OFFSET					   -10
-#define UI_Y_OFFSET					    5
-#define UI_OPTION_HEIGHT				30
-
 // Enumeration to represent the possible player actions
 enum class PlayerAction {
 	NONE,

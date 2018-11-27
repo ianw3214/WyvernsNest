@@ -10,7 +10,64 @@
             "attack2": "THROW ROCK",
             "attack3": "BURN",
             "attack4": "SELF STR BUFF",
-            "experience": 0.0,
+            "experience": 250,
+            "level": 5,
+            "name": "DEFAULT",
+            "selected": [
+                1,
+                2,
+                5,
+                9
+            ]
+        },
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "BURN",
+            "attack4": "SELF STR BUFF",
+            "experience": 250,
+            "level": 5,
+            "name": "DEFAULT",
+            "selected": [
+                1,
+                2,
+                5,
+                9
+            ]
+        },
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "BURN",
+            "attack4": "SELF STR BUFF",
+            "experience": 250,
+            "level": 5,
+            "name": "DEFAULT",
+            "selected": [
+                1,
+                2,
+                5,
+                9
+            ]
+        },
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "BURN",
+            "attack4": "SELF STR BUFF",
+            "experience": 250,
             "level": 5,
             "name": "DEFAULT",
             "selected": [

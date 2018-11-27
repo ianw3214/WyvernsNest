@@ -21,4 +21,12 @@ namespace SubDiv {
 		return (Core::windowHeight() / divisors) * blocks;
 	}
 
+	inline int hCenter() {
+		return Core::windowWidth() / 2;
+	}
+
+	inline int vCenter() {
+		return Core::windowHeight() / 2;
+	}
+
 }

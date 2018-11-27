@@ -2,6 +2,7 @@
 
 #include "../combat.hpp"
 #include "../util/attackloader.hpp"
+#include "../util/util.hpp"
 
 // Deprecated, should not be called
 // TODO: remove
@@ -98,30 +99,38 @@ void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
-	pos.x() += tile_width;
+	pos.x() += SubDiv::hSize(5, 1);
 	if (pos.y() < 0) pos.y() = 0;
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
-	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
-	Core::Text_Renderer::render("MOVE", pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_1 ? select : base);
-	Core::Text_Renderer::render(attack1.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
-	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_3 ? select : base);
-	Core::Text_Renderer::render(attack3.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_4 ? select : base);
-	Core::Text_Renderer::render(attack4.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, base);
-	Core::Text_Renderer::render("PASS", pos, 1.f);
+	int option_height = SubDiv::vSize(16, 1);
+	// The text offset is not even because the font is rendered a little below the center
+	ScreenCoord text_offset = ScreenCoord(10, SubDiv::vSize(36, 1));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
+	// Render the move if the player hasn't moved
+	if (!moved) {
+		Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::MOVE ? select : base);
+		Core::Text_Renderer::render("MOVE", pos + text_offset, 1.f);
+	}
+	pos.y() += option_height;
+	// Render the attacks
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_1 ? select : base);
+	Core::Text_Renderer::render(attack1.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_2 ? select : base);
+	Core::Text_Renderer::render(attack2.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_3 ? select : base);
+	Core::Text_Renderer::render(attack3.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_4 ? select : base);
+	Core::Text_Renderer::render(attack4.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	// Render the pass option
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, base);
+	Core::Text_Renderer::render("PASS", pos + text_offset, 1.f);
 }
 
 void Player::renderValidMoves() {

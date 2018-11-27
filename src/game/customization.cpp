@@ -1,6 +1,7 @@
 #include "customization.hpp"
 #include "skillTree.hpp"
 #include "combat.hpp"
+#include "util/util.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -41,13 +42,13 @@ Customization::Customization(const std::string& file) :
 	// Initialize the rest of the state
 	initSprites();
 
-	ScreenCoord coord1 = ScreenCoord(0 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	ScreenCoord coord1 = ScreenCoord(SubDiv::hPos(6, 2), SubDiv::vPos(10, 2));
 	button1 = SkillTreeLinkButton(coord1);
-	ScreenCoord coord2 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	ScreenCoord coord2 = ScreenCoord(SubDiv::hPos(6, 5), SubDiv::vPos(10, 2));
 	button2 = SkillTreeLinkButton(coord2);
-	ScreenCoord coord3 = ScreenCoord(0 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	ScreenCoord coord3 = ScreenCoord(SubDiv::hPos(6, 2), SubDiv::vPos(10, 7));
 	button3 = SkillTreeLinkButton(coord3);
-	ScreenCoord coord4 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	ScreenCoord coord4 = ScreenCoord(SubDiv::hPos(6, 5), SubDiv::vPos(10, 7));
 	button4 = SkillTreeLinkButton(coord4);
 	
 }
@@ -73,12 +74,12 @@ void Customization::generateDefaultUnitData() {
 }
 
 void Customization::initSprites() {
-	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
-	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+	base.setSize(SubDiv::hSize(2, 1), SubDiv::vSize(2, 1));
+	empty.setSize(SubDiv::hSize(2, 1), SubDiv::vSize(2, 1));
 
 	int width = Core::getTexture("res/assets/UI/Continue.png")->getWidth();
 	int height = Core::getTexture("res/assets/UI/Continue.png")->getHeight();
-	continueButton = ButtonData(ScreenCoord((Core::windowWidth() - width) / 2, 0), width, height);
+	continueButton = ButtonData(ScreenCoord(SubDiv::hCenter() - width / 2, 0), width, height);
 	continueButton.setSprites("res/assets/UI/Continue.png", "res/assets/UI/ContinueHover.png", "res/assets/UI/ContinueHover.png");
 }
 
@@ -108,7 +109,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 
 	//draw unit sprite
 	Sprite unitSprite("res/assets/players/MaleBase.png");
-	unitSprite.setSize(Core::windowWidth()/6, Core::windowHeight()/3);
+	unitSprite.setSize(SubDiv::hSize(6, 1), SubDiv::vSize(3, 1));
 	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
 	unitSprite.render();
 
@@ -116,12 +117,12 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	int x_offset = 80;
 	Core::Text_Renderer::setColour(Colour(0,0,0));
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render(unit.name, ScreenCoord(x + (Core::windowWidth()/4) - x_offset, y), 3.f);
+    Core::Text_Renderer::render(unit.name, ScreenCoord(x + SubDiv::hSize(4, 1) - x_offset, y), 3.f);
 
 	// Unit level
 	Core::Text_Renderer::setColour(Colour(0, 0, 0));
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
-	Core::Text_Renderer::render(std::string("LVL. ") + std::to_string(unit.level), ScreenCoord(x + static_cast<int>(Core::windowWidth() / 2.5), y + Core::windowHeight() / 11));
+	Core::Text_Renderer::render(std::string("LVL. ") + std::to_string(unit.level), ScreenCoord(x + static_cast<int>(Core::windowWidth() / 2.5f), y + Core::windowHeight() / 11));
 
 	// Skills
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
@@ -133,20 +134,20 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	// EXP BAR
 	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions
 	int height = 10;
-	int width = Core::windowWidth() / 4;
+	int width = SubDiv::hSize(4, 1);
 	int left_offset = 80;
-	ScreenCoord start = ScreenCoord(x + Core::windowWidth() / 4 - left_offset, y + (Core::windowHeight() / 2) / 3 - height);
+	ScreenCoord start = ScreenCoord(x + SubDiv::hSize(4, 1) - left_offset, y + SubDiv::vSize(6, 1) - height);
 	Core::Renderer::drawRect(start, width, height, Colour(.7f, .7f, .7f));
 	// Draw the actual bar
 	int right = lerp(0, width, static_cast<float>(unit.experience) / DEFAULT_MAX_EXP);
 	Core::Renderer::drawRect(start, right, height, Colour(.6f, .6f, 1.f));
 
 	// Attributes
-	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
-	Core::Text_Renderer::render("STR: " + std::to_string(unit.strength), ScreenCoord(x+(Core::windowWidth()/11), y+(Core::windowHeight()/2) - 20), 1.f);
-	Core::Text_Renderer::render("DEX: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/11) * 2, y+(Core::windowHeight()/2) - 20), 1.f);
-	Core::Text_Renderer::render("INT: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/11) * 3, y+(Core::windowHeight()/2) - 20), 1.f);
-	Core::Text_Renderer::render("CON: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/11) * 4, y+(Core::windowHeight()/2) - 20), 1.f);
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+	Core::Text_Renderer::render("STR: " + std::to_string(unit.strength), ScreenCoord(x+ SubDiv::hSize(10, 1), y + SubDiv::vSize(2, 1) - 20), 1.f);
+	Core::Text_Renderer::render("DEX: " + std::to_string(unit.dexterity), ScreenCoord(x+ SubDiv::hSize(10, 2), y+ SubDiv::vSize(2, 1) - 20), 1.f);
+	Core::Text_Renderer::render("INT: " + std::to_string(unit.intelligence), ScreenCoord(x+ SubDiv::hSize(10, 3), y+ SubDiv::vSize(2, 1) - 20), 1.f);
+	Core::Text_Renderer::render("CON: " + std::to_string(unit.constitution), ScreenCoord(x+ SubDiv::hSize(10, 4), y+ SubDiv::vSize(2, 1) - 20), 1.f);
 }
 
 void Customization::renderEmpty(int x, int y) {
@@ -159,12 +160,12 @@ void Customization::render() {
 	// Render the units to the screen
 	if (units.size() > 0) renderUnit(0, 0, units[0]);
 	else (renderEmpty(0, 0));
-	if (units.size() > 1) renderUnit(Core::windowWidth()/2, 0, units[1]);
-	else (renderEmpty(Core::windowWidth() / 2, 0));
-	if (units.size() > 2) renderUnit(0, Core::windowHeight()/2, units[2]);
-	else (renderEmpty(0, Core::windowHeight() / 2));
-	if (units.size() > 3) renderUnit(Core::windowWidth()/2, Core::windowHeight()/2, units[3]);
-	else (renderEmpty(Core::windowWidth() / 2, Core::windowHeight() / 2));
+	if (units.size() > 1) renderUnit(SubDiv::hCenter(), 0, units[1]);
+	else (renderEmpty(SubDiv::hCenter(), 0));
+	if (units.size() > 2) renderUnit(0, SubDiv::vCenter(), units[2]);
+	else (renderEmpty(0, SubDiv::vCenter()));
+	if (units.size() > 3) renderUnit(SubDiv::hCenter(), SubDiv::vCenter(), units[3]);
+	else (renderEmpty(SubDiv::hCenter(), SubDiv::vCenter()));
 
 	if (units.size() > 0) button1.render();
 	if (units.size() > 1) button2.render();
