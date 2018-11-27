@@ -9,7 +9,9 @@ using json = nlohmann::json;
 
 Menu::Menu() :
 	background("res/assets/menu/background.png"),
-	highlight("res/assets/menu/blur.png")
+	highlight("res/assets/menu/blur.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png")
 {
 	background.setSize(Core::windowWidth(), Core::windowHeight());
 	highlight.setSize(Core::windowWidth() / 2, 200);
@@ -25,10 +27,12 @@ Menu::Menu() :
 	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 180);
 
 	selected_option = 0;
+
+	SDL_ShowCursor(SDL_DISABLE);
 }
 
 Menu::~Menu() {
-
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -43,23 +47,16 @@ void Menu::handleEvent(const SDL_Event & e) {
 			if (selected_option < 0) selected_option = 0;
 		}
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
-			switch (selected_option) {
-			case 0: {
-				changeToCombatState();
-			} break;
-			case 1: {
-				changeState(new SettingsMenu());
-			} break;
-			case 2: {
-				changeState(new CreditsMenu());
-			} break;
-			case 3: {
-				exit(0);
-			} break;
-			default: {
-				exit(1);
-			} break;
-			}
+			switchToCurrentState();
+		}
+	}
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+		if (getButtonIndexAtPos(ScreenCoord(mouseX, mouseY)) >= 0) {
+			switchToCurrentState();
 		}
 	}
 }
@@ -67,6 +64,9 @@ void Menu::handleEvent(const SDL_Event & e) {
 void Menu::update(int delta) {
 	counter++;
 	if (counter % 20 == 0) render_text = !render_text;
+	// Update the currently selected if the mouse is hovering over it
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (getButtonIndexAtPos(ScreenCoord(mouseX, mouseY)) >= 0) selected_option = getButtonIndexAtPos(ScreenCoord(mouseX, mouseY));
 }
 
 void Menu::render() {
@@ -80,7 +80,7 @@ void Menu::render() {
 	*/
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
-	ScreenCoord version_pos(10, Core::windowHeight() - 40);
+	ScreenCoord version_pos(10, Core::windowHeight() - 10);
 	Core::Text_Renderer::setColour(Colour(.6f, 1.f, 1.f));
 	Core::Text_Renderer::render(std::string("VERSION ") + VERSION, version_pos, 1.f);
 
@@ -100,6 +100,35 @@ void Menu::render() {
 			Core::Text_Renderer::setColour(Colour(.6f, 1.f, 1.f));
 		}
 		Core::Text_Renderer::render(buttons[i], buttonCoords[i], 2.f);
+	}
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
+	}
+}
+
+void Menu::switchToCurrentState() {
+	switch (selected_option) {
+	case 0: {
+		changeToCombatState();
+	} break;
+	case 1: {
+		changeState(new SettingsMenu());
+	} break;
+	case 2: {
+		changeState(new CreditsMenu());
+	} break;
+	case 3: {
+		exit(0);
+	} break;
+	default: {
+		exit(1);
+	} break;
 	}
 }
 
@@ -163,4 +192,17 @@ void Menu::initializeSaveFile() {
 	outputData["level"] = 0;
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
+}
+
+int Menu::getButtonIndexAtPos(ScreenCoord coord) {
+	for (int i = 0; i < NUM_BUTTONS; ++i) {
+		int left = buttonCoords[i].x() - Core::windowWidth() / 2 + 100;
+		int right = buttonCoords[i].x();
+		int top = buttonCoords[i].y() + 10;
+		int bottom = buttonCoords[i].y() + 65;
+		if (mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom) {
+			return i;
+		}
+	}
+	return -1;
 }

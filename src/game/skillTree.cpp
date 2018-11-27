@@ -180,7 +180,7 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	initSprites();
 	updateReachableNodes();
 	backButton = ButtonData(ScreenCoord(Core::windowWidth() / 2 - 64, Core::windowHeight() - 90), 128, 64);
-	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png", "res/assets/UI/BackButton.png");
+	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButtonHover.png", "res/assets/UI/BackButton.png");
 }
 
 SkillTree::~SkillTree() {

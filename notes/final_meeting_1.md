@@ -16,6 +16,7 @@
   - Use rects to render instead of lines
   - Write **shaders** to make them render nicer
 - Implement skill tree **panning**
+- **Highlight** the current node that the cursor is hovering on
 
 ## Menu state
 
@@ -39,6 +40,9 @@
 - Delay between killing enemies and showing menu
 - What happens when the player dies?
 - Make *ZIGUIGUI LINE OF PATH* look nice
+- Finalize **controls**
+  - Use arrow keys + enter/space like in menu state
+  - Add mouse control support
 
 ## Other
 

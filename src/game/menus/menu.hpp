@@ -33,9 +33,13 @@ private:
 	// Sprites
 	Sprite background;
 	Sprite highlight;
+	Sprite cursor;
+	Sprite cursorPress;
 
 	// Menu state
 	int selected_option;
+	int mouseX, mouseY;
+	bool mouseDown;
 
 	// Counter for flashing text
 	int counter;
@@ -46,6 +50,8 @@ private:
 	std::vector<ScreenCoord> buttonCoords;
 
 	// Other helper methods
+	void switchToCurrentState();
 	void changeToCombatState();
 	void initializeSaveFile();
+	int getButtonIndexAtPos(ScreenCoord coord);
 };
