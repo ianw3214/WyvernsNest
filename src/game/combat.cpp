@@ -94,9 +94,8 @@ void Combat::handleEvent(const SDL_Event& e) {
 			bool valid = true;
 			if (inputData.find("players") == inputData.end()) valid = false;
 			if (inputData.find("level") == inputData.end()) valid = false;
-			// Generate a new save file if the current one is corrupted
 			if (!valid) {
-				// TODO: something here 
+				// TODO: something here, save is no good
 			} else {
 				int playerCount = 0;
 				for(const json& unit: inputData["players"]) {
@@ -109,7 +108,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 					int currentExp = unit["experience"];
 					int newExp = currentExp + expPerPlayer;
 					if(newExp >= DEFAULT_MAX_EXP) {
-						unit["level"] += 1;
+						unit["level"] = 1 + int(unit["level"]);
 						unit["experience"] = newExp - DEFAULT_MAX_EXP;
 					} else {
 						unit["experience"] = newExp;
@@ -118,6 +117,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 				}
 				
 				json outputData;
+				outputData["level"] = inputData["level"];
 				outputData["players"] = updatedPlayers;
 				std::ofstream new_save(USER_SAVE_LOCATION);
 				new_save << outputData.dump(4);
