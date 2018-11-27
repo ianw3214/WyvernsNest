@@ -30,14 +30,32 @@ void MageDudeEnemy::handleMovement() {
 	int y_offset;
 	int tries = 20;
 	while (tries > 0) {
-		bool hit_up = combat->getUnitAt(position - Vec2<int>(0, 2));
-		bool hit_down = combat->getUnitAt(position - Vec2<int>(0, -2));
-		bool hit_right = combat->getUnitAt(position - Vec2<int>(2, 0));
-		bool hit_left = combat->getUnitAt(position - Vec2<int>(-2, 0));
-		bool hit_up_left = combat->getUnitAt(position - Vec2<int>(-1, 1));
-		bool hit_up_right = combat->getUnitAt(position - Vec2<int>(1, 1));
-		bool hit_down_left = combat->getUnitAt(position - Vec2<int>(-1, -1));
-		bool hit_down_right = combat->getUnitAt(position - Vec2<int>(1, -1));
+		bool in_range_flag = false;
+		bool end_flag = false;
+		for (int i = -2; i < 3; i++) {
+			for (int j = -2; j < 3; j++) {
+				if (i == -2 || i == 2) {
+					if (combat->getUnitAt(position - Vec2<int>(i, j))) {
+						in_range_flag = true;
+						end_flag = true;
+						break;
+					}
+				}
+				else {
+					if (combat->getUnitAt(position - Vec2<int>(i, -2))) {
+						in_range_flag = true;
+						end_flag = true;
+						break;
+					}
+					if (combat->getUnitAt(position - Vec2<int>(i, 2))) {
+						in_range_flag = true;
+						end_flag = true;
+						break;
+					}
+				}
+			}
+			if (end_flag) break;
+		}
 
 		bool unit_left = combat->getUnitAt(position - Vec2<int>(-1, 0));
 		bool unit_right = combat->getUnitAt(position - Vec2<int>(1, 0));
@@ -57,7 +75,7 @@ void MageDudeEnemy::handleMovement() {
 		} else if (unit_down) {
 			x_offset = 0;
 			y_offset = 1;
-		} else if (hit_up || hit_down || hit_right || hit_left || hit_up_left || hit_up_right || hit_down_left || hit_down_right) {
+		} else if (in_range_flag) {
 			x_offset = 0;
 			y_offset = 0;
 		} else { // No units in sight
@@ -79,57 +97,70 @@ void MageDudeEnemy::handleMovement() {
 }
 
 void MageDudeEnemy::handleAttack() {
-	// A diamond shape AoE
-	if (combat->getUnitAt(position - Vec2<int>(2, 0))) {
-		fireball.attack(position - Vec2<int>(2, 0), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
+	// randomly pick an attack
+	int coin_flip = rand() % 100;
+	Unit *curr_unit;
+	bool end_flag = false;
+	if (0 <= coin_flip <= 75) { // fireball attack
+		for (int i = -2; i < 3; i++) {
+			for (int j = -2; j < 3; j++) {
+				if (i == -2 || i == 2) {
+					curr_unit = combat->getUnitAt(position - Vec2<int>(i, j));
+					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
+						fireball.attack(position - Vec2<int>(i, j), *combat);
+						state = UnitState::ATTACK;
+						startCounter();
+						return;
+					}
+				} else {
+					curr_unit = combat->getUnitAt(position - Vec2<int>(i, -2));
+					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
+						fireball.attack(position - Vec2<int>(i, -2), *combat);
+						state = UnitState::ATTACK;
+						startCounter();
+						return;
+					}
+					curr_unit = combat->getUnitAt(position - Vec2<int>(i, 2));
+					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
+						fireball.attack(position - Vec2<int>(i, 2), *combat);
+						state = UnitState::ATTACK;
+						startCounter();
+						return;
+					}
+				}
+			}
+		}
+	} else { // Dragon's rage
+		// Find an ally beside and buff 'em
+		curr_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
+			dragons_rage.attack(position - Vec2<int>(0, 1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
+		curr_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
+			dragons_rage.attack(position - Vec2<int>(0, -1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
+		curr_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
+			dragons_rage.attack(position - Vec2<int>(1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
+		curr_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
+			dragons_rage.attack(position - Vec2<int>(-1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
 	}
-
-	if (combat->getUnitAt(position - Vec2<int>(0, 2))) {
-		fireball.attack(position - Vec2<int>(0, 2), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(0, -2))) {
-		fireball.attack(position - Vec2<int>(0, -2), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(-2, 0))) {
-		fireball.attack(position - Vec2<int>(-2, 0), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(1, 1))) {
-		fireball.attack(position - Vec2<int>(1, 1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(-1, 1))) {
-		fireball.attack(position - Vec2<int>(-1, 1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(1, -1))) {
-		fireball.attack(position - Vec2<int>(1, -1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-	if (combat->getUnitAt(position - Vec2<int>(-1, -1))) {
-		fireball.attack(position - Vec2<int>(-1, -1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
-	}
-
 	state = UnitState::DONE;
 	/*
 		- The mage dude enemy has 2 basic attacks: FIREBALL and DRAGONS RAGE
