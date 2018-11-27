@@ -101,7 +101,7 @@ void MageDudeEnemy::handleAttack() {
 	int coin_flip = rand() % 100;
 	Unit *curr_unit;
 	bool end_flag = false;
-	if (0 <= coin_flip <= 75) { // fireball attack
+	if (0 <= coin_flip && coin_flip <= 75) { // fireball attack
 		for (int i = -2; i < 3; i++) {
 			for (int j = -2; j < 3; j++) {
 				if (i == -2 || i == 2) {
