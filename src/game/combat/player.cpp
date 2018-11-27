@@ -211,6 +211,9 @@ void Player::update(int delta) {
 				incrementCounter();
 			}
 		} break;
+		case UnitState::DONE: {
+			moved = false;
+		}
 		default: {
 			// Do nothing by default
 		} break;
