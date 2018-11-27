@@ -2,6 +2,8 @@
 
 #include "../engine/core.hpp"
 
+#define NUM_BUTTONS_CRD 1
+
 class CreditsMenu : public State {
 
 public:
@@ -13,8 +15,29 @@ public:
 	void render();                          // Handles entity rendering
 
 private:
+	// Sprites
 	Sprite background;
-	int counter = 0;
-	bool render_text = true;
+	Sprite highlight;
+	Sprite cursor;
+	Sprite cursorPress;
+
+	// Menu state
+	int selected_option;
+	int mouseX, mouseY;
+	bool mouseDown;
+
+	// Counter for flashing text
+	int counter;
+	bool render_text;
+
+	// The buttons to move to next states
+	std::vector<std::string> buttons;
+	std::vector<ScreenCoord> buttonCoords;
+
+	// Other helper methods
+	void switchToCurrentState();
+	void changeToCombatState();
+	void initializeSaveFile();
+	int getButtonIndexAtPos(ScreenCoord coord);
 };
 
