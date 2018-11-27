@@ -123,7 +123,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
 	Core::Text_Renderer::render(std::string("LVL. ") + std::to_string(unit.level), ScreenCoord(x + static_cast<int>(Core::windowWidth() / 2.5), y + Core::windowHeight() / 11));
 
-	// Skillls
+	// Skills
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
 	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5)), 1.f);
 	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 30), 1.f);
