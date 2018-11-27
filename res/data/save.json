@@ -1,34 +1,20 @@
 {
-    "level": 0,
+    "level": 1,
     "players": [
         {
-            "CON": 50,
+            "CON": 10,
             "DEX": 10,
             "INT": 10,
             "STR": 10,
-            "experience": 300,
-            "level": 5,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "BURN",
+            "attack4": "SELF STR BUFF",
+            "experience": 400,
+            "level": 1,
             "name": "DEFAULT",
             "selected": [
                 1
-            ],
-            "attacks": [
-
-            ]
-        },
-        {
-            "CON": 50,
-            "DEX": 10,
-            "INT": 10,
-            "STR": 10,
-            "experience": 300,
-            "level": 5,
-            "name": "DEFAULT",
-            "selected": [
-                1
-            ],
-            "attacks": [
-                
             ]
         }
     ]

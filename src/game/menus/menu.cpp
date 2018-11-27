@@ -132,7 +132,6 @@ void Menu::switchToCurrentState() {
 	}
 }
 
-#include <iostream>
 void Menu::changeToCombatState() {
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
@@ -174,7 +173,6 @@ void Menu::changeToCombatState() {
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 }
 
-#include <iostream>
 void Menu::initializeSaveFile() {
 	std::ofstream new_save(USER_SAVE_LOCATION);
 	json outputData;
@@ -191,11 +189,16 @@ void Menu::initializeSaveFile() {
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;
+	// Initialize player attacks
+	std::vector<std::string> attacks;
+	player["attack1"] = DEFAULT_PLAYER_ATTACK_1;
+	player["attack2"] = DEFAULT_PLAYER_ATTACK_2;
+	player["attack3"] = DEFAULT_PLAYER_ATTACK_3;
+	player["attack4"] = DEFAULT_PLAYER_ATTACK_4;
 	initialPlayers.push_back(player);
 	// Construct the actual save file data
 	outputData["players"] = initialPlayers;
-	outputData["level"] = 0;
-	std::cout << outputData.dump(4) << std::endl;
+	outputData["level"] = 1;
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
 }

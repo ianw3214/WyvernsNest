@@ -114,21 +114,19 @@ void Combat::handleEvent(const SDL_Event& e) {
 				std::vector<json> updatedPlayers;
 				for(json unit: inputData["players"]) {
 					int currentExp = unit["experience"];
-					int newExp = currentExp + expPerPlayer;
+					int newExp = static_cast<int>(currentExp + expPerPlayer);
 					if(newExp >= DEFAULT_MAX_EXP) {
-						unit["level"] += 1;
+						unit["level"] = unit["level"] + 1;
 						unit["experience"] = newExp - DEFAULT_MAX_EXP;
 					} else {
 						unit["experience"] = newExp;
 					}
 					updatedPlayers.push_back(unit);
 				}
-				
-				json outputData;
-				outputData["players"] = updatedPlayers;
+				old_save.close();
+				inputData["players"] = updatedPlayers;
 				std::ofstream new_save(USER_SAVE_LOCATION);
-				new_save << outputData.dump(4);
-				
+				new_save << inputData.dump(4);
 			}
 		}
 		// TODO: Also check for lose condition where all player units are dead
@@ -136,7 +134,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 	// Otherwise, handle the events for the game over menu
 	else {
 		if (e.type == SDL_KEYDOWN) {
-			if (e.key.keysym.sym == SDLK_RETURN) {
+			if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 				// Move on to the next state
 				changeState(new Customization());
 			}

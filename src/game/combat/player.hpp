@@ -21,7 +21,9 @@ enum class PlayerAction {
 	NONE,
 	MOVE,
 	ATTACK_1,
-	ATTACK_2
+	ATTACK_2,
+	ATTACK_3,
+	ATTACK_4
 };
 
 // Enumeration to represent player animation states
@@ -77,6 +79,8 @@ private:
 	// The attacks of the player
 	Attack attack1;
 	Attack attack2;
+	Attack attack3;
+	Attack attack4;
 
 	// The outline of the player movement path to the cursor
 	std::vector<ScreenCoord> path_line;

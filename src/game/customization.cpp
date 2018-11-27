@@ -1,7 +1,3 @@
-//STILL NEEDS TO INCLUDE LINK TO SKILL TREE 
-//ALSO NEEDS TO READ UNIT DATA FROM A FILE / GLOBAL VARIABLE
-
-
 #include "customization.hpp"
 #include "skillTree.hpp"
 #include "combat.hpp"
@@ -28,9 +24,15 @@ Customization::Customization(const std::string& file) :
 			int experience			= unit["experience"];
 			std::vector<Trait> traits;	// TODO
 			std::vector<int> tree	= unit["selected"];
-			units.push_back(UnitData{ name, STR, DEX, INT, CON, level, experience, traits, tree });
+			std::string attack1 = unit["attack1"];
+			std::string attack2 = unit["attack2"];
+			std::string attack3 = unit["attack3"];
+			std::string attack4 = unit["attack4"];
+			units.push_back(UnitData{ name, STR, DEX, INT, CON, level, experience, traits, tree, attack1, attack2, attack3, attack4 });
 		}
+		initAvailableAttacks();
 	} else {
+		// This should actually never run, perhaps delete the save and force exit the game
 		// generate data for units if not found
 		// TOOD: Save to a file
 		generateDefaultUnitData();
@@ -78,29 +80,6 @@ void Customization::initSprites() {
 	int height = Core::getTexture("res/assets/UI/Continue.png")->getHeight();
 	continueButton = ButtonData(ScreenCoord((Core::windowWidth() - width) / 2, 0), width, height);
 	continueButton.setSprites("res/assets/UI/Continue.png", "res/assets/UI/ContinueHover.png", "res/assets/UI/ContinueHover.png");
-}
-
-void Customization::switchToCombatState() {
-	// Assume the save file is always valid
-	std::ifstream save_file(DEFAULT_PLAYER_FILE);
-	json inputData;
-	save_file >> inputData;
-	int level_id = inputData["level"];
-	// ADD ONE TO THE LEVEL TO ADVANCE TO THE NEXT LEVEL
-	level_id++;
-	// Change the state based on the level file
-	std::string combatLevelLocation;
-	std::ifstream masterFile(DEFAULT_MASTER_FILE);
-	json masterData;
-	masterFile >> masterData;
-	for (const json& level : masterData["levels"]) {
-		if (level["id"] == level_id) {
-			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
-			std::string name = level["file"];
-			combatLevelLocation = std::string("res/data/levels/") + name;
-		}
-	}
-	changeState(new Combat(combatLevelLocation));
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
@@ -201,4 +180,44 @@ void SkillTreeLinkButton::render() {
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
 	// TODO: calculate offset from window width/height somehow
 	Core::Text_Renderer::render("Skill Tree", position + Vec2<int>(25, 35), 1.0);
+}
+
+void Customization::switchToCombatState() {
+	// Assume the save file is always valid
+	std::ifstream save_file(DEFAULT_PLAYER_FILE);
+	json inputData;
+	save_file >> inputData;
+	int level_id = inputData["level"];
+	// ADD ONE TO THE LEVEL TO ADVANCE TO THE NEXT LEVEL
+	level_id++;
+	// Change the state based on the level file
+	std::string combatLevelLocation;
+	std::ifstream masterFile(DEFAULT_MASTER_FILE);
+	json masterData;
+	masterFile >> masterData;
+	for (const json& level : masterData["levels"]) {
+		if (level["id"] == level_id) {
+			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
+			std::string name = level["file"];
+			combatLevelLocation = std::string("res/data/levels/") + name;
+		}
+	}
+	changeState(new Combat(combatLevelLocation));
+}
+
+void Customization::initAvailableAttacks() {
+	std::ifstream attacks_file(DEFAULT_ATTACK_FILE);
+	json attacks_data;
+	attacks_file >> attacks_data;
+
+	for (unsigned int i = 0; i < units.size(); ++i) {
+		attacks.push_back(std::vector<std::string>());
+		for (int j : units[i].skillTree) {
+			for (const json& attack : attacks_data["attacks"]) {
+				if (attack.find("nodeid") != attack.end() && attack["nodeid"] == j) {
+					attacks[i].push_back(attack["name"]);
+				}
+			}
+		}
+	}
 }

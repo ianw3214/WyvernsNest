@@ -20,7 +20,7 @@
             ],
             "nodeid": 1
         },{
-            "name": "RANGED",
+            "name": "THROW ROCK",
             "type": "ranged",
             "range": 10,
             "aoe": 0,
@@ -51,8 +51,7 @@
                     "ticks": 3
                 }
             ],
-            "modifiers": [],
-            "nodeid": 1
+            "modifiers": []
         },{
             "name": "SELF STR BUFF",
             "type": "self",
@@ -67,8 +66,7 @@
                     "ticks": 3
                 }
             ],
-            "modifiers": [],
-            "nodeid": 1
+            "modifiers": []
         },{
             "name": "FIREBALL",
             "type": "ranged",
