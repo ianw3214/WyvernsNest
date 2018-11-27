@@ -8,8 +8,10 @@
 #include "status.hpp"
 #include "../unitData.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 200
-#define DEFAULT_SPRITE_HEIGHT 200
+#define DEFAULT_SPRITE_WIDTH 300
+#define DEFAULT_SPRITE_HEIGHT 300
+
+class Combat;
 
 // Enumeration of unit types
 enum class UnitType {
@@ -40,9 +42,9 @@ public:
 	ScreenCoord screenPosition;
 
 	// Render methods
-	virtual void renderBottom();
+	virtual void renderBottom(Combat * combat);
 	// virtual void renderUnit();	<-- USE THE ORIGINAL ENTITY RENDER FUNCTION FOR THIS
-	virtual void renderTop();
+	virtual void renderTop(Combat * combat);
 	virtual void renderHealth();
 
 	// Getter methods
