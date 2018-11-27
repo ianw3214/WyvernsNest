@@ -1,0 +1,113 @@
+{
+    "height": 5,
+    "nodes": [
+        {
+            "id": 1,
+            "data": "ROOT",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [
+                2, 3
+            ],
+            "x_offset": 0,
+            "level": 0
+        },{
+            "id": 2,
+            "data": "PIERCING ATTACK",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [4, 5],
+            "x_offset": -2,
+            "level": 1
+        },{
+            "id": 3,
+            "data": "BASIC RANGED AOE",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [6, 7],
+            "x_offset": 2,
+            "level": 1
+        },{
+            "id": 4,
+            "data": "BASIC PUSH",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [8],
+            "x_offset": -2,
+            "level": 2
+        },{
+            "id": 5,
+            "data": "ATTACK BOOST",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [9],
+            "x_offset": -1,
+            "level": 2
+        },{
+            "id": 6,
+            "data": "DEFENCE BOOST",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [9],
+            "x_offset": 1,
+            "level": 2
+        },{
+            "id": 7,
+            "data": "BASIC TELEPORT",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [10],
+            "x_offset": 2,
+            "level": 2
+        },{
+            "id": 8,
+            "data": "SELF AOE",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [11],
+            "x_offset": -2,
+            "level": 3
+        },{
+            "id": 9,
+            "data": "LAY ON HANDS",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [11, 12],
+            "x_offset": 0,
+            "level": 3
+        },{
+            "id": 10,
+            "data": "HYPER BEAM",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [12],
+            "x_offset": 2,
+            "level": 3
+        },{
+            "id": 11,
+            "data": "COUNTER (RETURN DMG PASSIVE)",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [13, 14],
+            "x_offset": -1,
+            "level": 4
+        },{
+            "id": 12,
+            "data": "BURNING ATTACKS (PASSIVE)",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [14, 15],
+            "x_offset": 1,
+            "level": 4
+        },{
+            "id": 13,
+            "data": "DRAMATIC PULL W/ DAMAGE",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [],
+            "x_offset": -2,
+            "level": 5
+        },{
+            "id": 14,
+            "data": "RESURRECT",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [],
+            "x_offset": 0,
+            "level": 5
+        },{
+            "id": 15,
+            "data": "RAISE WALLS",
+            "sprite": "res/assets/UI/NodeBase.png",
+            "children": [],
+            "x_offset": 2,
+            "level": 5
+        }
+    ]
+}

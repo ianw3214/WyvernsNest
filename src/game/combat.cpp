@@ -1,38 +1,62 @@
 #include "combat.hpp"
 
 #include "util/attackloader.hpp"
+#include "combat/unit.hpp"
+#include "combat/player.hpp"
+#include "combat/enemy.hpp"
+#include "combat/status.hpp"
 
-Combat::Combat() :
-	current(nullptr)
-{
-	Player * player1 = new Player(0, 1);
-	Player * player2 = new Player(1, 2);
+#include "customization.hpp"
 
-	Enemy * enemy1 = new Enemy();
-	enemy1->position.x() = 2;
-	enemy1->position.y() = 2;
+#include <fstream>
+using json = nlohmann::json;
 
-	player1->setTileSize(grid.tile_width, grid.tile_height);
-	player2->setTileSize(grid.tile_width, grid.tile_height);
-	enemy1->setTileSize(grid.tile_width, grid.tile_height);
+Combat::Combat(const std::string & filePath) {
 
-	addEntity(player1);
-	addEntity(player2);
-	addEntity(enemy1);
+	// Load grid and enemy data from the file path
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
 
-	units.push_back(player1);
-	units.push_back(player2);
-	units.push_back(enemy1);
+		std::string grid_path = data["map"];
+		grid = Grid(std::string("res/data/maps/") + grid_path);
+
+		// Load the player data from file
+		std::ifstream save(USER_SAVE_LOCATION_COMBAT);
+		json save_data;
+		save >> save_data;
+		std::vector<json> player_data = save_data["players"];
+		
+		// Load the players into the combat state
+		json player_spawns = data["player_spawns"];
+		unsigned int index = 0;
+		for (const json& spawn : player_spawns) {
+			if (index < player_data.size()) {
+				addPlayer(spawn["x"], spawn["y"], player_data[index]);
+				index++;
+			}
+		}
+
+		// Load the enemies into the combat state
+		json enemies = data["enemies"];
+		for (const json& enemy : enemies) {
+			std::string type = enemy["type"];
+			if (type == "BABY GOOMBA") {
+				int x = enemy["x"];
+				int y = enemy["y"];
+				Enemy * unit = new Enemy();
+				addEnemy(unit, x, y);
+			}
+		}
+	}
 
 	// Keeping track of turn order
 	unitIndex = 0;
+	// nextUnitTurn();
 	selectUnit(units[unitIndex]);
 
-	// Set the combat references of the units
 	for (Unit * unit : units) unit->combat = this;
-
-	// ----- DEBUGGING CODE -----
-	Attacks::get("test", nullptr);
 }
 
 Combat::~Combat() {
@@ -46,7 +70,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (current->getType() == UnitType::PLAYER) {
 			Player * player = dynamic_cast<Player*>(current);
-			player->click(grid.mousePos, *this);
+			player->click(grid.mousePos);
 		}
 	}
 	// Keep looking for win/lose conditions while the game hasn't ended
@@ -67,7 +91,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.keysym.sym == SDLK_RETURN) {
 				// Move on to the next state
-				changeState(new Combat());
+				changeState(new Customization());
 			}
 		}
 	}
@@ -81,7 +105,7 @@ void Combat::update(int delta) {
 
 	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
 		Player * player = dynamic_cast<Player*>(current);
-		player->path_line = player->getPath(*this, grid.getMouseToGrid());
+		player->setPathLine(grid.getMouseToGrid());
 	}
 
 	// If the game isn't over, keep going with the turn order
@@ -100,13 +124,19 @@ void Combat::update(int delta) {
 void Combat::render() {
 	Core::Renderer::clear();
 	grid.render();
-	// Render sprites in the order they appear in the grid
-	for (int i = 0; i < grid.map_height; ++i) {
-		for (Unit * unit : units) {
-			if (unit->position.y() == i) {
-				unit->render();
+	{	// --------- UNIT RENDERING CODE ---------
+		// Render the bottom of the units first
+		for (Unit * unit : units) unit->renderBottom();
+		// Render sprites in the order they appear in the grid
+		for (int i = 0; i < grid.map_height; ++i) {
+			for (Unit * unit : units) {
+				if (unit->position.y() == i) {
+					unit->render();
+				}
 			}
 		}
+		// Render the top of the units now
+		for (Unit * unit : units) unit->renderTop();
 	}
 	// Render the game over screen if the game is over
 	if (game_over) {
@@ -119,35 +149,6 @@ void Combat::render() {
 		y += 220;
 		Core::Text_Renderer::render("Press enter to continue", ScreenCoord(x + 180, y));
 	}
-
-	/*
-    // RENDER SAMPLES
-    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 50), ScreenCoord(2000, Core::windowHeight() - 50), Colour(0.0, 1.0, 0.0));
-    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 66), ScreenCoord(2000, Core::windowHeight() - 66), Colour(0.0, 1.0, 0.0));
-    Core::Renderer::drawLine(ScreenCoord(0, Core::windowHeight() - 82), ScreenCoord(2000, Core::windowHeight() - 82), Colour(0.0, 1.0, 0.0));
-    Core::Text_Renderer::setColour(Colour(0,0,0));
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Top align.", ScreenCoord(50, 50), 1.f);
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
-    Core::Text_Renderer::render("Bottom align.", ScreenCoord(50, 50), 1.f);
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
-    Core::Text_Renderer::render("Middle align.", ScreenCoord(100, 50), 1.f);
-
-    Core::Renderer::drawLine(ScreenCoord(500, 0), ScreenCoord(500, 1000), Colour(0.0, 1.0, 0.0));
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Left align.", ScreenCoord(500, 50), 1.f);
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Centre align.", ScreenCoord(500, 80), 1.f);
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::right, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Right align.", ScreenCoord(500, 110), 1.f);
-
-    Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-	*/
 }
 
 // Returns the unit occupying the specified grid coordinate
@@ -159,6 +160,33 @@ Unit * Combat::getUnitAt(ScreenCoord at)
 		}
 	}
 	return nullptr;
+}
+
+std::vector<Player*> Combat::getPlayers() const {
+	std::vector<Player*> result;
+	for (Unit * unit : units) {
+		if (unit->getType() == UnitType::PLAYER) {
+			result.push_back(dynamic_cast<Player*>(unit));
+		}
+	}
+	return result;
+}
+
+void Combat::addPlayer(int x, int y, const json& data) {
+	Player * player = new Player(x, y, data);
+	player->setTileSize(grid.tile_width, grid.tile_height);
+	addEntity(player);
+	units.push_back(player);
+}
+
+void Combat::addEnemy(Enemy * enemy, int x, int y) {
+	enemy->position.x() = x;
+	enemy->position.y() = y;
+	enemy->setTileSize(grid.tile_width, grid.tile_height);
+
+	addEntity(enemy);
+	units.push_back(enemy);
+	return;
 }
 
 // Choose the next unit in combat to take a turn
@@ -177,7 +205,7 @@ void Combat::nextUnitTurn() {
 	}
 	// If the current unit is an enemy, take its turn
 	if (current->getType() == UnitType::ENEMY) {
-		dynamic_cast<Enemy*>(current)->takeTurn(*this);
+		dynamic_cast<Enemy*>(current)->takeTurn();
 	}
 }
 
@@ -188,7 +216,6 @@ void Combat::selectUnit(Unit * unit)
 		current->setState(UnitState::IDLE);
 		current->deselect();
 	}
-
 	current = unit;
 	unit->select();
 

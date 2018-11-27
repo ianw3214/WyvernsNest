@@ -2,10 +2,12 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "../../engine/animatedSprite.hpp"
+
 #include "attack.hpp"
 #include "unit.hpp"
-#include "node.hpp"
-#include "../../engine/animatedSprite.hpp"
+
+#include <nlohmann/json.hpp>
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
@@ -32,8 +34,6 @@ enum class PlayerAnim {
 	DEAD = 5
 };
 
-class Combat;
-
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Unit {
 
@@ -41,31 +41,28 @@ public:
 
 	Player();
 	Player(int x, int y);
+	Player(int x, int y, const nlohmann::json& data);
+
 	~Player();
 		
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
-	void render();
+
+	// The render function and its' corresponding helper functions
+	virtual void renderBottom() override;
+	virtual void render() override;
+	virtual void renderTop() override;
 	void renderTurnUI();
 	void renderValidMoves();
 	
-
-	void click(Vec2<int> to, Combat& combat);
-	int id;
+	// The click function to handle player logic depending on player state when cursor clicked
+	void click(Vec2<int> to);
+	
+	// Various helper methods
+	void setPathLine(Vec2<int> dest);
 
 	// The action that is being expected from the player
 	PlayerAction current_action;
-
-	// Variables to help keep track of player movement
-	ScreenCoord moveTarget;
-	ScreenCoord moveDiff;
-	ScreenCoord moveNext;
-
-	std::vector<ScreenCoord> path;
-	std::vector<ScreenCoord> path_line;
-
-	std::vector<ScreenCoord> getPath(Combat & combat, ScreenCoord to);
-
 
 protected:
 	// Override callback function to customize functionality
@@ -74,17 +71,20 @@ protected:
 
 private:
 
-	// Helper functions to calculate the screen position and movement of the player
-	void calculateScreenPositionMovement();
-	void incrementMovement();
+	// helper variables
+	void init();
 
-	std::vector<ScreenCoord> getPossibleMoves(Combat & combat);
-	void updatePossibleMoves(Combat & combat);
+	// The attacks of the player
+	Attack attack1;
+	Attack attack2;
+
+	// The outline of the player movement path to the cursor
+	std::vector<ScreenCoord> path_line;
+
+	// Movement helper functions
+	std::vector<ScreenCoord> getPossibleMoves();
+	void updatePossibleMoves();
 	std::vector<ScreenCoord> possibleMoves;
-
-	// Pathfinding helper methods
-	std::vector<ScreenCoord> heuristic(std::vector<std::vector<ScreenCoord>> * open);
-	std::vector<ScreenCoord> getValidNeighbours(ScreenCoord pos, Combat & combat);
 
 	// Player sprites
 	AnimatedSprite player_sprite;
