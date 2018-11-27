@@ -74,6 +74,7 @@ Combat::~Combat() {
 
 }
 
+#include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
 
 	for (Entity * entity : entities) entity->handleEvent(e);
@@ -127,7 +128,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 				outputData["level"] = inputData["level"];
 				outputData["players"] = updatedPlayers;
 				std::ofstream new_save(USER_SAVE_LOCATION);
-				new_save << inputData.dump(4);
+				new_save << outputData.dump(4);
 			}
 		}
 		// TODO: Also check for lose condition where all player units are dead
