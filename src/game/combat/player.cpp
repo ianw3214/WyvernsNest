@@ -2,27 +2,26 @@
 
 #include "../combat.hpp"
 #include "../util/attackloader.hpp"
+#include "../util/util.hpp"
 
-// TODO: only allow the player to move once during the turn
-
+// Deprecated, should not be called
+// TODO: remove
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	attack1(Attacks::get("PUNCH", this)),
-	attack2(Attacks::get("RANGED", this))
+	valid_tile("res/assets/tiles/valid.png")
 {
 	init();
 }
 
+// Deprecated, should not be called
+// TODO: remove
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	attack1(Attacks::get("PUNCH", this)),
-	attack2(Attacks::get("RANGED", this))
+	valid_tile("res/assets/tiles/valid.png")
 {
 	position.x() = x;
 	position.y() = y;
@@ -51,7 +50,12 @@ Player::Player(int x, int y, const nlohmann::json& data) :
 	unitData.constitution	= data["CON"];
 	unitData.experience		= data["experience"];
 	unitData.level			= data["level"];
+
 	// TODO: Load attacks from here
+	attack1 = Attacks::get(data["attack1"], this);
+	attack2 = Attacks::get(data["attack2"], this);
+	attack3 = Attacks::get(data["attack3"], this);
+	attack4 = Attacks::get(data["attack4"], this);
 }
 
 Player::~Player() {}
@@ -67,6 +71,12 @@ void Player::renderBottom(Combat * combat) {
 	}
 	if (current_action == PlayerAction::ATTACK_2) {
 		attack2.renderValidGrid(tile_width, tile_height, *combat);
+	}
+	if (current_action == PlayerAction::ATTACK_3) {
+		attack3.renderValidGrid(tile_width, tile_height, *combat);
+	}
+	if (current_action == PlayerAction::ATTACK_4) {
+		attack4.renderValidGrid(tile_width, tile_height, *combat);
 	}
 }
 
@@ -89,24 +99,38 @@ void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
-	pos.x() += tile_width;
+	pos.x() += SubDiv::hSize(5, 1);
 	if (pos.y() < 0) pos.y() = 0;
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
-	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
-	Core::Text_Renderer::render("MOVE", pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_1 ? select : base);
-	Core::Text_Renderer::render(attack1.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
-	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
-	pos.y() += UI_OPTION_HEIGHT;
-	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, base);
-	Core::Text_Renderer::render("PASS", pos, 1.f);
+	int option_height = SubDiv::vSize(16, 1);
+	// The text offset is not even because the font is rendered a little below the center
+	ScreenCoord text_offset = ScreenCoord(10, SubDiv::vSize(36, 1));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
+	// Render the move if the player hasn't moved
+	if (!moved) {
+		Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::MOVE ? select : base);
+		Core::Text_Renderer::render("MOVE", pos + text_offset, 1.f);
+	}
+	pos.y() += option_height;
+	// Render the attacks
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_1 ? select : base);
+	Core::Text_Renderer::render(attack1.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_2 ? select : base);
+	Core::Text_Renderer::render(attack2.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_3 ? select : base);
+	Core::Text_Renderer::render(attack3.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::ATTACK_4 ? select : base);
+	Core::Text_Renderer::render(attack4.getName(), pos + text_offset, 1.f);
+	pos.y() += option_height;
+	// Render the pass option
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, base);
+	Core::Text_Renderer::render("PASS", pos + text_offset, 1.f);
 }
 
 void Player::renderValidMoves() {
@@ -152,23 +176,30 @@ void Player::handleEvent(const SDL_Event & event)
 	if (selected && state == UnitState::IDLE) {
 		if (event.type == SDL_KEYDOWN) {
 			// Move Key
-			if (event.key.keysym.sym == SDLK_KP_1) {
+			if (event.key.keysym.sym == SDLK_KP_1 || event.key.keysym.sym == SDLK_1) {
 				if (!moved) {
 					current_action = PlayerAction::MOVE;
 					updatePossibleMoves();
 				}
 			}
 			// Attack 1 key
-			if (event.key.keysym.sym == SDLK_KP_2) {
+			if (event.key.keysym.sym == SDLK_2 || event.key.keysym.sym == SDLK_KP_2) {
 				current_action = PlayerAction::ATTACK_1;
 			}
 			// Attack 2 key
-			if (event.key.keysym.sym == SDLK_KP_3) {
+			if (event.key.keysym.sym == SDLK_3 || event.key.keysym.sym == SDLK_KP_3) {
 				current_action = PlayerAction::ATTACK_2;
 			}
-
+			// Attack 3 key
+			if (event.key.keysym.sym == SDLK_4 || event.key.keysym.sym == SDLK_KP_4) {
+				current_action = PlayerAction::ATTACK_3;
+			}
+			// Attack 4 key
+			if (event.key.keysym.sym == SDLK_5 || event.key.keysym.sym == SDLK_KP_5) {
+				current_action = PlayerAction::ATTACK_4;
+			}
 			// Pass the turn
-			if (event.key.keysym.sym == SDLK_KP_4) {
+			if (event.key.keysym.sym == SDLK_KP_6 || event.key.keysym.sym == SDLK_6) {
 				current_action = PlayerAction::NONE;
 				state = UnitState::DONE;
 				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
@@ -247,6 +278,26 @@ void Player::click(Vec2<int> to)
 		case PlayerAction::ATTACK_2: {
 			// do the action here
 			attack2.attack(to, *combat);
+			current_action = PlayerAction::NONE;
+			state = UnitState::ATTACK;
+			startCounter();
+			// TODO: Play animation based on attack type
+			player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
+			player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+		} break;
+		case PlayerAction::ATTACK_3: {
+			// do the action here
+			attack3.attack(to, *combat);
+			current_action = PlayerAction::NONE;
+			state = UnitState::ATTACK;
+			startCounter();
+			// TODO: Play animation based on attack type
+			player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
+			player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+		} break;
+		case PlayerAction::ATTACK_4: {
+			// do the action here
+			attack4.attack(to, *combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();

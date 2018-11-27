@@ -50,4 +50,10 @@ struct UnitData {
 	// Skill tree of the unit
 	std::vector<int> skillTree;
 
+	// Selected attacks
+	std::string attack1;
+	std::string attack2;
+	std::string attack3;
+	std::string attack4;
+
 };

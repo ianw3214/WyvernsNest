@@ -1,7 +1,8 @@
 #include "menu.hpp"
+#include "../util/util.hpp"
 #include "settingsmenu.hpp"
-#include "../combat.hpp"
 #include "creditsmenu.hpp"
+#include "../combat.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -21,10 +22,10 @@ Menu::Menu() :
 	buttons.push_back("CREDITS");
 	buttons.push_back("EXIT");
 
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 60);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 120);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 180);
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 5));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 6));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 7));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 8));
 
 	selected_option = 0;
 
@@ -148,7 +149,10 @@ void Menu::changeToCombatState() {
 		if (inputData.find("players") == inputData.end()) valid = false;
 		if (inputData.find("level") == inputData.end()) valid = false;
 		// Generate a new save file if the current one is corrupted
-		if (!valid) initializeSaveFile();
+		if (!valid) {
+			save_file.close();
+			initializeSaveFile();
+			}
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
@@ -186,17 +190,23 @@ void Menu::initializeSaveFile() {
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;
+	// Initialize player attacks
+	std::vector<std::string> attacks;
+	player["attack1"] = DEFAULT_PLAYER_ATTACK_1;
+	player["attack2"] = DEFAULT_PLAYER_ATTACK_2;
+	player["attack3"] = DEFAULT_PLAYER_ATTACK_3;
+	player["attack4"] = DEFAULT_PLAYER_ATTACK_4;
 	initialPlayers.push_back(player);
 	// Construct the actual save file data
 	outputData["players"] = initialPlayers;
-	outputData["level"] = 0;
+	outputData["level"] = 1;
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
 }
 
 int Menu::getButtonIndexAtPos(ScreenCoord coord) {
 	for (int i = 0; i < NUM_BUTTONS; ++i) {
-		int left = buttonCoords[i].x() - Core::windowWidth() / 2 + 100;
+		int left = buttonCoords[i].x() - SubDiv::hSize(5, 2);
 		int right = buttonCoords[i].x();
 		int top = buttonCoords[i].y() + 10;
 		int bottom = buttonCoords[i].y() + 65;

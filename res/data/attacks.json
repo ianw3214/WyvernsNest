@@ -17,9 +17,10 @@
                     "type": "STR",
                     "mod": 1.5
                 }
-            ]
+            ],
+            "nodeid": 1
         },{
-            "name": "RANGED",
+            "name": "THROW ROCK",
             "type": "ranged",
             "range": 10,
             "aoe": 0,
@@ -35,7 +36,8 @@
                     "type": "INT",
                     "mod": 20.0
                 }
-            ]
+            ],
+            "nodeid": 1
         },{
             "name": "BURN",
             "type": "ranged",
