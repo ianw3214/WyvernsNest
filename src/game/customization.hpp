@@ -6,6 +6,7 @@
 #include "unitData.hpp"
 
 #define DEFAULT_PLAYER_FILE		"res/data/save.json"
+#define DEFAULT_MASTER_FILE		"res/data/levels/master.json"
 
 #define DEFAULT_MAX_EXP			500.f
 
@@ -40,10 +41,14 @@ private:
 	SkillTreeLinkButton button2;
 	SkillTreeLinkButton button3;
 	SkillTreeLinkButton button4;
-	
+	ButtonData continueButton;
+
 	void initSprites();
 	// Sprites used to render the customization state
 	Sprite base;
 	Sprite empty;
+
+	// Helper functions
+	void switchToCombatState();
 
 };

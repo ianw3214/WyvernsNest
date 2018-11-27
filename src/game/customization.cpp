@@ -4,6 +4,7 @@
 
 #include "customization.hpp"
 #include "skillTree.hpp"
+#include "combat.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -72,6 +73,34 @@ void Customization::generateDefaultUnitData() {
 void Customization::initSprites() {
 	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
 	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+
+	int width = Core::getTexture("res/assets/UI/Continue.png")->getWidth();
+	int height = Core::getTexture("res/assets/UI/Continue.png")->getHeight();
+	continueButton = ButtonData(ScreenCoord((Core::windowWidth() - width) / 2, 0), width, height);
+	continueButton.setSprites("res/assets/UI/Continue.png", "res/assets/UI/ContinueHover.png", "res/assets/UI/ContinueHover.png");
+}
+
+void Customization::switchToCombatState() {
+	// Assume the save file is always valid
+	std::ifstream save_file(DEFAULT_PLAYER_FILE);
+	json inputData;
+	save_file >> inputData;
+	int level_id = inputData["level"];
+	// ADD ONE TO THE LEVEL TO ADVANCE TO THE NEXT LEVEL
+	level_id++;
+	// Change the state based on the level file
+	std::string combatLevelLocation;
+	std::ifstream masterFile(DEFAULT_MASTER_FILE);
+	json masterData;
+	masterFile >> masterData;
+	for (const json& level : masterData["levels"]) {
+		if (level["id"] == level_id) {
+			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
+			std::string name = level["file"];
+			combatLevelLocation = std::string("res/data/levels/") + name;
+		}
+	}
+	changeState(new Combat(combatLevelLocation));
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
@@ -82,6 +111,7 @@ void Customization::handleEvent(const SDL_Event& e) {
 		if (button2.colliding(mousePos)) changeState(new SkillTree(1));
 		if (button3.colliding(mousePos)) changeState(new SkillTree(2));
 		if (button4.colliding(mousePos)) changeState(new SkillTree(3));
+		if (continueButton.colliding(mousePos)) switchToCombatState();
 	}
 }
 
@@ -89,7 +119,6 @@ void Customization::update(int delta) {
 
 }
 
-#include <iostream>
 // Renders Unit data where x,y is the left top corner of the unit data box and unit is the unit to be render
 void Customization::renderUnit(int x, int y, UnitData unit){
 	// Render the base sprite first
@@ -156,6 +185,7 @@ void Customization::render() {
 	if (units.size() > 2) button3.render();
 	if (units.size() > 3) button4.render();
 
+	continueButton.render();
 }
 
 void Customization::displayUnitData(const UnitData & data) {

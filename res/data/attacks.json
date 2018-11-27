@@ -17,7 +17,8 @@
                     "type": "STR",
                     "mod": 1.5
                 }
-            ]
+            ],
+            "nodeid": 1
         },{
             "name": "RANGED",
             "type": "ranged",
@@ -35,7 +36,8 @@
                     "type": "INT",
                     "mod": 20.0
                 }
-            ]
+            ],
+            "nodeid": 1
         },{
             "name": "BURN",
             "type": "ranged",
@@ -49,7 +51,8 @@
                     "ticks": 3
                 }
             ],
-            "modifiers": []
+            "modifiers": [],
+            "nodeid": 1
         },{
             "name": "SELF STR BUFF",
             "type": "self",
@@ -64,7 +67,8 @@
                     "ticks": 3
                 }
             ],
-            "modifiers": []
+            "modifiers": [],
+            "nodeid": 1
         },{
             "name": "FIREBALL",
             "type": "ranged",
