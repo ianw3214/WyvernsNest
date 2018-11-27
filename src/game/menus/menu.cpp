@@ -132,6 +132,7 @@ void Menu::switchToCurrentState() {
 	}
 }
 
+#include <iostream>
 void Menu::changeToCombatState() {
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
@@ -148,7 +149,10 @@ void Menu::changeToCombatState() {
 		if (inputData.find("players") == inputData.end()) valid = false;
 		if (inputData.find("level") == inputData.end()) valid = false;
 		// Generate a new save file if the current one is corrupted
-		if (!valid) initializeSaveFile();
+		if (!valid) {
+			save_file.close();
+			initializeSaveFile();
+			}
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
@@ -170,6 +174,7 @@ void Menu::changeToCombatState() {
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 }
 
+#include <iostream>
 void Menu::initializeSaveFile() {
 	std::ofstream new_save(USER_SAVE_LOCATION);
 	json outputData;
@@ -190,6 +195,7 @@ void Menu::initializeSaveFile() {
 	// Construct the actual save file data
 	outputData["players"] = initialPlayers;
 	outputData["level"] = 0;
+	std::cout << outputData.dump(4) << std::endl;
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
 }

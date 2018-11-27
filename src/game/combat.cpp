@@ -6,12 +6,14 @@
 #include "combat/enemy.hpp"
 #include "combat/status.hpp"
 
+#include "menus/menu.hpp"
+
 #include "customization.hpp"
 
 #include <fstream>
 using json = nlohmann::json;
 
-Combat::Combat(const std::string & filePath) {
+Combat::Combat(const std::string & filePath) : current(nullptr) {
 
 	// Load grid and enemy data from the file path
 	std::ifstream file(filePath);
@@ -49,6 +51,8 @@ Combat::Combat(const std::string & filePath) {
 				addEnemy(unit, x, y);
 			}
 		}
+
+		experienceReward = data["experience"];
 	}
 
 	// Keeping track of turn order
@@ -83,6 +87,42 @@ void Combat::handleEvent(const SDL_Event& e) {
 			// Handle the win condition here
 			game_over = true;
 			game_win = true;
+
+			std::ifstream old_save(USER_SAVE_LOCATION);
+			json inputData;
+			old_save >> inputData;
+			bool valid = true;
+			if (inputData.find("players") == inputData.end()) valid = false;
+			if (inputData.find("level") == inputData.end()) valid = false;
+			// Generate a new save file if the current one is corrupted
+			if (!valid) {
+				// TODO: something here 
+			} else {
+				int playerCount = 0;
+				for(const json& unit: inputData["players"]) {
+					playerCount += 1;
+				}
+				float expPerPlayer = experienceReward / (float)playerCount;
+
+				std::vector<json> updatedPlayers;
+				for(json unit: inputData["players"]) {
+					int currentExp = unit["experience"];
+					int newExp = currentExp + expPerPlayer;
+					if(newExp >= DEFAULT_MAX_EXP) {
+						unit["level"] += 1;
+						unit["experience"] = newExp - DEFAULT_MAX_EXP;
+					} else {
+						unit["experience"] = newExp;
+					}
+					updatedPlayers.push_back(unit);
+				}
+				
+				json outputData;
+				outputData["players"] = updatedPlayers;
+				std::ofstream new_save(USER_SAVE_LOCATION);
+				new_save << outputData.dump(4);
+				
+			}
 		}
 		// TODO: Also check for lose condition where all player units are dead
 	}
