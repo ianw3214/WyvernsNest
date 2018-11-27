@@ -49,9 +49,9 @@ public:
 	void update(int delta);
 
 	// The render function and its' corresponding helper functions
-	virtual void renderBottom() override;
+	virtual void renderBottom(Combat * combat) override;
 	virtual void render() override;
-	virtual void renderTop() override;
+	virtual void renderTop(Combat * combat) override;
 	void renderTurnUI();
 	void renderValidMoves();
 	

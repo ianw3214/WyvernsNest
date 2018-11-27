@@ -126,7 +126,7 @@ void Combat::render() {
 	grid.render();
 	{	// --------- UNIT RENDERING CODE ---------
 		// Render the bottom of the units first
-		for (Unit * unit : units) unit->renderBottom();
+		for (Unit * unit : units) unit->renderBottom(this);
 		// Render sprites in the order they appear in the grid
 		for (int i = 0; i < grid.map_height; ++i) {
 			for (Unit * unit : units) {
@@ -136,7 +136,7 @@ void Combat::render() {
 			}
 		}
 		// Render the top of the units now
-		for (Unit * unit : units) unit->renderTop();
+		for (Unit * unit : units) unit->renderTop(this);
 	}
 	// Render the game over screen if the game is over
 	if (game_over) {
