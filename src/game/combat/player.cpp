@@ -235,23 +235,27 @@ void Player::click(Vec2<int> to)
 			// TODO: determine if an attack is valid, and don't execute the attack if it isn't
 		case PlayerAction::ATTACK_1: {
 			// do the action here
-			attack1.attack(to, *combat);
-			current_action = PlayerAction::NONE;
-			state = UnitState::ATTACK;
-			startCounter();
-			// TODO: Play animation based on attack type
-			player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_MELEE));
-			player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+			if (attack1.isValid(to)) {
+				attack1.attack(to, *combat);
+				current_action = PlayerAction::NONE;
+				state = UnitState::ATTACK;
+				startCounter();
+				// TODO: Play animation based on attack type
+				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_MELEE));
+				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+			}
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
-			attack2.attack(to, *combat);
-			current_action = PlayerAction::NONE;
-			state = UnitState::ATTACK;
-			startCounter();
-			// TODO: Play animation based on attack type
-			player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
-			player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+			if (attack2.isValid(to)) {
+				attack2.attack(to, *combat);
+				current_action = PlayerAction::NONE;
+				state = UnitState::ATTACK;
+				startCounter();
+				// TODO: Play animation based on attack type
+				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
+				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+			}
 		} break;
 		default: {
 			// do nothing
