@@ -57,22 +57,22 @@ void MageDudeEnemy::handleMovement() {
 			if (end_flag) break;
 		}
 
-		bool unit_left = combat->getUnitAt(position - Vec2<int>(-1, 0));
-		bool unit_right = combat->getUnitAt(position - Vec2<int>(1, 0));
-		bool unit_up = combat->getUnitAt(position - Vec2<int>(0, 1));
-		bool unit_down = combat->getUnitAt(position - Vec2<int>(0, -1));
+		Unit *unit_left = combat->getUnitAt(position - Vec2<int>(-1, 0));
+		Unit *unit_right = combat->getUnitAt(position - Vec2<int>(1, 0));
+		Unit *unit_up = combat->getUnitAt(position - Vec2<int>(0, 1));
+		Unit *unit_down = combat->getUnitAt(position - Vec2<int>(0, -1));
 		
 		// First try to run away, then check if in range
-		if (unit_left) {
+		if (unit_left && unit_left->getType() == UnitType::PLAYER) {
 			x_offset = 1;
 			y_offset = 0;
-		} else if (unit_right) {
+		} else if (unit_right && unit_right->getType() == UnitType::PLAYER) {
 			x_offset = -1;
 			y_offset = 0;
-		} else if (unit_up) {
+		} else if (unit_up && unit_up->getType() == UnitType::PLAYER) {
 			x_offset = 0;
 			y_offset = -1;
-		} else if (unit_down) {
+		} else if (unit_down && unit_down->getType() == UnitType::PLAYER) {
 			x_offset = 0;
 			y_offset = 1;
 		} else if (in_range_flag) {
@@ -101,7 +101,7 @@ void MageDudeEnemy::handleAttack() {
 	int coin_flip = rand() % 100;
 	Unit *curr_unit;
 	bool end_flag = false;
-	if (0 <= coin_flip <= 75) { // fireball attack
+	if (0 <= coin_flip && coin_flip <= 75) { // fireball attack
 		for (int i = -2; i < 3; i++) {
 			for (int j = -2; j < 3; j++) {
 				if (i == -2 || i == 2) {
