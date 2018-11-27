@@ -21,7 +21,7 @@
         },{
             "name": "RANGED",
             "type": "ranged",
-            "range": 2,
+            "range": 10,
             "aoe": 0,
             "affect_self": true,
             "effects": [
@@ -36,6 +36,35 @@
                     "mod": 20.0
                 }
             ]
+        },{
+            "name": "BURN",
+            "type": "ranged",
+            "range": 3,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "burn",
+                    "damage": 3,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": []
+        },{
+            "name": "SELF STR BUFF",
+            "type": "self",
+            "range": 0,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.2,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": []
         }
     ]
 }

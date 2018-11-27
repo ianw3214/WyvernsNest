@@ -60,8 +60,14 @@ ipch/
 .vs/
 .vscode/
 
+# DS files
+.DS_Store
+
 # DLL files
 *.dll
 
 # ZIP files
 *.zip
+
+# ASESprite files
+*.aseprite

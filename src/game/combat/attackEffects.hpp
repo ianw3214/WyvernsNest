@@ -4,6 +4,7 @@
 // NOTE: EFFECT IMPLEMENTATIONS FOUND IN `ATTACK.CPP` FILE
 
 class Attack;
+class Status;
 
 // The stat modifier for effects
 struct EffectModifier {
@@ -23,8 +24,7 @@ public:
 // Attack effect that damages units
 class DamageEffect : public AttackEffect {
 public:
-	DamageEffect() : base_damage(1) {}
-	DamageEffect(int damage) : base_damage(damage) {}
+	DamageEffect(int damage = 0) : base_damage(damage) {}
 	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
 
 private:
@@ -34,10 +34,32 @@ private:
 // Attack effect that heals units
 class HealEffect : public AttackEffect {
 public:
-	HealEffect() : heal(0) {}
-	HealEffect(int heal) : heal(heal) {}
+	HealEffect(int heal = 0) : heal(heal) {}
 	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
 
 private:
 	int heal;
+};
+
+class BurnEffect : public AttackEffect {
+public:
+	BurnEffect(int damage = 1, int ticks = 1, bool infinite = false) : 
+		burn_damage(damage), ticks(ticks), infinite(infinite) {}
+	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
+private:
+	int burn_damage;
+	int ticks;
+	bool infinite;
+};
+
+class StatBuffEffect : public AttackEffect {
+public:
+	StatBuffEffect(Stat stat, float percent, int ticks, bool infinite = false) : 
+		stat(stat), percent(percent), ticks(ticks), infinite(infinite) {}
+	virtual void attack(ScreenCoord pos, Combat& combat, const Attack& attack) override;
+private:
+	Stat stat;
+	float percent;
+	int ticks;
+	bool infinite;
 };

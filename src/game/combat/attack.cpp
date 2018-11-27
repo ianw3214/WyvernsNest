@@ -1,7 +1,8 @@
 #include "attack.hpp"
 
-#include "unit.hpp"
 #include "../combat.hpp"
+#include "unit.hpp"
+#include "status.hpp"
 
 // Construct an invalid attack by default
 Attack::Attack() :
@@ -256,5 +257,21 @@ void HealEffect::attack(ScreenCoord pos, Combat & combat, const Attack& attack) 
 			healing += static_cast<int>(attack.getSource()->getStat(modifier.stat) * modifier.modifier);
 		}
 		unit->heal(healing);
+	}
+}
+
+void BurnEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attack) {
+	Unit * unit = combat.getUnitAt(pos);
+	if (unit) {
+		// TODO: Add modifiers (or don't)
+		unit->addStatus(new BurnStatus(burn_damage, ticks, infinite, unit));
+	}
+}
+
+void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attack) {
+	Unit * unit = combat.getUnitAt(pos);
+	if (unit) {
+		// TODO: Add modifiers (or don't)
+		unit->addStatus(new StatBuffStatus(stat, percent, ticks, infinite, unit));
 	}
 }

@@ -1,25 +1,174 @@
+//STILL NEEDS TO INCLUDE LINK TO SKILL TREE 
+//ALSO NEEDS TO READ UNIT DATA FROM A FILE / GLOBAL VARIABLE
+
+
 #include "customization.hpp"
+#include "skillTree.hpp"
 
-Customization::Customization() {
+#include <fstream>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
+Customization::Customization(const std::string& file) :
+	base("res/assets/UI/UnitBase.png"),
+	empty("res/assets/UI/EmptyUnit.png")
+{
+	std::ifstream player_file(file);
+	if (player_file.is_open()) {
+		json data;
+		player_file >> data;
+		for (const json& unit : data["players"]) {
+			std::string name = unit["name"];
+			int STR					= unit["STR"];
+			int DEX					= unit["DEX"];
+			int INT					= unit["INT"];
+			int CON					= unit["CON"];
+			int level				= unit["level"];
+			int experience			= unit["experience"];
+			std::vector<Trait> traits;	// TODO
+			std::vector<int> tree	= unit["selected"];
+			units.push_back(UnitData{ name, STR, DEX, INT, CON, level, experience, traits, tree });
+		}
+	} else {
+		// generate data for units if not found
+		// TOOD: Save to a file
+		generateDefaultUnitData();
+	}
+
+	// Initialize the rest of the state
+	initSprites();
+
+	ScreenCoord coord1 = ScreenCoord(0 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	button1 = SkillTreeLinkButton(coord1);
+	ScreenCoord coord2 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, 0 + Core::windowHeight() / 5);
+	button2 = SkillTreeLinkButton(coord2);
+	ScreenCoord coord3 = ScreenCoord(0 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	button3 = SkillTreeLinkButton(coord3);
+	ScreenCoord coord4 = ScreenCoord(Core::windowWidth() / 2 + Core::windowWidth() / 3, Core::windowHeight() / 2 + Core::windowHeight() / 5);
+	button4 = SkillTreeLinkButton(coord4);
+	
 }
 
 Customization::~Customization() {
 
 }
 
-void Customization::handleEvent(const SDL_Event& e) {
+// Only generates dummy data right now
+// Deprecated...
+void Customization::generateDefaultUnitData() {
 
+	// This should never really be the case, but add it as backup anyways
+	// TODO: Generate a single default unit
+	UnitData defaultUnit;
+	defaultUnit.name = "BOB";
+	defaultUnit.strength = 10;
+	defaultUnit.dexterity = 10;
+	defaultUnit.constitution = 10;
+	defaultUnit.intelligence = 10;
+	units.push_back(defaultUnit);
+
+}
+
+void Customization::initSprites() {
+	base.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+	empty.setSize(Core::windowWidth() / 2, Core::windowHeight() / 2);
+}
+
+void Customization::handleEvent(const SDL_Event& e) {
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		Vec2<int> mousePos;
+		SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+		if (button1.colliding(mousePos)) changeState(new SkillTree(0));
+		if (button2.colliding(mousePos)) changeState(new SkillTree(1));
+		if (button3.colliding(mousePos)) changeState(new SkillTree(2));
+		if (button4.colliding(mousePos)) changeState(new SkillTree(3));
+	}
 }
 
 void Customization::update(int delta) {
 
 }
 
+#include <iostream>
+// Renders Unit data where x,y is the left top corner of the unit data box and unit is the unit to be render
+void Customization::renderUnit(int x, int y, UnitData unit){
+	// Render the base sprite first
+	base.setPos(x, y);
+	base.render();
+
+	int margin = 10;
+
+	//draw unit sprite
+	Sprite unitSprite("res/assets/players/MaleBase.png");
+	unitSprite.setSize(Core::windowWidth()/6, Core::windowHeight()/3);
+	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
+	unitSprite.render();
+
+	// Unit name
+	int x_offset = 80;
+	Core::Text_Renderer::setColour(Colour(0,0,0));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render(unit.name, ScreenCoord(x + (Core::windowWidth()/4) - x_offset, y), 3.f);
+
+	// Unit level
+	Core::Text_Renderer::setColour(Colour(0, 0, 0));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
+	Core::Text_Renderer::render(std::string("LVL. ") + std::to_string(unit.level), ScreenCoord(x + static_cast<int>(Core::windowWidth() / 2.5), y + Core::windowHeight() / 11));
+
+	// Attributes
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+    Core::Text_Renderer::render("Strength: " + std::to_string(unit.strength), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+30), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+60), 1.f);
+    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
+
+	// EXP BAR
+	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions
+	int height = 10;
+	int width = Core::windowWidth() / 4;
+	int left_offset = 80;
+	ScreenCoord start = ScreenCoord(x + Core::windowWidth() / 4 - left_offset, y + (Core::windowHeight() / 2) / 3 - height);
+	Core::Renderer::drawRect(start, width, height, Colour(.7f, .7f, .7f));
+	// Draw the actual bar
+	int right = lerp(0, width, static_cast<float>(unit.experience) / DEFAULT_MAX_EXP);
+	Core::Renderer::drawRect(start, right, height, Colour(.6f, .6f, 1.f));
+}
+
+void Customization::renderEmpty(int x, int y) {
+	empty.setPos(x, y);
+	empty.render();
+}
+
 void Customization::render() {
+
+	// Render the units to the screen
+	if (units.size() > 0) renderUnit(0, 0, units[0]);
+	else (renderEmpty(0, 0));
+	if (units.size() > 1) renderUnit(Core::windowWidth()/2, 0, units[1]);
+	else (renderEmpty(Core::windowWidth() / 2, 0));
+	if (units.size() > 2) renderUnit(0, Core::windowHeight()/2, units[2]);
+	else (renderEmpty(0, Core::windowHeight() / 2));
+	if (units.size() > 3) renderUnit(Core::windowWidth()/2, Core::windowHeight()/2, units[3]);
+	else (renderEmpty(Core::windowWidth() / 2, Core::windowHeight() / 2));
+
+	if (units.size() > 0) button1.render();
+	if (units.size() > 1) button2.render();
+	if (units.size() > 2) button3.render();
+	if (units.size() > 3) button4.render();
 
 }
 
 void Customization::displayUnitData(const UnitData & data) {
 	// Render the unit data to the window...
+}
+
+SkillTreeLinkButton::SkillTreeLinkButton(Vec2<int> position, int width, int height) : 
+	ButtonData(position, width, height) {}
+
+void SkillTreeLinkButton::render() {
+	ButtonData::render();
+	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
+	// TODO: calculate offset from window width/height somehow
+	Core::Text_Renderer::render("Skill Tree", position + Vec2<int>(25, 35), 1.0);
 }

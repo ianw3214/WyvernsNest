@@ -12,7 +12,7 @@
 
 #include <string>
 #include <vector>
-#include <utility>
+#include <utility> 
 
 // An enumeration representing the stat types
 enum class Stat { STR, DEX, INT, CON };
@@ -40,7 +40,14 @@ struct UnitData {
 	int intelligence;
 	int constitution;
 
+	// The EXP of the unit
+	int level;
+	int experience;
+
 	// Traits of the unit
 	std::vector<Trait> traits;
+
+	// Skill tree of the unit
+	std::vector<int> skillTree;
 
 };
