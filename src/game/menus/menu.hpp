@@ -18,6 +18,11 @@
 #define USER_SAVE_LOCATION		"res/data/save.json"
 #define MASTER_LEVEL_LOCATION	"res/data/levels/master.json"
 
+#define DEFAULT_PLAYER_ATTACK_1	"PUNCH"
+#define DEFAULT_PLAYER_ATTACK_2	"THROW ROCK"
+#define DEFAULT_PLAYER_ATTACK_3	"BURN"
+#define DEFAULT_PLAYER_ATTACK_4	"SELF STR BUFF"
+
 class Menu : public State {
 
 public:

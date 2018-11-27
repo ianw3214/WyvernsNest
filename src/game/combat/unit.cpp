@@ -14,7 +14,7 @@ Unit::Unit() :
 	top_margin(0),
 	shadow("res/assets/shadow.png")
 {
-  generateDefaultUnitData();
+	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
 }
 
@@ -26,7 +26,7 @@ Unit::Unit(UnitType type) :
 	top_margin(0),
 	shadow("res/assets/shadow.png")
 {
-  generateDefaultUnitData();
+	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
 }
 
@@ -38,7 +38,7 @@ Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
 	top_margin(0),
 	shadow("res/assets/shadow.png")
 {
-  generateDefaultUnitData();
+	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
 }
 
@@ -182,7 +182,7 @@ void Unit::calculateScreenPositionMovement() {
 	screenPosition.x() += moveNext.x() * tile_width / 20;
 	screenPosition.y() += moveNext.y() * tile_height / 20;
 
-	//make the shadow move during movement
+	// Make the shadow move during movement
 	shadow.setPos(screenPosition.x() - (tile_width - sprite_width) / 2, screenPosition.y() - tile_height / 2 + sprite_height);
 }
 
@@ -285,12 +285,12 @@ bool Unit::move(Combat & combat, Vec2<int> pos) {
 	return false;
 }
 
-void Unit::renderBottom() {
+void Unit::renderBottom(Combat * combat) {
 	// For now, just render the shadow of the unit on the bottom
 	shadow.render();
 }
 
-void Unit::renderTop() {
+void Unit::renderTop(Combat * combat) {
 	// Let the unit subclasses handle this one
 }
 
