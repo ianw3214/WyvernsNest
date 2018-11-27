@@ -1,5 +1,7 @@
 #include "player.hpp"
+
 #include "../combat.hpp"
+#include "../util/attackloader.hpp"
 
 // TODO: only allow the player to move once during the turn
 
@@ -7,63 +9,80 @@ Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png")
+	valid_tile("res/assets/tiles/valid.png"),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this))
 {
-	player_sprite.setSize(sprite_width, sprite_height);
-
-	player_sprite.addAnimation(1, 1);		// IDLE
-	player_sprite.addAnimation(0, 0);		// SELECTED
-	player_sprite.addAnimation(2, 16);		// ATK MELEE
-	player_sprite.addAnimation(17, 31);		// ATK RANGED	
-	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
-	player_sprite.addAnimation(35, 35);		// DEAD
+	init();
 }
 
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png")
+	valid_tile("res/assets/tiles/valid.png"),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this))
 {
-	player_sprite.setSize(300, sprite_height);
-	player_sprite.setSourceSize(96, 96);
 	position.x() = x;
 	position.y() = y;
 
-	player_sprite.addAnimation(1, 1);		// IDLE
-	player_sprite.addAnimation(0, 0);		// SELECTED
-	player_sprite.addAnimation(2, 16);		// ATK MELEE
-	player_sprite.addAnimation(17, 31);		// ATK RANGED	
-	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
-	player_sprite.addAnimation(35, 35);		// DEAD
+	init();
+}
+
+Player::Player(int x, int y, const nlohmann::json& data) :
+	Unit(UnitType::PLAYER),
+	current_action(PlayerAction::NONE),
+	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
+	valid_tile("res/assets/tiles/valid.png"),
+	attack1(Attacks::get("PUNCH", this)),
+	attack2(Attacks::get("RANGED", this))
+{
+	position.x() = x;
+	position.y() = y;
+
+	init();
+
+	// Load the unit data from the file
+	UnitData unitData;
+	unitData.strength		= data["STR"];
+	unitData.dexterity		= data["DEX"];
+	unitData.intelligence	= data["INT"];
+	unitData.constitution	= data["CON"];
+	unitData.experience		= data["experience"];
+	unitData.level			= data["level"];
+	// TODO: Load attacks from here
 }
 
 Player::~Player() {}
 
-void Player::render()
-{
-	// Render the shadow first
+void Player::renderBottom() {
 	shadow.render();
-
 	// Render the corresponding UI elements depending on the players current action
 	if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
 		renderValidMoves();
 	}
 	if (current_action == PlayerAction::ATTACK_1) {
-		attack1.renderValidGrid();
+		attack1.renderValidGrid(tile_width, tile_height);
 	}
 	if (current_action == PlayerAction::ATTACK_2) {
-		attack2.renderValidGrid();
+		attack2.renderValidGrid(tile_width, tile_height);
 	}
+}
+
+void Player::render()
+{
 	// Render the actual player
 	player_sprite.setPos(screenPosition.x(), screenPosition.y());
 	player_sprite.render();
+}
+
+void Player::renderTop() {
 	// If it's the players turn, render player related UI
 	if (state == UnitState::IDLE && selected) {
 		renderTurnUI();
 	}
 	renderHealth();
-
 }
 
 void Player::renderTurnUI() {
@@ -76,6 +95,7 @@ void Player::renderTurnUI() {
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::MOVE ? select : base);
 	Core::Text_Renderer::render("MOVE", pos, 1.f);
 	pos.y() += UI_OPTION_HEIGHT;
@@ -84,6 +104,9 @@ void Player::renderTurnUI() {
 	pos.y() += UI_OPTION_HEIGHT;
 	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, current_action == PlayerAction::ATTACK_2 ? select : base);
 	Core::Text_Renderer::render(attack2.getName(), pos, 1.f);
+	pos.y() += UI_OPTION_HEIGHT;
+	Core::Renderer::drawRect(pos + ScreenCoord(UI_X_OFFSET, UI_Y_OFFSET), 150, UI_OPTION_HEIGHT, base);
+	Core::Text_Renderer::render("PASS", pos, 1.f);
 }
 
 void Player::renderValidMoves() {
@@ -132,7 +155,7 @@ void Player::handleEvent(const SDL_Event & event)
 			if (event.key.keysym.sym == SDLK_KP_1) {
 				if (!moved) {
 					current_action = PlayerAction::MOVE;
-					updatePossibleMoves(*combat);
+					updatePossibleMoves();
 				}
 			}
 			// Attack 1 key
@@ -143,12 +166,20 @@ void Player::handleEvent(const SDL_Event & event)
 			if (event.key.keysym.sym == SDLK_KP_3) {
 				current_action = PlayerAction::ATTACK_2;
 			}
+
+			// Pass the turn
+			if (event.key.keysym.sym == SDLK_KP_4) {
+				current_action = PlayerAction::NONE;
+				state = UnitState::DONE;
+			}
 		}
 		
 	}
 }
 
 void Player::update(int delta) {
+	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
+	Unit::update(delta);
 	// Update the player based on its current state	
 	switch (state) {
 		case UnitState::IDLE: {
@@ -180,13 +211,16 @@ void Player::update(int delta) {
 				incrementCounter();
 			}
 		} break;
+		case UnitState::DONE: {
+			moved = false;
+		}
 		default: {
 			// Do nothing by default
 		} break;
 	}
 }
 
-void Player::click(Vec2<int> to, Combat& combat)
+void Player::click(Vec2<int> to)
 {
 	if (state != UnitState::IDLE) return;
 	switch (current_action) {
@@ -194,34 +228,14 @@ void Player::click(Vec2<int> to, Combat& combat)
 			// do nothing
 		} break;
 		case PlayerAction::MOVE: {
-			/*
-			// Only move the player to empty positions
-			if (combat.isPosEmpty(to)) {
-				// Also check if the movement is valid first
-				int steps = std::abs(to.x() - position.x()) + std::abs(to.y() - position.y());
-				if (steps <= getMoveSpeed()) {
-					moveTarget = to;
-					path = getPath(combat, moveTarget);
-					if (path.size() > 0) {
-						moveNext = ScreenCoord(0, 0);
-						incrementMovement();
-						state = UnitState::MOVE;
-						startCounter();
-						moved = true;
-					}
-					else {
-						//incorrect pos
-						current_action = PlayerAction::NONE;
-					}
-				}
-			}*/
-			if (move(combat, to)) moved = true;
+			// Move the player using the base unit move function
+			if (move(*combat, to)) moved = true;
 			current_action = PlayerAction::NONE;
 		} break;
 			// TODO: determine if an attack is valid, and don't execute the attack if it isn't
 		case PlayerAction::ATTACK_1: {
 			// do the action here
-			attack1.attack(to, combat);
+			attack1.attack(to, *combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -231,7 +245,7 @@ void Player::click(Vec2<int> to, Combat& combat)
 		} break;
 		case PlayerAction::ATTACK_2: {
 			// do the action here
-			attack2.attack(to, combat);
+			attack2.attack(to, *combat);
 			current_action = PlayerAction::NONE;
 			state = UnitState::ATTACK;
 			startCounter();
@@ -245,11 +259,11 @@ void Player::click(Vec2<int> to, Combat& combat)
 	}
 }
 
-void Player::setPathLine(Combat & combat, Vec2<int> dest) {
-	path_line = getPath(combat, dest);
+void Player::setPathLine(Vec2<int> dest) {
+	path_line = getPath(*combat, dest);
 }
 
-std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
+std::vector<ScreenCoord> Player::getPossibleMoves() {
 	std::vector<std::vector<ScreenCoord>> open;
 	std::vector<ScreenCoord> seen;
 
@@ -271,7 +285,7 @@ std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
 
 			seen.push_back(end_position);
 
-			std::vector<ScreenCoord> successors = getValidNeighbours(end_position, combat);
+			std::vector<ScreenCoord> successors = getValidNeighbours(end_position, *combat);
 			for (ScreenCoord succ : successors) {
 				std::vector<ScreenCoord> s(n);
 				s.push_back(succ);
@@ -283,9 +297,9 @@ std::vector<ScreenCoord> Player::getPossibleMoves(Combat& combat) {
 	return seen;
 }
 
-void Player::updatePossibleMoves(Combat & combat)
+void Player::updatePossibleMoves()
 {
-	possibleMoves = getPossibleMoves(combat);
+	possibleMoves = getPossibleMoves();
 }
 
 void Player::takeDamageCallback(int damage) {
@@ -297,4 +311,17 @@ void Player::takeDamageCallback(int damage) {
 
 void Player::selectCallback() {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::SELECTED));
+}
+
+void Player::init() {
+	// TODO: not sure why this is broken??? -> player rendering not centered
+	player_sprite.setSize(sprite_width, sprite_height);
+	player_sprite.setSourceSize(96, 96);
+
+	player_sprite.addAnimation(1, 1);		// IDLE
+	player_sprite.addAnimation(0, 0);		// SELECTED
+	player_sprite.addAnimation(2, 16);		// ATK MELEE
+	player_sprite.addAnimation(17, 31);		// ATK RANGED	
+	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
+	player_sprite.addAnimation(35, 35);		// DEAD
 }

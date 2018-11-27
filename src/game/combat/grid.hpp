@@ -2,15 +2,8 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
-#include "player.hpp"
-#include "enemy.hpp"
 
 #define SOURCE_TILE_WIDTH 32
-#define SOURCE_TILE_HEIGHT 32
-#define SOURCE_WIDTH 6
-#define SOURCE_HEIGHT 4
-#define INDEX_TO_X(i) (i % SOURCE_WIDTH)
-#define INDEX_TO_Y(i) (SOURCE_HEIGHT - (i / SOURCE_WIDTH) - 1)
 
 // TODO: load tilemap from a file
 // TODO: store tiles that are 'blocked' so units can't move to that position
@@ -23,13 +16,22 @@
 		8,  13,  9, 13, 11, 21, 21, 21, \
 		8,  13,  9, 13, 11, 21, 21, 21, \
 		14, 16, 15, 16, 17, 21, 21, 21  }
+#define DEFAULT_COLLISIONMAP { 1, 1, 1, 1, 1, 1, 1, 1, \
+		0, 0, 0, 0, 0, 0, 0, 0,	\
+		0, 0, 0, 0, 0, 0, 0, 0,	\
+		0, 0, 0, 0, 0, 0, 0, 0,	\
+		0, 0, 0, 0, 0, 0, 0, 0,	\
+		0, 0, 0, 0, 0, 0, 0, 0,	\
+		0, 0, 0, 0, 0, 0, 0, 0  }
 #define TILE_INDEX(x, y) (y * map_width + x)
+
 
 class Grid {	
 
 public:
 
 	Grid();
+	Grid(std::string file);
 	~Grid();
 
 	void render();
@@ -44,7 +46,7 @@ public:
 
 	// The actual tilemap data of the grid for rendering purposes
 	std::vector<int> tilemap;
-	std::vector<bool> collisionmap;
+	std::vector<int> collisionmap;
 
 	// Grid properties
 	int tile_width;
@@ -52,6 +54,11 @@ public:
 	int map_width;
 	int map_height;
 	int top_margin;
+	
+	// Source tilesheet properties
+	int source_width;
+	int source_height;
+	int source_tile_size;
 
 	// Mouse properties
 	int mouseX;
@@ -63,6 +70,11 @@ public:
 	bool renderOutline;
 
 private:
+
+	// Helper methods
+	void init(int source_tile_width);
+	int indexToX(int index) const;
+	int indexToY(int index) const;
 
 	// Grid sprites
 	Sprite tilesheet;

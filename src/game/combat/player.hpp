@@ -2,10 +2,12 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "../../engine/animatedSprite.hpp"
+
 #include "attack.hpp"
 #include "unit.hpp"
-#include "node.hpp"
-#include "../../engine/animatedSprite.hpp"
+
+#include <nlohmann/json.hpp>
 
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
@@ -32,8 +34,6 @@ enum class PlayerAnim {
 	DEAD = 5
 };
 
-class Combat;
-
 // TODO: update player so that the positions are calculated from the grid
 class Player : public Unit {
 
@@ -41,21 +41,25 @@ public:
 
 	Player();
 	Player(int x, int y);
+	Player(int x, int y, const nlohmann::json& data);
+
 	~Player();
 		
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
 
 	// The render function and its' corresponding helper functions
-	void render();
+	virtual void renderBottom() override;
+	virtual void render() override;
+	virtual void renderTop() override;
 	void renderTurnUI();
 	void renderValidMoves();
 	
 	// The click function to handle player logic depending on player state when cursor clicked
-	void click(Vec2<int> to, Combat& combat);
+	void click(Vec2<int> to);
 	
 	// Various helper methods
-	void setPathLine(Combat& combat, Vec2<int> dest);
+	void setPathLine(Vec2<int> dest);
 
 	// The action that is being expected from the player
 	PlayerAction current_action;
@@ -67,11 +71,19 @@ protected:
 
 private:
 
+	// helper variables
+	void init();
+
+	// The attacks of the player
+	Attack attack1;
+	Attack attack2;
+
 	// The outline of the player movement path to the cursor
 	std::vector<ScreenCoord> path_line;
 
-	std::vector<ScreenCoord> getPossibleMoves(Combat & combat);
-	void updatePossibleMoves(Combat & combat);
+	// Movement helper functions
+	std::vector<ScreenCoord> getPossibleMoves();
+	void updatePossibleMoves();
 	std::vector<ScreenCoord> possibleMoves;
 
 	// Player sprites

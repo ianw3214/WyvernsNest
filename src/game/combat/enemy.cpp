@@ -1,16 +1,22 @@
 #include "enemy.hpp"
 
 #include "../combat.hpp"
+#include "../util/attackloader.hpp"
 
 Enemy::Enemy() :
 	Unit(UnitType::ENEMY),
-	sprite("res/assets/enemies/WyvernFighter_Sprite.png")
+	sprite("res/assets/enemies/WyrmSprite.png"),
+	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+}
 
-	// Set the enemy attacks to the same AoE attack
-	attack1 = Attack("AoE", this, AttackType::SELF, 0, new DamageEffect(2), 1, false);
-	attack2 = Attack("AoE", this, AttackType::SELF, 0, new DamageEffect(2), 1, false);
+Enemy::Enemy(UnitType type, const std::string& spritePath) :
+	Unit(type),
+	sprite(spritePath),
+	bite(Attacks::get("PUNCH", this))
+{
+	sprite.setSize(sprite_width, sprite_height);
 }
 
 Enemy::~Enemy()
@@ -29,9 +35,13 @@ void Enemy::render()
 
 	renderHealth();
 
+	if (statusList.size() > 0) {
+		Core::Text_Renderer::render("DEBUG: " + std::to_string(statusList.size()), ScreenCoord(100, 100));
+	}
 }
 
 void Enemy::update(int delta) {
+	Unit::update(delta);
 	switch (state) {
 	case UnitState::IDLE: {
 		// Do nothing when idling
@@ -74,33 +84,54 @@ void Enemy::takeTurn() {
 }
 
 void Enemy::handleMovement() {
-	// CHOOSE A RANDOM LOCATION ON THE GRID TO MOVE
-	int x = rand() % combat->grid.map_width;
-	int y = rand() % combat->grid.map_height;
-	// If the movement wasn't successful, skip directly to the attack
-	if (!move(*combat, Vec2<int>(x, y))) {
+	// Try to move to a random valid location
+	int x_offset;
+	int y_offset;
+	int tries = 20;
+	while (tries > 0) {
+		x_offset = rand() % (getMoveSpeed() * 2 + 1) - getMoveSpeed();
+		y_offset = rand() % (std::abs(getMoveSpeed() - std::abs(x_offset)) * 2 + 1) - std::abs(getMoveSpeed() - std::abs(x_offset));
+		if (getPath(*combat, position - Vec2<int>(x_offset, y_offset)).size() > 0) {
+			break;
+		}
+		tries--;
+	}
+	if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
+		// Directly handle the attacks if no movement could be done
 		handleAttack();
 	}
 }
 
 void Enemy::handleAttack() {
-	int key = rand() % 2;
-	switch (key) {
-	case 0: {
+	if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
 		// do the action here
-		attack1.attack(position, *combat);
+		bite.attack(position - Vec2<int>(1, 0), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
-	} break;
-	case 1: {
-		// do the action here
-		attack2.attack(position, *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-	} break;
-	default: {
-		// do nothing
-	} break;
+		return;
 	}
+	if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
+		// do the action here
+		bite.attack(position - Vec2<int>(0, 1), *combat);
+		state = UnitState::ATTACK;
+		startCounter();
+		return;
+	}
+	if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
+		// do the action here
+		bite.attack(position - Vec2<int>(-1, 0), *combat);
+		state = UnitState::ATTACK;
+		startCounter();
+		return;
+	}
+	if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
+		// do the action here
+		bite.attack(position - Vec2<int>(0, -1), *combat);
+		state = UnitState::ATTACK;
+		startCounter();
+		return;
+	}
+	// If no attacks could be done, set the unit to be at done state
+	state = UnitState::DONE;
 }
 

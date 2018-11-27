@@ -6,6 +6,7 @@
 
 // Std library includes
 #include <iostream>
+#include <ctime>
 
 // Other project includes
 #include "renderer.hpp"
@@ -77,6 +78,9 @@ bool Engine::init(const char * name, int window_width, int window_height) {
 
 	mac_fix = 0;
 
+	// Seed random
+	srand(static_cast<unsigned int>(time(0)));
+	
 	return true;
 }
 

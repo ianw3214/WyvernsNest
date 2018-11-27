@@ -2,14 +2,11 @@
 
 #include "../engine/core.hpp"
 
-#define FLASH_TIME	20
-
-class Menu : public State {
+class SettingsMenu : public State {
 
 public:
-
-	Menu();
-	~Menu();
+	SettingsMenu();
+	~SettingsMenu();
 
 	void handleEvent(const SDL_Event& e);   // Handles incoming events
 	void update(int delta);                 // Handles state logic
@@ -17,8 +14,7 @@ public:
 
 private:
 	Sprite background;
-
-	// Counter for flashing text
-	int counter;
-	bool render_text;
+	int counter = 0;
+	bool render_text = true;
 };
+
