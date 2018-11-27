@@ -59,9 +59,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {
-	if (isValid(pos)) {
-
-
+	if (isValid(pos, combat)) {
 		switch (type) {
 		case AttackType::SELF: {
 			if (affect_self) {
@@ -99,55 +97,46 @@ void Attack::addEffectModifier(Stat stat, float multiplier) {
 }
 
 // Display the valid attack tiles on the grid
-void Attack::renderValidGrid(int tile_width, int tile_height) {
+void Attack::renderValidGrid(int tile_width, int tile_height, const Combat& combat) {
 
 	// Set the tile width/height before rendering
 	validSprite.setSize(tile_width, tile_height);
 
 	switch (type) {
 	case AttackType::SELF: {
-		// TODO: Somehow display the valid sprite
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y(), combat);
 	} break;
 	case AttackType::MELEE: {
-		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() - 1) * tile_height);
-		validSprite.render();
-		validSprite.setPos((source->position.x() + 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
-		validSprite.render();
+		renderValidSprite(tile_width, tile_height, source->position.x() - 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() + 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y() + 1, combat);
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y() - 1, combat);
 	} break;
 	case AttackType::RANGED: {
 		for (int y = -range; y < range + 1 ; y++) {
 			for (int x = -range; x < range + 1 ; x++) {
 				if (!(y == x && y == 0)) {
 					if (abs(x) + abs(y) <= range) {
-						validSprite.setPos((source->position.x() + x) * tile_width, (source->position.y() + y) * tile_height);
-						validSprite.render();
+						renderValidSprite(tile_width, tile_height, source->position.x() + x, source->position.y() + y, combat);
 					}
 				}
 			}
 		}
 	} break;
 	case AttackType::PIERCE: {
-		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() - 1) * tile_height);
-		validSprite.render();
-		validSprite.setPos((source->position.x() + 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
-		validSprite.render();
+		renderValidSprite(tile_width, tile_height, source->position.x() - 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() + 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() , source->position.y() + 1, combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() , source->position.y() - 1, combat);
 	} break;
 	}
 
 	//mouse rendering
-	renderValidTarget(tile_width, tile_height);
+	renderValidTarget(tile_width, tile_height, combat);
 	
 }
 
-void Attack::renderValidTarget(int tile_width, int tile_height) {
+void Attack::renderValidTarget(int tile_width, int tile_height, const Combat& combat) {
 
 	// Set the tile width/height before rendering
 	validSprite.setSize(tile_width, tile_height);
@@ -163,9 +152,9 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 	// Render the valid target based on whether it IS valid or not
 	switch (type) {
 	case AttackType::MELEE: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
-			targetValidSprite.render();
+			targetValidSprite.render();	
 		}
 		else {
 			targetInvalidSprite.setPos(x * tile_width, y * tile_height);
@@ -173,7 +162,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 		}
 	} break;
 	case AttackType::RANGED: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
 		}
@@ -183,7 +172,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 		}
 	} break;
 	case AttackType::PIERCE: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
 			validSprite.setPos((x + x - source->position.x()) * tile_width, (y + y - source->position.y()) * tile_height);
@@ -199,7 +188,14 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 	}
 }
 
-bool Attack::isValid(ScreenCoord pos) {
+void Attack::renderValidSprite(int tile_width, int tile_height, int x, int y, const Combat & combat) {
+	if (combat.grid.isPosValid(Vec2<int>(x, y))) {
+		validSprite.setPos(x * tile_width, y * tile_height);
+		validSprite.render();
+	}
+}
+
+bool Attack::isValid(ScreenCoord pos, const Combat& combat) {
 	switch (type) {
 	case AttackType::SELF: {
 		return pos == source->position;
@@ -207,19 +203,19 @@ bool Attack::isValid(ScreenCoord pos) {
 	case AttackType::MELEE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return true;
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::RANGED: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff <= range) return true;
+		if (x_diff + y_diff <= range) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::PIERCE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return true;
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	}

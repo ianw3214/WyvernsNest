@@ -61,4 +61,6 @@ private:
 	// Reference to the current unit that is taking its action
 	int unitIndex;
 
+	// The total experience granted to players upon completing the level
+	float experienceReward;
 };

@@ -4,10 +4,12 @@
 
 - Flash skill tree button when skill points available
   - Skill points determined by `player level - selected nodes`
-- How to continue from customization state back into game state?
+- ~~How to continue from customization state back into game state?~~
 - Player attacks loadout
-  - Need to store skill tree node id -> attacks **map**
-  - See trello card for implementation details
+  - ~~Render chosen player attacks~~
+  - ~~Need to store skill tree node id -> attacks **map**~~
+  - Ability to change player attack loadout
+    - See trello card for possible implementations
 
 ## Skill Tree state
 
@@ -24,9 +26,9 @@
 - **Settings** menu
   - Change window size
   - Change music / sound effect volume
-- **Credits** menu
-  - Setup basic structure to easily fill out names -> role
-- **Back** to main menu button for both
+- ~~**Credits** menu~~
+  - ~~Setup basic structure to easily fill out names -> role~~
+- ~~**Back** to main menu button for both~~
 
 ## Combat state
 
@@ -50,4 +52,4 @@
 - Game balance
 - Change escape key to **NOT** exit the game
 - Clean up a bunch of **TODOs** in the code
-- Implement EXP -> Store EXP gained in the level code
+- ~~Implement EXP -> Store EXP gained in the level code~~

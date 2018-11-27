@@ -67,10 +67,11 @@ bool Grid::isMousePosValid()
 	return mousePos.x() < map_width && mousePos.y() < map_height;
 }
 
+// TODO: ONE OF THESE FUNCTIONS SHOULD BE DEPRECATED
 bool Grid::isPosEmpty(Vec2<int> pos) const {
 	if (TILE_INDEX(pos.x(), pos.y()) < 0) return false;
 	if (TILE_INDEX(pos.x(), pos.y()) >= map_width * map_height) return false;
-	return collisionmap[TILE_INDEX(pos.x(), pos.y())] == 0;
+	return (collisionmap[TILE_INDEX(pos.x(), pos.y())] == 0);
 }
 
 bool Grid::isPosValid(Vec2<int> pos) const {
