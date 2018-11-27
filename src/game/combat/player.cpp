@@ -171,6 +171,7 @@ void Player::handleEvent(const SDL_Event & event)
 			if (event.key.keysym.sym == SDLK_KP_4) {
 				current_action = PlayerAction::NONE;
 				state = UnitState::DONE;
+				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 			}
 		}
 		
