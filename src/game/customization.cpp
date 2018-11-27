@@ -123,12 +123,12 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::top);
 	Core::Text_Renderer::render(std::string("LVL. ") + std::to_string(unit.level), ScreenCoord(x + static_cast<int>(Core::windowWidth() / 2.5), y + Core::windowHeight() / 11));
 
-	// Attributes
+	// Skillls
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-    Core::Text_Renderer::render("Strength: " + std::to_string(unit.strength), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+30), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+60), 1.f);
-    Core::Text_Renderer::render("Dexterity: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/5), y+(Core::windowHeight()/5)+90), 1.f);
+	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5)), 1.f);
+	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 30), 1.f);
+	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 60), 1.f);
+	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 90), 1.f);
 
 	// EXP BAR
 	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions
@@ -140,6 +140,13 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	// Draw the actual bar
 	int right = lerp(0, width, static_cast<float>(unit.experience) / DEFAULT_MAX_EXP);
 	Core::Renderer::drawRect(start, right, height, Colour(.6f, .6f, 1.f));
+
+	// Attributes
+	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+	Core::Text_Renderer::render("STR: " + std::to_string(unit.strength), ScreenCoord(x+(Core::windowWidth()/11), y+(Core::windowHeight()/2) - 20), 1.f);
+	Core::Text_Renderer::render("DEX: " + std::to_string(unit.dexterity), ScreenCoord(x+(Core::windowWidth()/11) * 2, y+(Core::windowHeight()/2) - 20), 1.f);
+	Core::Text_Renderer::render("INT: " + std::to_string(unit.intelligence), ScreenCoord(x+(Core::windowWidth()/11) * 3, y+(Core::windowHeight()/2) - 20), 1.f);
+	Core::Text_Renderer::render("CON: " + std::to_string(unit.constitution), ScreenCoord(x+(Core::windowWidth()/11) * 4, y+(Core::windowHeight()/2) - 20), 1.f);
 }
 
 void Customization::renderEmpty(int x, int y) {
