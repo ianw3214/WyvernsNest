@@ -22,6 +22,9 @@ public:
 
     void pauseAllAudio();
     void resumeAllAudio();
+
+    void fadeOutAllMusic(int ms);
+    void fadeInMusic(const std::string &filePath, int ms, int loops = 0);
 private:
     std::unordered_map<std::string, Mix_Music*> m_music;
     std::unordered_map<std::string, Mix_Chunk*> m_chunks;

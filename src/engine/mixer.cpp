@@ -92,3 +92,22 @@ void Mixer::pauseAllAudio() {
 void Mixer::resumeAllAudio() {
     Mix_ResumeMusic();
 }
+
+/**
+ * `ms` is the number of milliseconds before the music should finish
+ */
+void Mixer::fadeOutAllMusic(int ms) {
+    Mix_FadeOutMusic(ms);
+}
+
+/**
+ *  `ms` is the number of milliseconds before reaching full volume
+ *  `loops` is the number of times to repeat the audio. -1 loops infinitely,
+ *  0 plays the audio one time, 1 plays twice, etc.
+ */
+void Mixer::fadeInMusic(const std::string& filePath, int ms, int loops) {
+    auto music_idx = m_music.find(filePath);
+    if(music_idx == m_music.end()) return; // Music doesn't exist
+    Mix_Music *music = music_idx->second;
+    Mix_FadeInMusic(music, loops, ms);
+}
