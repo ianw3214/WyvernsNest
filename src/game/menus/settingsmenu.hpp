@@ -4,6 +4,13 @@
 
 #define NUM_BUTTONS_SET 1
 
+#define TITLE_TEXT	"SETTINGS"
+#define VOLUME_TEXT	"VOLUME"
+#define RES_TEXT	"RESOLUTION"
+#define BACK_TEXT	"BACK"
+
+#define NUM_OPTIONS 3
+
 class SettingsMenu : public State {
 
 public:
@@ -17,24 +24,14 @@ public:
 private:
 	// Sprites
 	Sprite background;
-	Sprite highlight;
 	Sprite cursor;
 	Sprite cursorPress;
+	Sprite slider;
+	Sprite aspect;
 
 	// Menu state
 	int selected_option;
 	int mouseX, mouseY;
 	bool mouseDown;
-
-	// Counter for flashing text
-	int counter;
-	bool render_text;
-
-	// The buttons to move to next states
-	std::vector<std::string> buttons;
-	std::vector<ScreenCoord> buttonCoords;
-
-	int getButtonIndexAtPos(ScreenCoord coord);
-	void switchToCurrentState();
 };
 
