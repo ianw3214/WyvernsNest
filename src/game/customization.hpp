@@ -49,6 +49,8 @@ private:
 	SkillTreeLinkButton button4;
 	ButtonData continueButton;
 
+	std::vector<ButtonData> skillCycleButtons;
+	
 	void initSprites();
 	// Sprites used to render the customization state
 	Sprite base;
@@ -57,5 +59,6 @@ private:
 	// Helper functions
 	void switchToCombatState();
 	void initAvailableAttacks();
+	void cycleAttack(int unit, int button, int i_attack, bool forward);
 
 };

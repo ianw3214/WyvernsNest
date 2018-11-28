@@ -33,7 +33,7 @@ Menu::Menu() :
 }
 
 Menu::~Menu() {
-	SDL_ShowCursor(SDL_ENABLE);
+	
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -172,6 +172,7 @@ void Menu::changeToCombatState() {
 
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Menu::initializeSaveFile() {

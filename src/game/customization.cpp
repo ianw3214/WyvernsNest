@@ -7,6 +7,8 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+#include <iostream>
+
 Customization::Customization(const std::string& file) :
 	base("res/assets/UI/UnitBase.png"),
 	empty("res/assets/UI/EmptyUnit.png")
@@ -50,7 +52,35 @@ Customization::Customization(const std::string& file) :
 	button3 = SkillTreeLinkButton(coord3);
 	ScreenCoord coord4 = ScreenCoord(SubDiv::hPos(6, 5), SubDiv::vPos(10, 7));
 	button4 = SkillTreeLinkButton(coord4);
-	
+
+	// Initialize skill cycle buttons
+	for (int i = 0; i < 4; ++i) {
+		int x = 0;
+		int y = 0;
+		if (i == 1 || i == 3) x = SubDiv::hCenter();
+		if (i == 2 || i == 3) y = SubDiv::vCenter();
+
+		// Left side
+		ScreenCoord skillCycleButton1Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 8);
+		ScreenCoord skillCycleButton2Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 38);
+		ScreenCoord skillCycleButton3Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 68);
+		ScreenCoord skillCycleButton4Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 98);
+		// Right side
+		ScreenCoord skillCycleButton5Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 8);
+		ScreenCoord skillCycleButton6Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 38);
+		ScreenCoord skillCycleButton7Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 68);
+		ScreenCoord skillCycleButton8Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 98);
+
+		skillCycleButtons.emplace_back(skillCycleButton1Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton2Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton3Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton4Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton5Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton6Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton7Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton8Coord, 32, 23);
+	}
+
 }
 
 Customization::~Customization() {
@@ -84,19 +114,38 @@ void Customization::initSprites() {
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
+	Vec2<int> mousePos;
+	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 	if (e.type == SDL_MOUSEBUTTONUP) {
-		Vec2<int> mousePos;
-		SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 		if (button1.colliding(mousePos)) changeState(new SkillTree(0));
 		if (button2.colliding(mousePos)) changeState(new SkillTree(1));
 		if (button3.colliding(mousePos)) changeState(new SkillTree(2));
 		if (button4.colliding(mousePos)) changeState(new SkillTree(3));
 		if (continueButton.colliding(mousePos)) switchToCombatState();
 	}
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		// Render skill cycle buttons
+		for (unsigned int i = 0; i < 8 * units.size(); ++i) {
+			if (skillCycleButtons[i].colliding(mousePos)) {
+				// First, figure out which unit's button is being clicked
+				int unit = i / 8;
+				// Also, figure out which button of the unit is being clicked
+				int button = i % 8;
+				// From the clicked button, figure out which attack is being changed
+				int i_attack = button % 4;
+				// Also, figure out the direction that the attack is being changed in
+				bool forward = button >= 4;
+				// If there are attacks available to change, change it
+				if (attacks[unit].size() > 4) {
+					cycleAttack(unit, button, i_attack, forward);
+				}
+			}
+		}
+	}
 }
 
 void Customization::update(int delta) {
-
+	
 }
 
 // Renders Unit data where x,y is the left top corner of the unit data box and unit is the unit to be render
@@ -126,10 +175,14 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 
 	// Skills
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5)), 1.f);
-	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 30), 1.f);
-	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 60), 1.f);
-	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 90), 1.f);
+	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1)), 1.f);
+	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 30), 1.f);
+	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 60), 1.f);
+	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 90), 1.f);
+
+	// if mouse button clicked
+	Vec2<int> mousePos;
+	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 
 	// EXP BAR
 	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions
@@ -167,11 +220,17 @@ void Customization::render() {
 	if (units.size() > 3) renderUnit(SubDiv::hCenter(), SubDiv::vCenter(), units[3]);
 	else (renderEmpty(SubDiv::hCenter(), SubDiv::vCenter()));
 
+	// Render skill tree link buttons
 	if (units.size() > 0) button1.render();
 	if (units.size() > 1) button2.render();
 	if (units.size() > 2) button3.render();
 	if (units.size() > 3) button4.render();
 
+	// Render skill cycle buttons
+	for (unsigned int i = 0; i < 8 * units.size(); ++i) {
+		skillCycleButtons[i].render();
+	}
+	
 	continueButton.render();
 }
 
@@ -229,5 +288,40 @@ void Customization::initAvailableAttacks() {
 				}
 			}
 		}
+	}
+}
+
+void Customization::cycleAttack(int unit, int button, int i_attack, bool forward) {
+	std::string current_attack;
+	if (i_attack == 0) current_attack = units[unit].attack1;
+	if (i_attack == 1) current_attack = units[unit].attack2;
+	if (i_attack == 2) current_attack = units[unit].attack3;
+	if (i_attack == 3) current_attack = units[unit].attack4;
+	// First, figure out the index of the current attack
+	int index = -1;
+	for (int i = 0; i < attacks[unit].size(); ++i) {
+		if (attacks[unit][i] == current_attack) {
+			index = i;
+		}
+	}
+	if (index < 0) return;
+	// Then, cycle through the vector
+	int i = forward ? index + 1 : index - 1;
+	if (i < 0) i = attacks[unit].size() - 1;
+	if (i >= attacks[unit].size()) i = 0;
+	while (i != index) {
+		const std::string& cur = attacks[unit][i];
+		// Check if the attack is already a unit attack, otherwise change it
+		if (cur != units[unit].attack1 && cur != units[unit].attack2 &&
+			cur != units[unit].attack3 && cur != units[unit].attack4)
+		{
+			if (i_attack == 0) units[unit].attack1 = cur;
+			if (i_attack == 1) units[unit].attack2 = cur;
+			if (i_attack == 2) units[unit].attack3 = cur;
+			if (i_attack == 3) units[unit].attack4 = cur;
+		}
+		i += forward ? 1 : -1;
+		if (i < 0) i = attacks[unit].size() - 1;
+		if (i >= attacks[unit].size()) i = 0;
 	}
 }
