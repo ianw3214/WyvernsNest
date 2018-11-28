@@ -30,7 +30,7 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 		json save_data;
 		save >> save_data;
 		std::vector<json> player_data = save_data["players"];
-		
+
 		// Load the players into the combat state
 		json player_spawns = data["player_spawns"];
 		unsigned int index = 0;
@@ -68,6 +68,32 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 	selectUnit(units[unitIndex]);
 
 	for (Unit * unit : units) unit->combat = this;
+
+
+	ps = ParticleSystem();
+
+	//Emitter::Emitter(int x, int y, int angle, int spread, int maxY, int lifespan, int spawnrate, bool burst, int speed, int pLifeSpan, int spawnRadius) :
+
+	//flame dmg
+	Emitter * flame = new Emitter(340, 200, 0, 120, 50, 0, 10, true, 5, 10, 5, true);
+	flame->SetSprite(0, 100, 100, 100);
+
+	//buff
+	Emitter * buff = new Emitter(540, 200, 0, 0, 0, 1200, 50, false, 1, 200, 100, false);
+	buff->SetSprite(0, 0, 100, 100);
+
+	//heal
+	Emitter * heal = new Emitter(800, 200, 0, 0, 0, 30, 3, false, 5, 50, 100, false);
+	heal->SetSprite(100, 100, 100, 100);
+
+	//grass
+	Emitter * grass = new Emitter(1000, 200, 0, 45, 50, 0, 5, true, 5, 10, 5, true);
+	grass->SetSprite(100, 0, 100, 100);
+
+	ps.addEmitter(flame);
+	ps.addEmitter(buff);
+	ps.addEmitter(heal);
+	ps.addEmitter(grass);
 }
 
 Combat::~Combat() {
@@ -89,7 +115,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 	if (!game_over) {
 		// Check for win condition if the player input triggers it
 		bool win = true;
-		for (const Unit * unit : units) 
+		for (const Unit * unit : units)
 			if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
 		if (win) {
 			// Handle the win condition here
@@ -104,21 +130,23 @@ void Combat::handleEvent(const SDL_Event& e) {
 			if (inputData.find("level") == inputData.end()) valid = false;
 			if (!valid) {
 				// TODO: something here, save is no good
-			} else {
+			}
+			else {
 				int playerCount = 0;
-				for(const json& unit: inputData["players"]) {
+				for (const json& unit : inputData["players"]) {
 					playerCount += 1;
 				}
 				float expPerPlayer = experienceReward / (float)playerCount;
 
 				std::vector<json> updatedPlayers;
-				for(json unit: inputData["players"]) {
+				for (json unit : inputData["players"]) {
 					int currentExp = unit["experience"];
 					int newExp = static_cast<int>(currentExp + expPerPlayer);
-					if(newExp >= DEFAULT_MAX_EXP) {
+					if (newExp >= DEFAULT_MAX_EXP) {
 						unit["level"] = 1 + int(unit["level"]);
 						unit["experience"] = newExp - DEFAULT_MAX_EXP;
-					} else {
+					}
+					else {
 						unit["experience"] = newExp;
 					}
 					updatedPlayers.push_back(unit);
@@ -148,6 +176,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 void Combat::update(int delta) {
 
 	grid.update();
+	ps.update();
 	for (Entity * e : entities) e->update(delta);
 
 	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
@@ -164,7 +193,7 @@ void Combat::update(int delta) {
 	}
 	// If the game is over, update according to the menu
 	else {
-		
+
 	}
 }
 
@@ -196,6 +225,8 @@ void Combat::render() {
 		y += 220;
 		Core::Text_Renderer::render("Press enter to continue", ScreenCoord(x + 180, y));
 	}
+
+	ps.render();
 }
 
 // Returns the unit occupying the specified grid coordinate
@@ -247,7 +278,8 @@ void Combat::nextUnitTurn() {
 	if (units[unitIndex]->getState() == UnitState::DEAD) {
 		nextUnitTurn();
 		return;
-	} else {
+	}
+	else {
 		selectUnit(units[unitIndex]);
 	}
 	// If the current unit is an enemy, take its turn
