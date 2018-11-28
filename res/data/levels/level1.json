@@ -3,14 +3,14 @@
     "enemies": [
         {
             "type": "BABY GOOMBA",
-            "x": 4,
-            "y": 4
+            "x": 5,
+            "y": 3
         }
     ],
     "player_spawns": [
         {
-            "x": 1,
-            "y": 1
+            "x": 0,
+            "y": 3
         },
         {
             "x": 2,
