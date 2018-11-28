@@ -32,15 +32,15 @@
 
 ## Combat state
 
-- Order unit turns based on **DEX** attribute
+- ~~Order unit turns based on **DEX** attribute~~
 - More animations
   - If programmer, just fill with squares or some shit for now
   - 1 frame animations for speed
 - Particle effects
   - ~~Effect for attacks~~
   - Effect for passive status
-- Delay between killing enemies and showing menu
-- What happens when the player dies?
+- ~~Delay between killing enemies and showing menu~~
+- ~~What happens when the player dies?~~
 - Make *ZIGUIGUI LINE OF PATH* look nice
 - Finalize **controls**
   - Use arrow keys + enter/space like in menu state

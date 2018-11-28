@@ -1,5 +1,7 @@
 #include "combat.hpp"
 
+#include "util/util.hpp"
+
 #include "util/attackloader.hpp"
 #include "util/particleloader.hpp"
 #include "combat/unit.hpp"
@@ -9,14 +11,17 @@
 #include "combat/enemies/mageDudeEnemy.hpp"
 
 #include "menus/menu.hpp"
-
 #include "customization.hpp"
 
 #include <utility>
 #include <fstream>
 using json = nlohmann::json;
 
-Combat::Combat(const std::string & filePath) : current(nullptr) {
+Combat::Combat(const std::string & filePath) :
+	current(nullptr),
+	gameOverBase("res/assets/UI/game_over/base.png")
+{
+	initSprites();
 
 	// Load grid and enemy data from the file path
 	std::ifstream file(filePath);
@@ -63,7 +68,6 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 
 		experienceReward = data["experience"];
 	}
-
 	for (Unit * unit : units) unit->combat = this;
 
 	// Initialize the particle system
@@ -83,17 +87,32 @@ void Combat::handleEvent(const SDL_Event& e) {
 	for (Entity * entity : entities) entity->handleEvent(e);
 	// Handle mouse clicks for player units
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		if (current->getType() == UnitType::PLAYER) {
-			Player * player = dynamic_cast<Player*>(current);
-			player->click(grid.mousePos);
+		if (game_over) {
+			ScreenCoord mousePos;
+			SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+			if (continueButton.colliding(mousePos)) {
+				if (game_win) {
+					changeState(new Customization());
+				} else {
+					changeState(new Menu());
+				}
+			}
+		} else {
+			if (current->getType() == UnitType::PLAYER) {
+				Player * player = dynamic_cast<Player*>(current);
+				player->click(grid.mousePos);
+			}
 		}
 	}
 	// Keep looking for win/lose conditions while the game hasn't ended
 	if (!game_over) {
 		// Check for win condition if the player input triggers it
 		bool win = true;
-		for (const Unit * unit : units)
+		bool lose = true;
+		for (const Unit * unit : units) {
 			if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
+			if (unit->getType() == UnitType::PLAYER && unit->health > 0) lose = false;
+		}
 		if (win) {
 			// Handle the win condition here
 			game_over = true;
@@ -117,16 +136,20 @@ void Combat::handleEvent(const SDL_Event& e) {
 
 				std::vector<json> updatedPlayers;
 				for (json unit : inputData["players"]) {
+					std::string name = unit["name"];
+					bool level_up = false;
 					int currentExp = unit["experience"];
 					int newExp = static_cast<int>(currentExp + expPerPlayer);
 					if (newExp >= DEFAULT_MAX_EXP) {
 						unit["level"] = 1 + int(unit["level"]);
 						unit["experience"] = newExp - DEFAULT_MAX_EXP;
+						level_up = true;
 					}
 					else {
 						unit["experience"] = newExp;
 					}
 					updatedPlayers.push_back(unit);
+					gameOverData.push_back(GameOverData{ name, static_cast<int>(expPerPlayer), level_up});
 				}
 				old_save.close();
 				json outputData;
@@ -135,15 +158,26 @@ void Combat::handleEvent(const SDL_Event& e) {
 				std::ofstream new_save(USER_SAVE_LOCATION);
 				new_save << outputData.dump(4);
 			}
+			// Start the counter to show the death menu
+			startCounter();
 		}
 		// TODO: Also check for lose condition where all player units are dead
+		if (!win && lose) {
+			// Handle the win condition here
+			game_over = true;
+			game_win = false;
+			// Start the counter to show the death menu
+			startCounter();
+		}
 	}
 	// Otherwise, handle the events for the game over menu
 	else {
 		if (e.type == SDL_KEYDOWN) {
 			if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
-				// Move on to the next state
-				changeState(new Customization());
+				if (render_game_over) {
+					// Move on to the next state
+					changeState(new Customization());
+				}
 			}
 		}
 	}
@@ -170,7 +204,11 @@ void Combat::update(int delta) {
 	}
 	// If the game is over, update according to the menu
 	else {
-
+		if (compareCounter(GAME_OVER_TIMER)) {
+			render_game_over = true;
+		} else {
+			incrementCounter();
+		}
 	}
 }
 
@@ -192,15 +230,42 @@ void Combat::render() {
 		for (Unit * unit : units) unit->renderTop(this);
 	}
 	// Render the game over screen if the game is over
-	if (game_over) {
+	if (render_game_over) {
 		// First, render the base rectangle
-		int x = (Core::windowWidth() - GAME_OVER_MENU_WIDTH) / 2;
-		int y = (Core::windowHeight() - GAME_OVER_MENU_HEIGHT) / 2;
-		Core::Renderer::drawRect(ScreenCoord(x, y), GAME_OVER_MENU_WIDTH, GAME_OVER_MENU_HEIGHT, Colour(0.6f, 0.6f, 0.6f));
-		// Render text
-		Core::Text_Renderer::render("GAME OVER", ScreenCoord(x + 200, y), 4.f);
-		y += 220;
-		Core::Text_Renderer::render("Press enter to continue", ScreenCoord(x + 180, y));
+		gameOverBase.render();
+		// Render text based on whether the player won or not
+		if (game_win) {		// Player won
+			Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+			Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
+			Core::Text_Renderer::render("VICTORY", ScreenCoord(SubDiv::hCenter(), SubDiv::vPos(10, 3)), 2.5f);
+			// Render the player stats
+			for (unsigned int i = 0; i < gameOverData.size(); ++i) {
+				Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+				Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
+				Core::Text_Renderer::render(gameOverData[i].name, ScreenCoord(SubDiv::hPos(12, 3), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.5f);
+				Core::Text_Renderer::setColour(Colour(.5f, .3f, .2f));
+				std::string text = std::string("+") + std::to_string(gameOverData[i].gained_exp) + (" EXP");
+				Core::Text_Renderer::render(text, ScreenCoord(SubDiv::hPos(2, 1), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.f);
+				if (gameOverData[i].level_up) {
+					Core::Text_Renderer::setColour(Colour(.9f, 1.f, .9f));
+					Core::Text_Renderer::render("LEVEL UP!", ScreenCoord(SubDiv::hPos(24, 15), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.2f);
+				}
+			}
+			// Render the continue button
+			continueButton.render();
+			Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+			Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::middle);
+			Core::Text_Renderer::render("CONTINUE", continueButton.position + ScreenCoord(80, 35), 1.3f);
+		}
+		else {				// Player lost
+			Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+			Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
+			Core::Text_Renderer::render("DEFEAT", ScreenCoord(SubDiv::hCenter(), SubDiv::vPos(10, 3)), 2.5f);
+			continueButton.render();
+			Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+			Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::middle);
+			Core::Text_Renderer::render("BACK", continueButton.position + ScreenCoord(80, 35), 1.3f);
+		}
 	}
 
 	ps.render();
@@ -242,6 +307,14 @@ void Combat::addEnemy(Enemy * enemy, int x, int y) {
 	addEntity(enemy);
 	units.push_back(enemy);
 	return;
+}
+
+void Combat::initSprites() {
+	int width = gameOverBase.getTexture().getWidth();
+	int height = gameOverBase.getTexture().getHeight();
+	gameOverBase.setPos((Core::windowWidth() - width) / 2, (Core::windowHeight() - height) / 2);
+
+	continueButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 80, SubDiv::vPos(40, 27)));
 }
 
 // Choose the next unit in combat to take a turn

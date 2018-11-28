@@ -12,7 +12,7 @@ Enemy::Enemy() :
 	// Randomize enemy stats
 	UnitData data;
 	data.strength = rand() % 10 + 1;
-	data.dexterity = rand() % 10 + 21;
+	data.dexterity = rand() % 10 + 1;
 	data.intelligence = rand() % 10 + 1;
 	data.constitution = rand() % 10 + 1;
 	setData(data);
