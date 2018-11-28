@@ -89,6 +89,7 @@ private:
 	// Player sprites
 	AnimatedSprite player_sprite;
 	Sprite valid_tile;
+	AnimatedSprite valid_move;
 
 	bool moved;
 };

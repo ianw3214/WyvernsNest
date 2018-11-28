@@ -10,7 +10,8 @@ Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png")
+	valid_tile("res/assets/tiles/valid.png"),
+	valid_move("res/assets/tiles/valid_move.png", 32, 32)
 {
 	init();
 }
@@ -21,7 +22,8 @@ Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png")
+	valid_tile("res/assets/tiles/valid.png"),
+	valid_move("res/assets/tiles/valid_move.png", 32, 32)
 {
 	position.x() = x;
 	position.y() = y;
@@ -34,8 +36,7 @@ Player::Player(int x, int y, const nlohmann::json& data) :
 	current_action(PlayerAction::NONE),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
 	valid_tile("res/assets/tiles/valid.png"),
-	attack1(Attacks::get("PUNCH", this)),
-	attack2(Attacks::get("RANGED", this))
+	valid_move("res/assets/tiles/valid_move.png", 32, 32)
 {
 	position.x() = x;
 	position.y() = y;
@@ -138,39 +139,25 @@ void Player::renderTurnUI() {
 
 void Player::renderValidMoves() {
 
+	// Render the base grid of valid moves first
 	valid_tile.setSize(tile_width, tile_height);
 	for (ScreenCoord pos : possibleMoves) {
 		valid_tile.setPos((pos.x()) * tile_width, (pos.y()) * tile_height);
 		valid_tile.render();
 	}
 
-	int i = 0;
+	// Then render the path to the cursor
+	bool first = true;
+	valid_move.setSize(tile_width, tile_height);
 	for (ScreenCoord pos : path_line) {
-		ScreenCoord start;
-		ScreenCoord end;
-		if (i == 0) {
-			i++;
+		if (first) {
+			first = false;
 			continue;
 		}
-		else {
-			start = pos;
-			end = path_line[i - 1];
-		}
-
-		start.x() *= tile_width;
-		end.x() *= tile_width;
-		start.y() *= tile_height;
-		end.y() *= tile_height;
-
-		start.x() += tile_width / 2;
-		end.x() += tile_width / 2;
-		start.y() += tile_height / 2;
-		end.y() += tile_height / 2;
-
-		Core::Renderer::drawLine(start, end, Colour(1, 0, 0));
-
-		i++;
+		valid_move.setPos(pos.x() * tile_width, pos.y() * tile_height);
+		valid_move.renderWithoutUpdate();
 	}
+	valid_move.updateFrame();
 }
 
 void Player::handleEvent(const SDL_Event & event)
@@ -378,7 +365,6 @@ void Player::selectCallback() {
 }
 
 void Player::init() {
-	// TODO: not sure why this is broken??? -> player rendering not centered
 	player_sprite.setSize(sprite_width, sprite_height);
 	player_sprite.setSourceSize(96, 96);
 
@@ -388,4 +374,8 @@ void Player::init() {
 	player_sprite.addAnimation(17, 31);		// ATK RANGED	
 	player_sprite.addAnimation(32, 34);		// TAKE DAMAGE
 	player_sprite.addAnimation(35, 35);		// DEAD
+
+	valid_move.setSourceSize(32, 32);
+	valid_move.addAnimation(0, 5);
+	valid_move.playAnimation(0);
 }

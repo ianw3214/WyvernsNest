@@ -14,7 +14,7 @@
 ## Skill Tree state
 
 - Display descriptions
-- Skill tree **link** rendering
+- Skill tree **link** rendering -> *NOT IMPORTANT*
   - Use rects to render instead of lines
   - Write **shaders** to make them render nicer
 - Implement skill tree **panning**
@@ -23,9 +23,9 @@
 ## Menu state
 
 - Some nice **shaders** to make the menu look nice
-- **Settings** menu
-  - Change window size
-  - Change music / sound effect volume
+- ~~**Settings** menu~~
+  - ~~Change window size~~
+  - ~~Change music / sound effect volume~~
 - ~~**Credits** menu~~
   - ~~Setup basic structure to easily fill out names -> role~~
 - ~~**Back** to main menu button for both~~
