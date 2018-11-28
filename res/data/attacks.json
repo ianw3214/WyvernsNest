@@ -48,21 +48,15 @@
         },{
             "name": "DASH",
             "type": "ranged",
-            "range": 10,
+            "range": 3,
             "aoe": 0,
             "affect_self": true,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 2
+                    "type": "move"
                 }
             ],
-            "modifiers": [
-                {
-                    "type": "INT",
-                    "mod": 20.0
-                }
-            ],
+            "modifiers": [],
             "particles": [],
             "nodeid": 1
         },{

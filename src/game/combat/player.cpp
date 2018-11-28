@@ -95,7 +95,6 @@ void Player::renderTop(Combat * combat) {
 	}
 	renderHealth();
 }
-#include <iostream>
 void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
@@ -232,6 +231,11 @@ void Player::update(int delta) {
 					current_action = PlayerAction::NONE;
 					position = moveTarget;
 					calculateScreenPosition();
+					if (moved) {
+						state = UnitState::DONE;
+					} else {
+						moved = true;
+					}
 				}
 			}
 			else {
@@ -242,13 +246,12 @@ void Player::update(int delta) {
 		case UnitState::ATTACK: {
 			if (compareCounter(PLAYER_DEFAULT_ATTACK_COUNTER)) {
 				state = UnitState::DONE;
-				moved = false;
 			} else {
 				incrementCounter();
 			}
 		} break;
 		case UnitState::DONE: {
-			moved = false;
+			
 		}
 		default: {
 			// Do nothing by default
@@ -265,56 +268,52 @@ void Player::click(Vec2<int> to)
 		} break;
 		case PlayerAction::MOVE: {
 			// Move the player using the base unit move function
-			if (move(*combat, to)) moved = true;
+			move(*combat, to);
 			current_action = PlayerAction::NONE;
 		} break;
 			// TODO: determine if an attack is valid, and don't execute the attack if it isn't
 		case PlayerAction::ATTACK_1: {
-			// do the action here
 			if (attack1.isValid(to, *combat)) {
-				attack1.attack(to, *combat);
 				current_action = PlayerAction::NONE;
 				state = UnitState::ATTACK;
 				startCounter();
 				// TODO: Play animation based on attack type
 				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_MELEE));
 				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+				attack1.attack(to, *combat);
 			}
 		} break;
 		case PlayerAction::ATTACK_2: {
-			// do the action here
 			if (attack2.isValid(to, *combat)) {
-				attack2.attack(to, *combat);
 				current_action = PlayerAction::NONE;
 				state = UnitState::ATTACK;
 				startCounter();
 				// TODO: Play animation based on attack type
 				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
 				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+				attack2.attack(to, *combat);
 			}
 		} break;
 		case PlayerAction::ATTACK_3: {
-			// do the action here
 			if (attack3.isValid(to, *combat)) {
-				attack3.attack(to, *combat);
 				current_action = PlayerAction::NONE;
 				state = UnitState::ATTACK;
 				startCounter();
 				// TODO: Play animation based on attack type
 				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
 				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+				attack3.attack(to, *combat);
 			}
 		} break;
 		case PlayerAction::ATTACK_4: {
-			// do the action here
 			if (attack4.isValid(to, *combat)) {
-				attack4.attack(to, *combat);
 				current_action = PlayerAction::NONE;
 				state = UnitState::ATTACK;
 				startCounter();
 				// TODO: Play animation based on attack type
 				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::ATTACK_RANGED));
 				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+				attack4.attack(to, *combat);
 			}
 		} break;
 		default: {
@@ -374,6 +373,7 @@ void Player::takeDamageCallback(int damage) {
 }
 
 void Player::selectCallback() {
+	moved = false;
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::SELECTED));
 }
 

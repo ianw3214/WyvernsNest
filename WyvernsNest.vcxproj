@@ -146,7 +146,6 @@
     <ClCompile Include="src\engine\text\textRenderer.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
     <ClCompile Include="src\game\combat\attack.cpp" />
-    <ClCompile Include="src\game\combat\attackEffects.cpp" />
     <ClCompile Include="src\game\combat\enemies\basicWarriorEnemy.cpp" />
     <ClCompile Include="src\game\combat\enemies\mageDudeEnemy.cpp" />
     <ClCompile Include="src\game\combat\enemy.cpp" />

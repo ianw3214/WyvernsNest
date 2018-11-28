@@ -117,9 +117,6 @@
     <ClCompile Include="src\game\menus\settingsmenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\combat\attackEffects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\particleSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

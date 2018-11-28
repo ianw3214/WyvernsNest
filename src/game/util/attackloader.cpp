@@ -114,6 +114,9 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 		int distance = data["distance"];
 		return new PushEffect(distance);
 	}
+	if (data["type"] == "move") {
+		return new MoveEffect();
+	}
 	return nullptr;
 }
 
