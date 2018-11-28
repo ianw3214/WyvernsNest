@@ -6,6 +6,7 @@
 #include "combat/enemy.hpp"
 #include "combat/status.hpp"
 #include "combat/enemies/mageDudeEnemy.hpp"
+#include "combat/enemies/basicWarriorEnemy.hpp"
 
 #include "menus/menu.hpp"
 
@@ -55,6 +56,12 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 				int x = enemy["x"];
 				int y = enemy["y"];
 				Enemy *unit = new MageDudeEnemy();
+				addEnemy(unit, x, y);
+			}
+			else if (type == "BASIC WARRIOR") {
+				int x = enemy["x"];
+				int y = enemy["y"];
+				Enemy *unit = new WarriorEnemy();
 				addEnemy(unit, x, y);
 			}
 		}
@@ -116,7 +123,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 					int currentExp = unit["experience"];
 					int newExp = static_cast<int>(currentExp + expPerPlayer);
 					if(newExp >= DEFAULT_MAX_EXP) {
-						unit["level"] = unit["level"] + 1;
+						unit["level"] = (int) unit["level"] + 1;
 						unit["experience"] = newExp - DEFAULT_MAX_EXP;
 					} else {
 						unit["experience"] = newExp;
