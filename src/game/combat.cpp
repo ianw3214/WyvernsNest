@@ -1,6 +1,7 @@
 #include "combat.hpp"
 
 #include "util/attackloader.hpp"
+#include "util/particleloader.hpp"
 #include "combat/unit.hpp"
 #include "combat/player.hpp"
 #include "combat/enemy.hpp"
@@ -71,29 +72,12 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 
 
 	ps = ParticleSystem();
-
-	//Emitter::Emitter(int x, int y, int angle, int spread, int maxY, int lifespan, int spawnrate, bool burst, int speed, int pLifeSpan, int spawnRadius) :
-
-	//flame dmg
-	Emitter * flame = new Emitter(340, 200, 0, 120, 50, 0, 10, true, 5, 10, 5, true);
-	flame->SetSprite(0, 100, 100, 100);
-
-	//buff
-	Emitter * buff = new Emitter(540, 200, 0, 0, 0, 1200, 50, false, 1, 200, 100, false);
-	buff->SetSprite(0, 0, 100, 100);
-
-	//heal
-	Emitter * heal = new Emitter(800, 200, 0, 0, 0, 30, 3, false, 5, 50, 100, false);
-	heal->SetSprite(100, 100, 100, 100);
-
-	//grass
-	Emitter * grass = new Emitter(1000, 200, 0, 45, 50, 0, 5, true, 5, 10, 5, true);
-	grass->SetSprite(100, 0, 100, 100);
-
-	ps.addEmitter(flame);
-	ps.addEmitter(buff);
-	ps.addEmitter(heal);
-	ps.addEmitter(grass);
+	/*
+	ps.addEmitter(Particles::get("FIRE", 340, 200));
+	ps.addEmitter(Particles::get("BUFF", 540, 200));
+	ps.addEmitter(Particles::get("HEAL", 800, 200));
+	ps.addEmitter(Particles::get("DIRT", 1000, 200));
+	*/
 }
 
 Combat::~Combat() {
