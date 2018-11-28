@@ -9,6 +9,7 @@
 #include "combat/enemy.hpp"
 #include "combat/status.hpp"
 #include "combat/enemies/mageDudeEnemy.hpp"
+#include "combat/enemies/basicWarriorEnemy.hpp"
 
 #include "menus/menu.hpp"
 #include "customization.hpp"
@@ -63,6 +64,12 @@ Combat::Combat(const std::string & filePath) :
 				int x = enemy["x"];
 				int y = enemy["y"];
 				Enemy *unit = new MageDudeEnemy();
+				addEnemy(unit, x, y);
+			}
+			else if (type == "BASIC WARRIOR") {
+				int x = enemy["x"];
+				int y = enemy["y"];
+				Enemy *unit = new WarriorEnemy();
 				addEnemy(unit, x, y);
 			}
 		}

@@ -25,6 +25,20 @@
                 }],
             "nodeid": 1
         },{
+            "name" : "HIT",
+            "type" : "melee",
+            "range" : 1,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 4
+                }
+            ],
+            "modifiers": [],
+            "nodeid": 1
+        },{
             "name": "THROW ROCK",
             "type": "ranged",
             "range": 10,
