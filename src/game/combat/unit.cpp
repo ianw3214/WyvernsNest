@@ -272,28 +272,52 @@ void Unit::heal(int health) {
 
 #include <iostream>
 void Unit::push(int p, ScreenCoord src_pos) {
-	printf("PUSHING!!!\n");
+	Vec2<int> temp_pos;
+
 	if (src_pos[0] - position[0] > 0) {
-		std::cout << "1: " << p << std::endl;
-		// move(*combat, position - Vec2<int>(-1*p, 0));
-		position = position - Vec2<int>(1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
+		//std::cout << "1: " << p << std::endl;
 	}
 	else if (src_pos[0] - position[0] < 0) {
-		std::cout << "2: " << p << std::endl;
-		// move(*combat, position - Vec2<int>(1*p, 0));
-		position = position - Vec2<int>(-1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(-1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
+		//std::cout << "2: " << p << std::endl;
 	}
 	else if (src_pos[1] - position[1] > 0) {
-		std::cout << "3: " << p << std::endl;
-		// move(*combat, position - Vec2<int>(0, -1*p))
-		position = position - Vec2<int>(0, 1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, 1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
+		//std::cout << "3: " << p << std::endl;
 	}
 	else if (src_pos[1] - position[1] < 0) {
-		std::cout << "4: " << p << std::endl;
-		// move(*combat, position - Vec2<int>(0, 1*p));
-		position = position - Vec2<int>(0, -1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, -1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
+		//std::cout << "4: " << p << std::endl;
 	}
-	std::cout << position.x() << " : " << position.y() << std::endl;
 }
 
 bool Unit::move(Combat & combat, Vec2<int> pos) {
