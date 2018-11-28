@@ -54,6 +54,7 @@ public:
 
 	// The central get function to get the attack data and associate it with a unit
 	Emitter * get(const std::string& name, int x, int y);
+	Emitter * get(const std::string& name, int x, int y, int angle);
 
 protected:
 	// Protected constructor/destructor for singleton pattern
@@ -74,5 +75,8 @@ private:
 namespace Particles {
 	inline Emitter * get(const std::string& name, int x = 0, int y = 0) {
 		return ParticleLoader::get_instance().get(name, x , y);
+	}
+	inline Emitter * get(const std::string& name, int x = 0, int y = 0, int angle = 0) {
+		return ParticleLoader::get_instance().get(name, x, y, angle);
 	}
 }

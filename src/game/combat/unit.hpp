@@ -91,7 +91,7 @@ protected:
 	// Variables that contain various useful stats for the unit
 	int move_speed;
 	bool selected = false;
-	void loadPropertiesFromUnitData();
+	void loadPropertiesFromUnitData(bool resetHealth=true);
 
 	// State variable of the unit
 	UnitState state;

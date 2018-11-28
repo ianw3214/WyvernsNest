@@ -93,7 +93,12 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			// Set the target to the center of the target
 			int x = pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2;
 			int y = pos.y() * combat.grid.tile_height + combat.grid.tile_height / 2;
-			combat.addEmitter(Particles::get(particle.name, x, y));
+			int angle;
+			if (pos.y() < source->position.y()) angle = 0;
+			if (pos.y() > source->position.y()) angle = 180;
+			if (pos.x() < source->position.x()) angle = 270;
+			if (pos.x() > source->position.x()) angle = 90;
+			combat.addEmitter(Particles::get(particle.name, x, y, angle));
 		}
 	}
 }

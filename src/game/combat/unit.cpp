@@ -247,6 +247,8 @@ void Unit::select() {
 	for (int i : removeIndex) {
 		statusList.erase(statusList.begin() + i);
 	}
+	// Recalculate the stats in case anything was removed
+	loadPropertiesFromUnitData(false);
 }
 
 void Unit::deselect() {
@@ -270,30 +272,23 @@ void Unit::heal(int health) {
 	}
 }
 
-#include <iostream>
 void Unit::push(int p, ScreenCoord src_pos) {
-	printf("PUSHING!!!\n");
 	if (src_pos[0] - position[0] > 0) {
-		std::cout << "1: " << p << std::endl;
 		// move(*combat, position - Vec2<int>(-1*p, 0));
 		position = position - Vec2<int>(1 * p, 0);
 	}
 	else if (src_pos[0] - position[0] < 0) {
-		std::cout << "2: " << p << std::endl;
 		// move(*combat, position - Vec2<int>(1*p, 0));
 		position = position - Vec2<int>(-1 * p, 0);
 	}
 	else if (src_pos[1] - position[1] > 0) {
-		std::cout << "3: " << p << std::endl;
 		// move(*combat, position - Vec2<int>(0, -1*p))
 		position = position - Vec2<int>(0, 1 * p);
 	}
 	else if (src_pos[1] - position[1] < 0) {
-		std::cout << "4: " << p << std::endl;
 		// move(*combat, position - Vec2<int>(0, 1*p));
 		position = position - Vec2<int>(0, -1 * p);
 	}
-	std::cout << position.x() << " : " << position.y() << std::endl;
 }
 
 bool Unit::move(Combat & combat, Vec2<int> pos) {
@@ -356,11 +351,13 @@ void Unit::renderHealth() {
 	}
 }
 
-void Unit::loadPropertiesFromUnitData() {
+void Unit::loadPropertiesFromUnitData(bool resetHealth) {
 	// The health of the unit depends on it's constitution
 	maxHealth = data.constitution * 2;
-	health = getCON() * 2;
-	if (health > maxHealth) health = maxHealth;
+	if (resetHealth) {
+		health = getCON() * 2;
+		if (health > maxHealth) health = maxHealth;
+	}
 	// The movement speed in terms of grid units of the unit
 	move_speed = getDEX() / 5 + 1;
 	// TEMPORARY HARD CAP, CHANGE THIS BY OPTIMIZING IN THE FUTURE

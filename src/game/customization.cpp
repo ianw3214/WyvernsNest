@@ -303,12 +303,24 @@ void Customization::switchToCombatState() {
 	std::ifstream masterFile(DEFAULT_MASTER_FILE);
 	json masterData;
 	masterFile >> masterData;
+	// TODO: Temporary, change this in the future
+	bool level_found = false;
 	for (const json& level : masterData["levels"]) {
 		if (level["id"] == level_id) {
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
 			std::string name = level["file"];
 			combatLevelLocation = std::string("res/data/levels/") + name;
+			level_found = true;
 		}
+	}
+	save_file.close();
+	masterFile.close();
+	if (level_found) {
+		// Save the new level to the game
+		inputData["level"] = level_id;
+		std::ofstream out_save_file(DEFAULT_PLAYER_FILE);
+		out_save_file << inputData.dump(4);
+		out_save_file.close();
 	}
 	changeState(new Combat(combatLevelLocation));
 }

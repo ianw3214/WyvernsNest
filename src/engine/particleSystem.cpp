@@ -224,8 +224,8 @@ void Particle::update()
 		approxX += velocity.x()*speed;
 		approxY += velocity.y()*speed;
 
-		position.x() = floor(approxX);
-		position.y() = floor(approxY);
+		position.x() = static_cast<int>(floor(approxX));
+		position.y() = static_cast<int>(floor(approxY));
 	}
 	else {
 		if (position.y() < maxY) {
@@ -234,8 +234,8 @@ void Particle::update()
 
 			velocity += G;
 
-			position.x() = floor(approxX);
-			position.y() = floor(approxY);
+			position.x() = static_cast<int>(floor(approxX));
+			position.y() = static_cast<int>(floor(approxY));
 		}
 		else {
 			counter++;
