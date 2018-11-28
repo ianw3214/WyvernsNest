@@ -172,8 +172,8 @@
             "nodeid": 3
         },{
             "name" : "BASIC PUSH",
-            "type" : "melee",
-            "range" : 0,
+            "type" : "push",
+            "range" : 1,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
