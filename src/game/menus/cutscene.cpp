@@ -25,6 +25,11 @@ void Cutscene::handleEvent(const SDL_Event& e) {
 			changeState(m_state);
 		}
 	}
+	// Also cycle through the image on mouse press
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		if (m_position == m_sprites.size() - 1) changeState(m_state);
+		else m_position++;
+	}
 }
 
 void Cutscene::update(int delta) {

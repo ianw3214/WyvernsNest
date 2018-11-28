@@ -9,6 +9,7 @@
 Player::Player() :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
+	player_state(PlayerState::CHOOSING),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
 	valid_tile("res/assets/tiles/valid.png"),
 	valid_move("res/assets/tiles/valid_move.png", 32, 32)
@@ -21,6 +22,7 @@ Player::Player() :
 Player::Player(int x, int y) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
+	player_state(PlayerState::CHOOSING),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
 	valid_tile("res/assets/tiles/valid.png"),
 	valid_move("res/assets/tiles/valid_move.png", 32, 32)
@@ -34,6 +36,7 @@ Player::Player(int x, int y) :
 Player::Player(int x, int y, const nlohmann::json& data) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
+	player_state(PlayerState::CHOOSING),
 	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
 	valid_tile("res/assets/tiles/valid.png"),
 	valid_move("res/assets/tiles/valid_move.png", 32, 32)
@@ -64,21 +67,23 @@ Player::~Player() {}
 
 void Player::renderBottom(Combat * combat) {
 	shadow.render();
-	// Render the corresponding UI elements depending on the players current action
-	if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
-		renderValidMoves();
-	}
-	if (current_action == PlayerAction::ATTACK_1) {
-		attack1.renderValidGrid(tile_width, tile_height, *combat);
-	}
-	if (current_action == PlayerAction::ATTACK_2) {
-		attack2.renderValidGrid(tile_width, tile_height, *combat);
-	}
-	if (current_action == PlayerAction::ATTACK_3) {
-		attack3.renderValidGrid(tile_width, tile_height, *combat);
-	}
-	if (current_action == PlayerAction::ATTACK_4) {
-		attack4.renderValidGrid(tile_width, tile_height, *combat);
+	if (player_state == PlayerState::ATTACKING) {
+		// Render the corresponding UI elements depending on the players current action
+		if (current_action == PlayerAction::MOVE && state == UnitState::IDLE) {
+			renderValidMoves();
+		}
+		if (current_action == PlayerAction::ATTACK_1) {
+			attack1.renderValidGrid(tile_width, tile_height, *combat);
+		}
+		if (current_action == PlayerAction::ATTACK_2) {
+			attack2.renderValidGrid(tile_width, tile_height, *combat);
+		}
+		if (current_action == PlayerAction::ATTACK_3) {
+			attack3.renderValidGrid(tile_width, tile_height, *combat);
+		}
+		if (current_action == PlayerAction::ATTACK_4) {
+			attack4.renderValidGrid(tile_width, tile_height, *combat);
+		}
 	}
 }
 
@@ -91,7 +96,7 @@ void Player::render()
 
 void Player::renderTop(Combat * combat) {
 	// If it's the players turn, render player related UI
-	if (state == UnitState::IDLE && selected) {
+	if (selected && state == UnitState::IDLE && player_state == PlayerState::CHOOSING) {
 		renderTurnUI();
 	}
 	renderHealth();
@@ -133,7 +138,7 @@ void Player::renderTurnUI() {
 	Core::Text_Renderer::render(attack4.getName(), pos + text_offset, 1.f);
 	pos.y() += option_height;
 	// Render the pass option
-	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, base);
+	Core::Renderer::drawRect(pos, SubDiv::hSize(5, 1), option_height, current_action == PlayerAction::PASS ? select : base);
 	Core::Text_Renderer::render("PASS", pos + text_offset, 1.f);
 }
 
@@ -165,43 +170,124 @@ void Player::handleEvent(const SDL_Event & event)
 	// Only handle events for the entity if it is selected
 	if (selected && state == UnitState::IDLE) {
 		if (event.type == SDL_KEYDOWN) {
-			// Move Key
-			if (event.key.keysym.sym == SDLK_KP_1 || event.key.keysym.sym == SDLK_1) {
-				if (!moved) {
-					current_action = PlayerAction::MOVE;
-					updatePossibleMoves();
+			if (player_state == PlayerState::CHOOSING) {
+				// Move Key
+				if (event.key.keysym.sym == SDLK_KP_1 || event.key.keysym.sym == SDLK_1) {
+					if (!moved) {
+						current_action = PlayerAction::MOVE;
+						updatePossibleMoves();
+					}
 				}
+				// Attack 1 key
+				if (event.key.keysym.sym == SDLK_2 || event.key.keysym.sym == SDLK_KP_2) {
+					current_action = PlayerAction::ATTACK_1;
+				}
+				// Attack 2 key
+				if (event.key.keysym.sym == SDLK_3 || event.key.keysym.sym == SDLK_KP_3) {
+					current_action = PlayerAction::ATTACK_2;
+				}
+				// Attack 3 key
+				if (event.key.keysym.sym == SDLK_4 || event.key.keysym.sym == SDLK_KP_4) {
+					current_action = PlayerAction::ATTACK_3;
+				}
+				// Attack 4 key
+				if (event.key.keysym.sym == SDLK_5 || event.key.keysym.sym == SDLK_KP_5) {
+					current_action = PlayerAction::ATTACK_4;
+				}
+				// Pass the turn
+				if (event.key.keysym.sym == SDLK_KP_6 || event.key.keysym.sym == SDLK_6) {
+					current_action = PlayerAction::PASS;
+				}
+				// Next attack option
+				if (event.key.keysym.sym == SDLK_DOWN) {
+					switch (current_action) {
+					case PlayerAction::NONE: {
+						if (moved) {
+							current_action = PlayerAction::ATTACK_1;
+						} else {
+							current_action = PlayerAction::MOVE;
+							updatePossibleMoves();
+						}
+					} break;
+					case PlayerAction::MOVE:		current_action = PlayerAction::ATTACK_1;	break;
+					case PlayerAction::ATTACK_1:	current_action = PlayerAction::ATTACK_2;	break;
+					case PlayerAction::ATTACK_2:	current_action = PlayerAction::ATTACK_3;	break;
+					case PlayerAction::ATTACK_3:	current_action = PlayerAction::ATTACK_4;	break;
+					case PlayerAction::ATTACK_4:	current_action = PlayerAction::PASS;		break;
+					case PlayerAction::PASS:		current_action = PlayerAction::PASS;		break;
+					default:						current_action = PlayerAction::NONE;
+					}
+				}
+				// Previous attack option
+				if (event.key.keysym.sym == SDLK_UP) {
+					switch (current_action) {
+					case PlayerAction::NONE:		current_action = PlayerAction::MOVE;		break;
+					case PlayerAction::PASS:		current_action = PlayerAction::ATTACK_4;	break;
+					case PlayerAction::ATTACK_4:	current_action = PlayerAction::ATTACK_3;	break;
+					case PlayerAction::ATTACK_3:	current_action = PlayerAction::ATTACK_2;	break;
+					case PlayerAction::ATTACK_2:	current_action = PlayerAction::ATTACK_1;	break;
+					case PlayerAction::ATTACK_1:
+					case PlayerAction::MOVE: {
+						// ATTACK_1 AND MOVE both fallthrough to move
+						if (moved) {
+							current_action = PlayerAction::ATTACK_1;
+						} else {
+							current_action = PlayerAction::MOVE;
+							updatePossibleMoves();
+						}
+					} break;
+					default:						current_action = PlayerAction::NONE;
+					}
+				}
+				if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE) {
+					player_state = PlayerState::ATTACKING;
+				}
+				return;
 			}
-			// Attack 1 key
-			if (event.key.keysym.sym == SDLK_2 || event.key.keysym.sym == SDLK_KP_2) {
-				current_action = PlayerAction::ATTACK_1;
-			}
-			// Attack 2 key
-			if (event.key.keysym.sym == SDLK_3 || event.key.keysym.sym == SDLK_KP_3) {
-				current_action = PlayerAction::ATTACK_2;
-			}
-			// Attack 3 key
-			if (event.key.keysym.sym == SDLK_4 || event.key.keysym.sym == SDLK_KP_4) {
-				current_action = PlayerAction::ATTACK_3;
-			}
-			// Attack 4 key
-			if (event.key.keysym.sym == SDLK_5 || event.key.keysym.sym == SDLK_KP_5) {
-				current_action = PlayerAction::ATTACK_4;
-			}
-			// Pass the turn
-			if (event.key.keysym.sym == SDLK_KP_6 || event.key.keysym.sym == SDLK_6) {
-				current_action = PlayerAction::NONE;
-				state = UnitState::DONE;
-				player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
+			if (player_state == PlayerState::ATTACKING) {
+				if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE) {
+					int gridX, gridY;
+					SDL_GetMouseState(&gridX, &gridY);
+					gridX = gridX / tile_width;
+					gridY = gridY / tile_width;
+					execute(Vec2<int>(gridX, gridY));
+				}
+				return;
 			}
 		}
-		
+		if (event.type == SDL_MOUSEBUTTONDOWN) {
+			if (player_state == PlayerState::CHOOSING) {
+				int mouseX, mouseY;
+				SDL_GetMouseState(&mouseX, &mouseY);
+				if (getActionAtCoord(ScreenCoord(mouseX, mouseY)) != PlayerAction::NONE) {
+					player_state = PlayerState::ATTACKING;
+					if (current_action == PlayerAction::MOVE) updatePossibleMoves();
+					return;
+				}
+			}
+			if (player_state == PlayerState::ATTACKING) {
+				int gridX, gridY;
+				SDL_GetMouseState(&gridX, &gridY);
+				gridX = gridX / tile_width;
+				gridY = gridY / tile_width;
+				execute(Vec2<int>(gridX, gridY));
+			}
+		}
 	}
 }
 
 void Player::update(int delta) {
 	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
 	Unit::update(delta);
+	// Update the current action based on the mouse position
+	if (selected) {	
+		int mouseX, mouseY;
+		SDL_GetMouseState(&mouseX, &mouseY);
+		PlayerAction action = getActionAtCoord(ScreenCoord(mouseX, mouseY));
+		if (state == UnitState::IDLE && player_state == PlayerState::CHOOSING && action != PlayerAction::NONE) {
+			current_action = action;
+		}
+	}
 	// Update the player based on its current state	
 	switch (state) {
 		case UnitState::IDLE: {
@@ -246,7 +332,7 @@ void Player::update(int delta) {
 	}
 }
 
-void Player::click(Vec2<int> to)
+void Player::execute(Vec2<int> to)
 {
 	if (state != UnitState::IDLE) return;
 	switch (current_action) {
@@ -302,6 +388,11 @@ void Player::click(Vec2<int> to)
 				player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 				attack4.attack(to, *combat);
 			}
+		} break;
+		case PlayerAction::PASS: {
+			current_action = PlayerAction::NONE;
+			state = UnitState::DONE;
+			player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 		} break;
 		default: {
 			// do nothing
@@ -378,4 +469,39 @@ void Player::init() {
 	valid_move.setSourceSize(32, 32);
 	valid_move.addAnimation(0, 5);
 	valid_move.playAnimation(0);
+}
+
+PlayerAction Player::getActionAtCoord(ScreenCoord coord) {
+	// TODO: Separate this into member variables/functions since a lot of data is shared with the rendering of options
+	int option_height = SubDiv::vSize(16, 1);
+	ScreenCoord pos = screenPosition;
+	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
+	else {
+		pos.x() += SubDiv::hSize(5, 1);
+	}
+	if (pos.y() < 0) pos.y() = 0;
+	// Check move option collision if the player hasn't moved
+	if (!moved) {
+		if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height) {
+			return PlayerAction::MOVE;
+		}
+	}
+	pos.y() += option_height;
+	// Render the attacks
+	if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height)
+		return PlayerAction::ATTACK_1;
+	pos.y() += option_height;
+	if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height)
+		return PlayerAction::ATTACK_2;
+	pos.y() += option_height;
+	if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height)
+		return PlayerAction::ATTACK_3;
+	pos.y() += option_height;
+	if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height)
+		return PlayerAction::ATTACK_4;
+	pos.y() += option_height;
+	// Render the pass option
+	if (coord.x() > pos.x() && coord.x() < pos.x() + SubDiv::hSize(5, 1) && coord.y() > pos.y() && coord.y() < pos.y() + option_height)
+		return PlayerAction::PASS;
+	return PlayerAction::NONE;
 }

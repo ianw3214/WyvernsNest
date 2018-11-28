@@ -12,6 +12,12 @@
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
+// Enumeration to represent the player 'state'
+enum class PlayerState {
+	CHOOSING,
+	ATTACKING
+};
+
 // Enumeration to represent the possible player actions
 enum class PlayerAction {
 	NONE,
@@ -19,7 +25,8 @@ enum class PlayerAction {
 	ATTACK_1,
 	ATTACK_2,
 	ATTACK_3,
-	ATTACK_4
+	ATTACK_4,
+	PASS
 };
 
 // Enumeration to represent player animation states
@@ -53,14 +60,15 @@ public:
 	void renderTurnUI();
 	void renderValidMoves();
 	
-	// The click function to handle player logic depending on player state when cursor clicked
-	void click(Vec2<int> to);
+	// The function to execute the players action on the position
+	void execute(Vec2<int> to);
 	
 	// Various helper methods
 	void setPathLine(Vec2<int> dest);
 
 	// The action that is being expected from the player
 	PlayerAction current_action;
+	PlayerState player_state;
 
 protected:
 	// Override callback function to customize functionality
@@ -69,8 +77,9 @@ protected:
 
 private:
 
-	// helper variables
+	// helper variables/functions
 	void init();
+	PlayerAction getActionAtCoord(ScreenCoord coord);
 
 	// The attacks of the player
 	Attack attack1;

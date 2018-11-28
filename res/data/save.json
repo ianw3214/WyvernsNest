@@ -10,7 +10,7 @@
             "attack2": "THROW ROCK",
             "attack3": "DASH",
             "attack4": "BLOCK",
-            "experience": 200,
+            "experience": 400,
             "level": 1,
             "name": "DEFAULT",
             "selected": [

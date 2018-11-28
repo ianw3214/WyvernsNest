@@ -85,6 +85,7 @@ Combat::~Combat() {
 void Combat::handleEvent(const SDL_Event& e) {
 
 	for (Entity * entity : entities) entity->handleEvent(e);
+	/*
 	// Handle mouse clicks for player units
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		if (game_over) {
@@ -104,6 +105,16 @@ void Combat::handleEvent(const SDL_Event& e) {
 			}
 		}
 	}
+	// Also handle space/enter key presses of the player
+	if (e.type == SDL_KEYDOWN) {
+		if (!game_over && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_RETURN)) {
+			if (current->getType() == UnitType::PLAYER) {
+				Player * player = dynamic_cast<Player*>(current);
+				player->click(grid.mousePos);
+			}
+		}
+	}
+	*/
 	// Keep looking for win/lose conditions while the game hasn't ended
 	if (!game_over) {
 		// Check for win condition if the player input triggers it
@@ -114,10 +125,10 @@ void Combat::handleEvent(const SDL_Event& e) {
 			if (unit->getType() == UnitType::PLAYER && unit->health > 0) lose = false;
 		}
 		if (win) {
-			// Handle the win condition here
 			game_over = true;
 			game_win = true;
 
+			// Save updated information to the save file
 			std::ifstream old_save(USER_SAVE_LOCATION);
 			json inputData;
 			old_save >> inputData;

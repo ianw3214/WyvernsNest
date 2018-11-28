@@ -41,13 +41,33 @@ void SettingsMenu::handleEvent(const SDL_Event &e) {
 		mouseDown = true;
 	}
 	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
 		// TODO: figure this shit out
+		if (selected_option == 2) changeState(new Menu());
 	}
 }
 
 void SettingsMenu::update(int delta) {
 	// Update the currently selected if the mouse is hovering over it
 	SDL_GetMouseState(&mouseX, &mouseY);
+	// mouse over the volume option
+	if (mouseX > SubDiv::hPos(3, 1) && mouseX < SubDiv::hPos(3, 1) + SubDiv::hSize(6, 1) &&
+		mouseY > SubDiv::vPos(20, 10) - SubDiv::vSize(12, 1) && mouseY < SubDiv::vPos(20, 10))
+	{
+		selected_option = 0;
+	}
+	// Render the resolution option
+	if (mouseX > SubDiv::hPos(3, 1) && mouseX < SubDiv::hPos(3, 1) + SubDiv::hSize(6, 1) &&
+		mouseY > SubDiv::vPos(20, 13) - SubDiv::vSize(12, 1) && mouseY < SubDiv::vPos(20, 13))
+	{
+		selected_option = 1;
+	}
+	// Render the back option
+	if (mouseX > SubDiv::hCenter() - SubDiv::hSize(8, 1) && mouseX < SubDiv::hCenter() + SubDiv::hSize(8, 1) &&
+		mouseY > SubDiv::vPos(20, 17) - SubDiv::vSize(18, 1) && mouseY < SubDiv::vPos(20, 17) + SubDiv::vSize(18, 1))
+	{
+		selected_option = 2;
+	}
 }
 
 void SettingsMenu::render() {

@@ -41,10 +41,10 @@
   - Effect for passive status
 - ~~Delay between killing enemies and showing menu~~
 - ~~What happens when the player dies?~~
-- Make *ZIGUIGUI LINE OF PATH* look nice
-- Finalize **controls**
-  - Use arrow keys + enter/space like in menu state
-  - Add mouse control support
+- ~~Make *ZIGUIGUI LINE OF PATH* look nice~~
+- ~~Finalize **controls**~~
+  - ~~Use arrow keys + enter/space like in menu state~~
+  - ~~Add mouse control support~~
 
 ## Other
 
