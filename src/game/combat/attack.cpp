@@ -76,16 +76,16 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
+
+			Emitter * flame = new Emitter(pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2, pos.y() *combat.grid.tile_height, 0, 120, 50, 0, 10, true, 5, 10, 5, true);
+			flame->SetSprite(0, 100, 100, 100);
+			combat.ps.addEmitter(flame);
 		} break;
 		case AttackType::PIERCE: {
 			// TOOD: Make sure the attack is valid before running it
 			// TODO: Make peircing attack based on range
 			effect->attack(pos, combat, *this);
 			effect->attack(pos + pos - source->position, combat, *this);
-		} break;
-		case AttackType::PUSH: {
-			printf("about to push\n");
-			effect->attack(pos, combat, *this);
 		} break;
 		}
 	}
@@ -222,12 +222,6 @@ bool Attack::isValid(ScreenCoord pos, const Combat& combat) {
 		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
-	case AttackType::PUSH: {
-		int x_diff = std::abs(pos.x() - source->position.x());
-		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
-		return false;
-	} break;
 	}
 	return false;
 }
@@ -282,12 +276,9 @@ void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attac
 	}
 }
 
-#include <iostream>
 void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
-	std::cout << "ATTACK EFFECT PUSH" << std::endl;
 	Unit *unit = combat.getUnitAt(pos);
 	if (unit) {
-		std::cout << "EXECTUTING UNIT PUSH" << std::endl;
-		unit->push(p, attack.getSource()->screenPosition);
+		unit->push(distance, attack.getSource()->screenPosition);
 	}
 }

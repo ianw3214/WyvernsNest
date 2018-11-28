@@ -38,7 +38,6 @@ Customization::Customization(const std::string& file) :
 		// This should actually never run, perhaps delete the save and force exit the game
 		// generate data for units if not found
 		// TOOD: Save to a file
-		generateDefaultUnitData();
 	}
 
 	// Initialize the rest of the state
@@ -61,45 +60,45 @@ Customization::Customization(const std::string& file) :
 		if (i == 2 || i == 3) y = SubDiv::vCenter();
 
 		// Left side
-		ScreenCoord skillCycleButton1Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 8);
-		ScreenCoord skillCycleButton2Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 38);
-		ScreenCoord skillCycleButton3Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 68);
-		ScreenCoord skillCycleButton4Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 98);
+		ScreenCoord skillCycleButton1Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 40, y + SubDiv::vPos(5, 1) + 4);
+		ScreenCoord skillCycleButton2Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 40, y + SubDiv::vPos(5, 1) + 40);
+		ScreenCoord skillCycleButton3Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 40, y + SubDiv::vPos(5, 1) + 76);
+		ScreenCoord skillCycleButton4Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 40, y + SubDiv::vPos(5, 1) + 112);
 		// Right side
-		ScreenCoord skillCycleButton5Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 8);
-		ScreenCoord skillCycleButton6Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 38);
-		ScreenCoord skillCycleButton7Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 68);
-		ScreenCoord skillCycleButton8Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 98);
+		ScreenCoord skillCycleButton5Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 146, y + SubDiv::vPos(5, 1) + 4);
+		ScreenCoord skillCycleButton6Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 146, y + SubDiv::vPos(5, 1) + 40);
+		ScreenCoord skillCycleButton7Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 146, y + SubDiv::vPos(5, 1) + 76);
+		ScreenCoord skillCycleButton8Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 146, y + SubDiv::vPos(5, 1) + 112);
 
-		skillCycleButtons.emplace_back(skillCycleButton1Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton2Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton3Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton4Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton5Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton6Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton7Coord, 32, 23);
-		skillCycleButtons.emplace_back(skillCycleButton8Coord, 32, 23);
+		skillCycleButtons.emplace_back(skillCycleButton1Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton2Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton3Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton4Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton5Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton6Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton7Coord, 32, 32);
+		skillCycleButtons.emplace_back(skillCycleButton8Coord, 32, 32);
+
+		// Set the sprites of the skill cycle buttons
+		for (unsigned int i = skillCycleButtons.size() - 8; i < skillCycleButtons.size(); ++i) {
+			skillCycleButtons[i].setSprites("res/assets/UI/arrows.png", "res/assets/UI/arrows.png", "res/assets/UI/arrows.png");
+			if (i % 8 < 4) {	// LEFT BUTTON
+				skillCycleButtons[i].default_sprite.setSourcePos(0, 0);
+				skillCycleButtons[i].hover_sprite.setSourcePos(64, 0);
+				skillCycleButtons[i].default_sprite.setSourceSize(32, 32);
+				skillCycleButtons[i].hover_sprite.setSourceSize(32, 32);
+			} else {			// RIGHT BUTTON
+				skillCycleButtons[i].default_sprite.setSourcePos(32, 0);
+				skillCycleButtons[i].hover_sprite.setSourcePos(96, 0);
+				skillCycleButtons[i].default_sprite.setSourceSize(32, 32);
+				skillCycleButtons[i].hover_sprite.setSourceSize(32, 32);
+			}
+		}
 	}
 
 }
 
 Customization::~Customization() {
-
-}
-
-// Only generates dummy data right now
-// Deprecated...
-void Customization::generateDefaultUnitData() {
-
-	// This should never really be the case, but add it as backup anyways
-	// TODO: Generate a single default unit
-	UnitData defaultUnit;
-	defaultUnit.name = "BOB";
-	defaultUnit.strength = 10;
-	defaultUnit.dexterity = 10;
-	defaultUnit.constitution = 10;
-	defaultUnit.intelligence = 10;
-	units.push_back(defaultUnit);
 
 }
 
@@ -176,9 +175,9 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	// Skills
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
 	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1)), 1.f);
-	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 30), 1.f);
-	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 60), 1.f);
-	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 90), 1.f);
+	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 36), 1.f);
+	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 72), 1.f);
+	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 108), 1.f);
 
 	// if mouse button clicked
 	Vec2<int> mousePos;
@@ -249,7 +248,29 @@ void SkillTreeLinkButton::render() {
 	Core::Text_Renderer::render("Skill Tree", position + Vec2<int>(25, 35), 1.0);
 }
 
+void Customization::saveData() {
+	json save_data;
+	std::ifstream in_save_file(DEFAULT_PLAYER_FILE);
+	in_save_file >> save_data;
+	in_save_file.close();
+
+	// Update changes in units
+	int index = 0;
+	for (json& unit : save_data["players"]) {
+		unit["attack1"] = units[index].attack1;
+		unit["attack2"] = units[index].attack2;
+		unit["attack3"] = units[index].attack3;
+		unit["attack4"] = units[index].attack4;
+	}
+
+	// Save it to the save file
+	std::ofstream out_save_file(DEFAULT_PLAYER_FILE);
+	out_save_file << save_data.dump(4);
+	out_save_file.close();
+}
+
 void Customization::switchToCombatState() {
+	saveData();
 	// Assume the save file is always valid
 	std::ifstream save_file(DEFAULT_PLAYER_FILE);
 	json inputData;
@@ -272,7 +293,6 @@ void Customization::switchToCombatState() {
 	changeState(new Combat(combatLevelLocation));
 }
 
-#include <iostream>
 void Customization::initAvailableAttacks() {
 	std::ifstream attacks_file(DEFAULT_ATTACK_FILE);
 	json attacks_data;
@@ -284,7 +304,6 @@ void Customization::initAvailableAttacks() {
 			for (const json& attack : attacks_data["attacks"]) {
 				if (attack.find("nodeid") != attack.end() && attack["nodeid"] == j) {
 					attacks[i].push_back(attack["name"]);
-					std::cout << attack["name"] << std::endl;
 				}
 			}
 		}
@@ -299,7 +318,7 @@ void Customization::cycleAttack(int unit, int button, int i_attack, bool forward
 	if (i_attack == 3) current_attack = units[unit].attack4;
 	// First, figure out the index of the current attack
 	int index = -1;
-	for (int i = 0; i < attacks[unit].size(); ++i) {
+	for (unsigned int i = 0; i < attacks[unit].size(); ++i) {
 		if (attacks[unit][i] == current_attack) {
 			index = i;
 		}
@@ -308,7 +327,7 @@ void Customization::cycleAttack(int unit, int button, int i_attack, bool forward
 	// Then, cycle through the vector
 	int i = forward ? index + 1 : index - 1;
 	if (i < 0) i = attacks[unit].size() - 1;
-	if (i >= attacks[unit].size()) i = 0;
+	if (i >= static_cast<int>(attacks[unit].size())) i = 0;
 	while (i != index) {
 		const std::string& cur = attacks[unit][i];
 		// Check if the attack is already a unit attack, otherwise change it
@@ -322,6 +341,6 @@ void Customization::cycleAttack(int unit, int button, int i_attack, bool forward
 		}
 		i += forward ? 1 : -1;
 		if (i < 0) i = attacks[unit].size() - 1;
-		if (i >= attacks[unit].size()) i = 0;
+		if (i >= static_cast<int>(attacks[unit].size())) i = 0;
 	}
 }

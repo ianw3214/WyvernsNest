@@ -1,1 +1,22 @@
-{}
+{
+    "level": 1,
+    "players": [
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "attack1": "RANGED BASIC",
+            "attack2": "PUNCH",
+            "attack3": "THROW ROCK",
+            "attack4": "DASH",
+            "experience": 400,
+            "level": 7,
+            "name": "DEFAULT",
+            "selected": [
+                1,
+                3
+            ]
+        }
+    ]
+}

@@ -4,6 +4,7 @@
 #include "../math/vec.hpp"
 
 #include "combat/grid.hpp"
+#include "../engine/particleSystem.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -44,6 +45,10 @@ public:
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
 
+
+	//Particle System
+	ParticleSystem ps;
+
 private:
 
 	// Combat state variables
@@ -63,4 +68,6 @@ private:
 
 	// The total experience granted to players upon completing the level
 	float experienceReward;
+
+
 };

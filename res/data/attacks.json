@@ -172,14 +172,14 @@
             "nodeid": 3
         },{
             "name" : "BASIC PUSH",
-            "type" : "push",
+            "type" : "melee",
             "range" : 1,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "push",
+                    "distance": 2
                 }
             ],
             "modifiers": [
