@@ -40,7 +40,6 @@ private:
 	void displayUnitData(const UnitData& data);
 	void renderUnit(int x, int y, UnitData unit);
 	void renderEmpty(int x, int y);
-	void generateDefaultUnitData();
 
 	// Buttons used to bring to next state
 	SkillTreeLinkButton button1;
@@ -57,6 +56,7 @@ private:
 	Sprite empty;
 
 	// Helper functions
+	void saveData();
 	void switchToCombatState();
 	void initAvailableAttacks();
 	void cycleAttack(int unit, int button, int i_attack, bool forward);

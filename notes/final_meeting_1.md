@@ -5,10 +5,10 @@
 - Flash skill tree button when skill points available
   - Skill points determined by `player level - selected nodes`
 - ~~How to continue from customization state back into game state?~~
-- Player attacks loadout
+- ~~Player attacks loadout~~
   - ~~Render chosen player attacks~~
   - ~~Need to store skill tree node id -> attacks **map**~~
-  - Ability to change player attack loadout
+  - ~~Ability to change player attack loadout~~
     - See trello card for possible implementations
 
 ## Skill Tree state

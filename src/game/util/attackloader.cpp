@@ -78,9 +78,6 @@ AttackType AttackLoader::getTypeFromString(const std::string & str) const {
 	if (str == "pierce") {
 		return AttackType::PIERCE;
 	}
-	if (str == "push") {
-		return AttackType::PUSH;
-	}
 	return AttackType::INVALID;
 }
 
@@ -105,6 +102,10 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 		int ticks = data["ticks"];
 		// TODO: Add ability to add infinite effect in file
 		return new StatBuffEffect(stat, added_percent, ticks, false);
+	}
+	if (data["type"] == "push") {
+		int distance = data["distance"];
+		return new PushEffect(distance);
 	}
 	return nullptr;
 }

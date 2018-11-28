@@ -15,8 +15,7 @@ enum class AttackType {
 	SELF,
 	MELEE,
 	RANGED,
-	PIERCE,
-	PUSH
+	PIERCE
 };
 
 // Use an integer to represent the range of the attack

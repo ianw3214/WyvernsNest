@@ -66,8 +66,8 @@ private:
 
 class PushEffect : public AttackEffect {
 public:
-	PushEffect(int push = 1) : p(push) {}
+	PushEffect(int distance = 1) : distance(distance) {}
 	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
 private:
-	int p;
+	int distance;
 };
