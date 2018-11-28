@@ -57,6 +57,7 @@ public:
 private:
 
 	// Combat state variables
+	bool pause;
 	bool render_game_over;
 	bool game_over;
 	bool game_win;
@@ -72,9 +73,13 @@ private:
 	// Sprites to display the game over menu
 	void initSprites();
 	Sprite gameOverBase;
+	Sprite pauseBase;
 
 	// Buttons
 	ButtonData continueButton;
+	ButtonData resumeButton;
+	ButtonData menuButton;
+	ButtonData quitButton;
 
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
@@ -89,6 +94,9 @@ private:
 
 	// The total experience granted to players upon completing the level
 	float experienceReward;
+
+	// Other helper functions
+	void updateWinStatus();
 
 
 };

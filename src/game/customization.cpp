@@ -141,6 +141,14 @@ void Customization::handleEvent(const SDL_Event& e) {
 			}
 		}
 	}
+	if (e.type == SDL_KEYDOWN) {
+		if (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_RETURN) {
+			switchToCombatState();
+		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			exit(0);
+		}
+	}
 }
 
 void Customization::update(int delta) {

@@ -211,8 +211,11 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 	}
 
 	if (e.type == SDL_KEYDOWN) {
-		if (e.key.keysym.sym == SDLK_RETURN) {
+		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			returnToCustomization();
+		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			exit(0);
 		}
 	}
 }

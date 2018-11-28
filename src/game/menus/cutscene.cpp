@@ -24,6 +24,10 @@ void Cutscene::handleEvent(const SDL_Event& e) {
 		else if (e.key.keysym.sym == SDLK_SPACE && m_position == m_sprites.size() - 1) {
 			changeState(m_state);
 		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			// Skip the cutscene if the escape key is pressed
+			changeState(m_state);
+		}
 	}
 	// Also cycle through the image on mouse press
 	if (e.type == SDL_MOUSEBUTTONDOWN) {

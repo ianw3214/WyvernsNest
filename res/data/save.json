@@ -9,9 +9,9 @@
             "attack1": "PUNCH",
             "attack2": "THROW ROCK",
             "attack3": "DASH",
-            "attack4": "BLOCK",
+            "attack4": "SPEED BOOST",
             "experience": 400,
-            "level": 1,
+            "level": 3,
             "name": "DEFAULT",
             "selected": [
                 1

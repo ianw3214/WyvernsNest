@@ -36,6 +36,10 @@ void SettingsMenu::handleEvent(const SDL_Event &e) {
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			if (selected_option == 2) changeState(new Menu());
 		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			if (selected_option == 2) changeState(new Menu());
+			else selected_option = 2;
+		}
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		mouseDown = true;

@@ -50,6 +50,6 @@
 
 - Level/Encounter design
 - Game balance
-- Change escape key to **NOT** exit the game
+- ~~Change escape key to **NOT** exit the game~~
 - Clean up a bunch of **TODOs** in the code
 - ~~Implement EXP -> Store EXP gained in the level code~~

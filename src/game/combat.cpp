@@ -19,7 +19,8 @@ using json = nlohmann::json;
 
 Combat::Combat(const std::string & filePath) :
 	current(nullptr),
-	gameOverBase("res/assets/UI/game_over/base.png")
+	gameOverBase("res/assets/UI/game_over/base.png"),
+	pauseBase("res/assets/UI/pauseBase.png")
 {
 	initSprites();
 
@@ -84,141 +85,92 @@ Combat::~Combat() {
 
 void Combat::handleEvent(const SDL_Event& e) {
 
-	for (Entity * entity : entities) entity->handleEvent(e);
-	/*
-	// Handle mouse clicks for player units
-	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		if (game_over) {
-			ScreenCoord mousePos;
-			SDL_GetMouseState(&mousePos.x(), &mousePos.y());
-			if (continueButton.colliding(mousePos)) {
-				if (game_win) {
-					changeState(new Customization());
-				} else {
-					changeState(new Menu());
+	if (!pause) {
+		// Keep looking for win/lose conditions while the game hasn't ended
+		if (!game_over) {
+			// Check for win condition if the player input triggers it
+			updateWinStatus();
+		}
+		// Otherwise, handle the events for the game over menu
+		else {
+			if (e.type == SDL_KEYDOWN) {
+				if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
+					if (render_game_over) {
+						// Move on to the next state
+						changeState(new Customization());
+					}
 				}
 			}
-		} else {
+			if (e.type == SDL_MOUSEBUTTONDOWN) {
+				ScreenCoord mousePos;
+				SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+				if (continueButton.colliding(mousePos)) {
+					if (game_win) {
+						changeState(new Customization());
+					} else {
+						changeState(new Menu());
+					}
+				}
+			}
+		}
+		// Pause the game if escape key is pressed
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+			pause = true;
+			// If the player wasn't in the middle of attacking, show the pause menu
 			if (current->getType() == UnitType::PLAYER) {
 				Player * player = dynamic_cast<Player*>(current);
-				player->click(grid.mousePos);
-			}
-		}
-	}
-	// Also handle space/enter key presses of the player
-	if (e.type == SDL_KEYDOWN) {
-		if (!game_over && (e.key.keysym.sym == SDLK_SPACE || e.key.keysym.sym == SDLK_RETURN)) {
-			if (current->getType() == UnitType::PLAYER) {
-				Player * player = dynamic_cast<Player*>(current);
-				player->click(grid.mousePos);
-			}
-		}
-	}
-	*/
-	// Keep looking for win/lose conditions while the game hasn't ended
-	if (!game_over) {
-		// Check for win condition if the player input triggers it
-		bool win = true;
-		bool lose = true;
-		for (const Unit * unit : units) {
-			if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
-			if (unit->getType() == UnitType::PLAYER && unit->health > 0) lose = false;
-		}
-		if (win) {
-			game_over = true;
-			game_win = true;
-
-			// Save updated information to the save file
-			std::ifstream old_save(USER_SAVE_LOCATION);
-			json inputData;
-			old_save >> inputData;
-			bool valid = true;
-			if (inputData.find("players") == inputData.end()) valid = false;
-			if (inputData.find("level") == inputData.end()) valid = false;
-			if (!valid) {
-				// TODO: something here, save is no good
-			}
-			else {
-				int playerCount = 0;
-				for (const json& unit : inputData["players"]) {
-					playerCount += 1;
-				}
-				float expPerPlayer = experienceReward / (float)playerCount;
-
-				std::vector<json> updatedPlayers;
-				for (json unit : inputData["players"]) {
-					std::string name = unit["name"];
-					bool level_up = false;
-					int currentExp = unit["experience"];
-					int newExp = static_cast<int>(currentExp + expPerPlayer);
-					if (newExp >= DEFAULT_MAX_EXP) {
-						unit["level"] = 1 + int(unit["level"]);
-						unit["experience"] = newExp - DEFAULT_MAX_EXP;
-						level_up = true;
-					}
-					else {
-						unit["experience"] = newExp;
-					}
-					updatedPlayers.push_back(unit);
-					gameOverData.push_back(GameOverData{ name, static_cast<int>(expPerPlayer), level_up});
-				}
-				old_save.close();
-				json outputData;
-				outputData["level"] = inputData["level"];
-				outputData["players"] = updatedPlayers;
-				std::ofstream new_save(USER_SAVE_LOCATION);
-				new_save << outputData.dump(4);
-			}
-			// Start the counter to show the death menu
-			startCounter();
-		}
-		// TODO: Also check for lose condition where all player units are dead
-		if (!win && lose) {
-			// Handle the win condition here
-			game_over = true;
-			game_win = false;
-			// Start the counter to show the death menu
-			startCounter();
-		}
-	}
-	// Otherwise, handle the events for the game over menu
-	else {
-		if (e.type == SDL_KEYDOWN) {
-			if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
-				if (render_game_over) {
-					// Move on to the next state
-					changeState(new Customization());
+				if (player->player_state == PlayerState::ATTACKING) {
+					pause = false;
 				}
 			}
+		}
+		// Update entities after updating combat state because pause depends on player state
+		for (Entity * entity : entities) entity->handleEvent(e);
+	} else {
+		if (e.type == SDL_MOUSEBUTTONUP) {
+			ScreenCoord mouse;
+			SDL_GetMouseState(&mouse.x(), &mouse.y());
+			if (resumeButton.colliding(mouse)) {
+				pause = false;
+			}
+			if (menuButton.colliding(mouse)) {
+				changeState(new Menu());
+			}
+			if (quitButton.colliding(mouse)) {
+				exit(0);
+			}
+		}
+		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+			exit(0);
 		}
 	}
 }
 
-
 void Combat::update(int delta) {
+	if (!pause) {
+		grid.update();
+		ps.update();
+		for (Entity * e : entities) e->update(delta);
 
-	grid.update();
-	ps.update();
-	for (Entity * e : entities) e->update(delta);
-
-	if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
-		Player * player = dynamic_cast<Player*>(current);
-		player->setPathLine(grid.getMouseToGrid());
-	}
-
-	// If the game isn't over, keep going with the turn order
-	if (!game_over) {
-		// If the unit is done with its state, go to the next unit
-		if (current->getState() == UnitState::DONE || current->getState() == UnitState::DEAD) {
-			nextUnitTurn();
+		if (current->getType() == UnitType::PLAYER && current->getState() == UnitState::IDLE) {
+			Player * player = dynamic_cast<Player*>(current);
+			player->setPathLine(grid.getMouseToGrid());
 		}
-	}
-	// If the game is over, update according to the menu
-	else {
-		if (compareCounter(GAME_OVER_TIMER)) {
-			render_game_over = true;
-		} else {
-			incrementCounter();
+
+		// If the game isn't over, keep going with the turn order
+		if (!game_over) {
+			// If the unit is done with its state, go to the next unit
+			if (current->getState() == UnitState::DONE || current->getState() == UnitState::DEAD) {
+				nextUnitTurn();
+			}
+		}
+		// If the game is over, update according to the menu
+		else {
+			if (compareCounter(GAME_OVER_TIMER)) {
+				render_game_over = true;
+			} else {
+				incrementCounter();
+			}
 		}
 	}
 }
@@ -280,6 +232,22 @@ void Combat::render() {
 	}
 
 	ps.render();
+
+	// If the game is paused, render the pause menu
+	if (pause) {
+		pauseBase.render();
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+		Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
+		Core::Text_Renderer::render("PAUSE", ScreenCoord(SubDiv::hCenter(), SubDiv::vPos(10, 3)), 2.5f);
+		Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::middle);
+		resumeButton.render();
+		Core::Text_Renderer::render("RESUME", resumeButton.position + Vec2<int>(120, 32), 1.8f);
+		menuButton.render();
+		Core::Text_Renderer::render("MAIN MENU", menuButton.position + Vec2<int>(120, 32), 1.8f);
+		quitButton.render();
+		Core::Text_Renderer::render("QUIT", quitButton.position + Vec2<int>(120, 32), 1.8f);
+	}
 }
 
 // Returns the unit occupying the specified grid coordinate
@@ -321,11 +289,19 @@ void Combat::addEnemy(Enemy * enemy, int x, int y) {
 }
 
 void Combat::initSprites() {
+	// Calculate game over menu sprite position
 	int width = gameOverBase.getTexture().getWidth();
 	int height = gameOverBase.getTexture().getHeight();
 	gameOverBase.setPos((Core::windowWidth() - width) / 2, (Core::windowHeight() - height) / 2);
+	// Calculate pause menu sprite position
+	width = pauseBase.getTexture().getWidth();
+	height = pauseBase.getTexture().getHeight();
+	pauseBase.setPos((Core::windowWidth() - width) / 2, (Core::windowHeight() - height) / 2);
 
-	continueButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 80, SubDiv::vPos(40, 27)));
+	continueButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vPos(40, 27)));
+	resumeButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter() - 100), 240);
+	menuButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter()), 240);
+	quitButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter() + 100), 240);
 }
 
 // Choose the next unit in combat to take a turn
@@ -382,6 +358,69 @@ void Combat::startGame() {
 	}
 	
 
+}
+
+void Combat::updateWinStatus() {
+	bool win = true;
+	bool lose = true;
+	for (const Unit * unit : units) {
+		if (unit->getType() == UnitType::ENEMY && unit->health > 0) win = false;
+		if (unit->getType() == UnitType::PLAYER && unit->health > 0) lose = false;
+	}
+	if (win) {
+		game_over = true;
+		game_win = true;
+
+		// Save updated information to the save file
+		std::ifstream old_save(USER_SAVE_LOCATION);
+		json inputData;
+		old_save >> inputData;
+		bool valid = true;
+		if (inputData.find("players") == inputData.end()) valid = false;
+		if (inputData.find("level") == inputData.end()) valid = false;
+		if (!valid) {
+			// TODO: something here, save is no good
+		} else {
+			int playerCount = 0;
+			for (const json& unit : inputData["players"]) {
+				playerCount += 1;
+			}
+			float expPerPlayer = experienceReward / (float)playerCount;
+
+			std::vector<json> updatedPlayers;
+			for (json unit : inputData["players"]) {
+				std::string name = unit["name"];
+				bool level_up = false;
+				int currentExp = unit["experience"];
+				int newExp = static_cast<int>(currentExp + expPerPlayer);
+				if (newExp >= DEFAULT_MAX_EXP) {
+					unit["level"] = 1 + int(unit["level"]);
+					unit["experience"] = newExp - DEFAULT_MAX_EXP;
+					level_up = true;
+				} else {
+					unit["experience"] = newExp;
+				}
+				updatedPlayers.push_back(unit);
+				gameOverData.push_back(GameOverData{ name, static_cast<int>(expPerPlayer), level_up });
+			}
+			old_save.close();
+			json outputData;
+			outputData["level"] = inputData["level"];
+			outputData["players"] = updatedPlayers;
+			std::ofstream new_save(USER_SAVE_LOCATION);
+			new_save << outputData.dump(4);
+		}
+		// Start the counter to show the death menu
+		startCounter();
+	}
+	// TODO: Also check for lose condition where all player units are dead
+	if (!win && lose) {
+		// Handle the win condition here
+		game_over = true;
+		game_win = false;
+		// Start the counter to show the death menu
+		startCounter();
+	}
 }
 
 bool Combat::isPosEmpty(Vec2<int> pos) const {
