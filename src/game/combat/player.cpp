@@ -94,12 +94,15 @@ void Player::renderTop(Combat * combat) {
 	}
 	renderHealth();
 }
-
+#include <iostream>
 void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
-	pos.x() += SubDiv::hSize(5, 1);
+	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
+	else {
+		pos.x() += SubDiv::hSize(5, 1);
+	}
 	if (pos.y() < 0) pos.y() = 0;
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
