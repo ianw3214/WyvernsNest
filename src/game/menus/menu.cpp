@@ -51,6 +51,10 @@ void Menu::handleEvent(const SDL_Event & e) {
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			switchToCurrentState();
 		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			if (selected_option == NUM_BUTTONS - 1) exit(0);
+			else selected_option = NUM_BUTTONS - 1;
+		}
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		mouseDown = true;
@@ -73,13 +77,11 @@ void Menu::update(int delta) {
 
 void Menu::render() {
 	background.render();
-	/*
 	if (render_text) {
-		ScreenCoord pos(380, 450);
-		Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
-		Core::Text_Renderer::render("Press any key to begin", pos, 2.f);
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+		Core::Text_Renderer::setColour(Colour(7.f, .8f, .9f));
+		Core::Text_Renderer::render("Press  ENTER  to  begin", ScreenCoord(SubDiv::hCenter(), Core::windowHeight() - 10), 0.8f);
 	}
-	*/
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	ScreenCoord version_pos(10, Core::windowHeight() - 10);

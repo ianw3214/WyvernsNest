@@ -113,11 +113,6 @@ void Engine::update() {
 		if (event.type == SDL_QUIT) {
 			m_running = false;
 		}
-		if (event.type == SDL_KEYUP) {
-			if (event.key.keysym.sym == SDLK_ESCAPE) {
-				m_running = false;
-			}
-		}
 		if (m_state) m_state->handleEvent(event);
 	}
 

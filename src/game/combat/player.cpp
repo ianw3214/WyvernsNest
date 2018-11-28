@@ -174,28 +174,34 @@ void Player::handleEvent(const SDL_Event & event)
 				// Move Key
 				if (event.key.keysym.sym == SDLK_KP_1 || event.key.keysym.sym == SDLK_1) {
 					if (!moved) {
+						if (current_action == PlayerAction::MOVE) player_state = PlayerState::ATTACKING;
 						current_action = PlayerAction::MOVE;
 						updatePossibleMoves();
 					}
 				}
 				// Attack 1 key
 				if (event.key.keysym.sym == SDLK_2 || event.key.keysym.sym == SDLK_KP_2) {
+					if (current_action == PlayerAction::ATTACK_1) player_state = PlayerState::ATTACKING;
 					current_action = PlayerAction::ATTACK_1;
 				}
 				// Attack 2 key
 				if (event.key.keysym.sym == SDLK_3 || event.key.keysym.sym == SDLK_KP_3) {
+					if (current_action == PlayerAction::ATTACK_2) player_state = PlayerState::ATTACKING;
 					current_action = PlayerAction::ATTACK_2;
 				}
 				// Attack 3 key
 				if (event.key.keysym.sym == SDLK_4 || event.key.keysym.sym == SDLK_KP_4) {
+					if (current_action == PlayerAction::ATTACK_3) player_state = PlayerState::ATTACKING;
 					current_action = PlayerAction::ATTACK_3;
 				}
 				// Attack 4 key
 				if (event.key.keysym.sym == SDLK_5 || event.key.keysym.sym == SDLK_KP_5) {
+					if (current_action == PlayerAction::ATTACK_4) player_state = PlayerState::ATTACKING;
 					current_action = PlayerAction::ATTACK_4;
 				}
 				// Pass the turn
 				if (event.key.keysym.sym == SDLK_KP_6 || event.key.keysym.sym == SDLK_6) {
+					if (current_action == PlayerAction::PASS) execute(Vec2<int>());
 					current_action = PlayerAction::PASS;
 				}
 				// Next attack option
@@ -240,7 +246,14 @@ void Player::handleEvent(const SDL_Event & event)
 					}
 				}
 				if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_SPACE) {
-					player_state = PlayerState::ATTACKING;
+					if (current_action == PlayerAction::PASS) {
+						execute(Vec2<int>());
+						player_state = PlayerState::CHOOSING;
+					} else {
+						if (current_action != PlayerAction::NONE) {
+							player_state = PlayerState::ATTACKING;
+						}
+					}
 				}
 				return;
 			}
@@ -249,8 +262,12 @@ void Player::handleEvent(const SDL_Event & event)
 					int gridX, gridY;
 					SDL_GetMouseState(&gridX, &gridY);
 					gridX = gridX / tile_width;
-					gridY = gridY / tile_width;
+					gridY = gridY / tile_height;
 					execute(Vec2<int>(gridX, gridY));
+					player_state = PlayerState::CHOOSING;
+				}
+				if (event.key.keysym.sym == SDLK_ESCAPE) {
+					player_state = PlayerState::CHOOSING;
 				}
 				return;
 			}
@@ -262,15 +279,21 @@ void Player::handleEvent(const SDL_Event & event)
 				if (getActionAtCoord(ScreenCoord(mouseX, mouseY)) != PlayerAction::NONE) {
 					player_state = PlayerState::ATTACKING;
 					if (current_action == PlayerAction::MOVE) updatePossibleMoves();
-					return;
 				}
+				if (current_action == PlayerAction::PASS) {
+					execute(Vec2<int>());
+					player_state = PlayerState::CHOOSING;
+				}
+				return;
 			}
 			if (player_state == PlayerState::ATTACKING) {
 				int gridX, gridY;
 				SDL_GetMouseState(&gridX, &gridY);
 				gridX = gridX / tile_width;
-				gridY = gridY / tile_width;
+				gridY = gridY / tile_height;
 				execute(Vec2<int>(gridX, gridY));
+				player_state = PlayerState::CHOOSING;
+				return;
 			}
 		}
 	}
