@@ -12,6 +12,7 @@
 
 #include "customization.hpp"
 
+#include <utility>
 #include <fstream>
 using json = nlohmann::json;
 
@@ -63,28 +64,20 @@ Combat::Combat(const std::string & filePath) : current(nullptr) {
 		experienceReward = data["experience"];
 	}
 
-	// Keeping track of turn order
-	unitIndex = 0;
-	// nextUnitTurn();
-	selectUnit(units[unitIndex]);
-
 	for (Unit * unit : units) unit->combat = this;
 
-
+	// Initialize the particle system
 	ps = ParticleSystem();
-	/*
-	ps.addEmitter(Particles::get("FIRE", 340, 200));
-	ps.addEmitter(Particles::get("BUFF", 540, 200));
-	ps.addEmitter(Particles::get("HEAL", 800, 200));
-	ps.addEmitter(Particles::get("DIRT", 1000, 200));
-	*/
+
+	// Start the game by selecting the first unit to go
+	startGame();
+
 }
 
 Combat::~Combat() {
 
 }
 
-#include <iostream>
 void Combat::handleEvent(const SDL_Event& e) {
 
 	for (Entity * entity : entities) entity->handleEvent(e);
@@ -281,6 +274,29 @@ void Combat::selectUnit(Unit * unit)
 	}
 	current = unit;
 	unit->select();
+
+}
+
+void Combat::startGame() {
+	// Keeping track of turn order
+	unitIndex = 0;
+
+	// BUBBLE SORT BECAUSE I'M LAZY
+	// TODO: MAKE THIS MORE EFFICIENT
+	for (unsigned int i = 0; i < units.size() - 1; ++i) {
+		for (unsigned int j = 0; j < units.size() - i - 1; ++j) {
+			if (units[j]->getDEX() < units[j + 1]->getDEX()) {
+				std::swap(units[j], units[j + 1]);
+			}
+		}
+	}
+
+	selectUnit(units[unitIndex]);
+	// If the first unit is an enemy, take its turn
+	if (current->getType() == UnitType::ENEMY) {
+		dynamic_cast<Enemy*>(current)->takeTurn();
+	}
+	
 
 }
 

@@ -45,7 +45,6 @@ public:
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
 
-
 	// Particle System
 	ParticleSystem ps;
 	void addEmitter(Emitter * emitter);
@@ -63,6 +62,7 @@ private:
 	// Utility functions for turn ordering
 	void nextUnitTurn();
 	void selectUnit(Unit * unit);
+	void startGame();
 
 	// Reference to the current unit that is taking its action
 	int unitIndex;

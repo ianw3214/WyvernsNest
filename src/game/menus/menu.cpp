@@ -167,7 +167,6 @@ void Menu::changeToCombatState() {
 			combatLevelLocation = std::string("res/data/levels/") + name;
 		}
 	}
-
 	changeState(new Combat(combatLevelLocation));
 
 	// Set the text rendering colour back to normal

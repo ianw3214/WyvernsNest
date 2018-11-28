@@ -50,6 +50,7 @@ Player::Player(int x, int y, const nlohmann::json& data) :
 	unitData.constitution	= data["CON"];
 	unitData.experience		= data["experience"];
 	unitData.level			= data["level"];
+	setData(unitData);
 
 	// TODO: Load attacks from here
 	attack1 = Attacks::get(data["attack1"], this);

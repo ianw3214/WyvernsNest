@@ -101,6 +101,9 @@ std::vector<ScreenCoord> Unit::getPath(Combat & combat, ScreenCoord to) {
 	std::vector<ScreenCoord> root;
 	root.push_back(position);
 
+	// Check to see if the target position is valid first
+	if (!combat.grid.isPosValid(to)) return std::vector<ScreenCoord>();
+
 	open.push_back(root);
 	while (!(open.empty())) {
 		std::vector<ScreenCoord> n = heuristic(&open);
@@ -310,7 +313,6 @@ void Unit::renderTop(Combat * combat) {
 	// Let the unit subclasses handle this one
 }
 
-#include <iostream>
 void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;
@@ -344,8 +346,11 @@ void Unit::renderHealth() {
 
 void Unit::loadPropertiesFromUnitData() {
 	// The health of the unit depends on it's constitution
-	health = data.constitution;
-	maxHealth = data.constitution;
+	health = data.constitution * 2;
+	maxHealth = data.constitution * 2;
 	// The movement speed in terms of grid units of the unit
 	move_speed = data.dexterity / 5 + 1;
+	// TEMPORARY HARD CAP, CHANGE THIS BY OPTIMIZING IN THE FUTURE
+	// TODO: Profile pathfinding code to find bottleneck
+	if (move_speed > 4) move_speed = 4;
 }

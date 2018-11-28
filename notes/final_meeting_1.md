@@ -37,7 +37,7 @@
   - If programmer, just fill with squares or some shit for now
   - 1 frame animations for speed
 - Particle effects
-  - Effect for attacks
+  - ~~Effect for attacks~~
   - Effect for passive status
 - Delay between killing enemies and showing menu
 - What happens when the player dies?

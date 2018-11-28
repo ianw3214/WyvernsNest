@@ -6,16 +6,15 @@
             "DEX": 10,
             "INT": 10,
             "STR": 10,
-            "attack1": "RANGED BASIC",
-            "attack2": "PUNCH",
-            "attack3": "THROW ROCK",
-            "attack4": "DASH",
-            "experience": 300,
-            "level": 12,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "DASH",
+            "attack4": "BLOCK",
+            "experience": 200,
+            "level": 1,
             "name": "DEFAULT",
             "selected": [
-                1,
-                3
+                1
             ]
         }
     ]
