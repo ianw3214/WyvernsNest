@@ -213,6 +213,7 @@ void Customization::switchToCombatState() {
 	changeState(new Combat(combatLevelLocation));
 }
 
+#include <iostream>
 void Customization::initAvailableAttacks() {
 	std::ifstream attacks_file(DEFAULT_ATTACK_FILE);
 	json attacks_data;
@@ -224,6 +225,7 @@ void Customization::initAvailableAttacks() {
 			for (const json& attack : attacks_data["attacks"]) {
 				if (attack.find("nodeid") != attack.end() && attack["nodeid"] == j) {
 					attacks[i].push_back(attack["name"]);
+					std::cout << attack["name"] << std::endl;
 				}
 			}
 		}

@@ -265,6 +265,22 @@ void Unit::heal(int health) {
 	}
 }
 
+void Unit::push(int p, ScreenCoord src_pos) {
+	printf("PUSHING!!!\n");
+	if (src_pos[0] - screenPosition[0] > 0) {
+		move(*combat, screenPosition - Vec2<int>(-1*p, 0));
+	}
+	else if (src_pos[0] - screenPosition[0] < 0) {
+		move(*combat, screenPosition - Vec2<int>(1*p, 0));
+	}
+	else if (src_pos[1] - screenPosition[1] > 0) {
+		move(*combat, screenPosition - Vec2<int>(0, -1*p));
+	}
+	else if (src_pos[1] - screenPosition[1] < 0) {
+		move(*combat, screenPosition - Vec2<int>(0, 1*p));
+	}
+}
+
 bool Unit::move(Combat & combat, Vec2<int> pos) {
 	// Only move the player to empty positions
 	if (combat.isPosEmpty(pos)) {
