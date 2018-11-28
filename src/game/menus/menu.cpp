@@ -3,6 +3,7 @@
 #include "settingsmenu.hpp"
 #include "creditsmenu.hpp"
 #include "../combat.hpp"
+#include "cutscene.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -156,6 +157,7 @@ void Menu::changeToCombatState() {
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
+	bool has_cutscene = false;
 	std::string combatLevelLocation;
 	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
 	json masterData;
@@ -165,9 +167,19 @@ void Menu::changeToCombatState() {
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
 			std::string name = level["file"];
 			combatLevelLocation = std::string("res/data/levels/") + name;
+			// If a cutscene is found, switch to it
+			if (level.find("cutscene") != level.end()) {
+				has_cutscene = true;
+				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation));
+				for (std::string img : level["cutscene"]["images"]) {
+					cutscene->addSprite(img);
+				}
+				changeState(cutscene);
+			} else {
+				changeState(new Combat(combatLevelLocation));
+			}
 		}
 	}
-	changeState(new Combat(combatLevelLocation));
 
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
