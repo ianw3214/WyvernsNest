@@ -113,8 +113,8 @@
             "particles": []
         },{
             "name" : "PIERCING",
-            "type" : "melee",
-            "range" : 0,
+            "type" : "pierce",
+            "range" : 2,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
@@ -126,7 +126,7 @@
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 1.5
+                    "mod": 2.0
                 }
             ],
             "particles": [],

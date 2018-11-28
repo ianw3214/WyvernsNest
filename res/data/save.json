@@ -6,15 +6,16 @@
             "DEX": 10,
             "INT": 10,
             "STR": 10,
-            "attack1": "PUNCH",
+            "attack1": "PIERCING",
             "attack2": "THROW ROCK",
             "attack3": "DASH",
             "attack4": "SPEED BOOST",
-            "experience": 400,
-            "level": 3,
+            "experience": 300,
+            "level": 4,
             "name": "DEFAULT",
             "selected": [
-                1
+                1,
+                2
             ]
         }
     ]

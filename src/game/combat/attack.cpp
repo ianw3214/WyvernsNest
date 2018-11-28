@@ -80,8 +80,10 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 		} break;
 		case AttackType::PIERCE: {
 			// TODO: Make peircing attack based on range
-			effect->attack(pos, combat, *this);
-			effect->attack(pos + pos - source->position, combat, *this);
+			Vec2<int> step = pos - source->position;
+			for (int i = 0; i < range; ++i) {
+				effect->attack(pos + step * i, combat, *this);
+			}
 		} break;
 		}
 	}
