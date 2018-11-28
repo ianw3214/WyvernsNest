@@ -5,23 +5,28 @@
 
 #include "combat/grid.hpp"
 #include "../engine/particleSystem.hpp"
+#include "util/button.hpp"
 
 #include <nlohmann/json.hpp>
 
-#define GAME_OVER_MENU_WIDTH	800
-#define GAME_OVER_MENU_HEIGHT	400
+#define GAME_OVER_TIMER			(2000 / 33)
 
 // Other hard coded values
 #define USER_SAVE_LOCATION_COMBAT "res/data/save.json"
+
+// Struct used to hold player data to render at game over screen
+struct GameOverData {
+	std::string name;
+	int gained_exp;
+	bool level_up;
+};
 
 class Unit;
 class Player;
 class Enemy;
 
 // TODO: Implement loading unit stats and calculating health, speed, etc. accordingly
-// TODO: Base turn order off of unit stats
 // TODO: Somehow merge the selectUnit and nextUnitTurn functions
-// TODO: Fix attacks to not execute if not valid
 class Combat : public State {
 
 public:
@@ -45,16 +50,31 @@ public:
 	Grid grid;
 	bool isPosEmpty(Vec2<int> pos) const;
 
-
-	//Particle System
+	// Particle System
 	ParticleSystem ps;
+	void addEmitter(Emitter * emitter);
 
 private:
 
 	// Combat state variables
+	bool render_game_over;
 	bool game_over;
 	bool game_win;
 	Unit * current;
+	std::vector<GameOverData> gameOverData;
+
+	// Counter variable for showing the game over screen after the player wins
+	int game_over_counter;
+	void startCounter() { game_over_counter = 0; }
+	void incrementCounter() { game_over_counter++; }
+	bool compareCounter(int num) const { return game_over_counter >= num; }
+
+	// Sprites to display the game over menu
+	void initSprites();
+	Sprite gameOverBase;
+
+	// Buttons
+	ButtonData continueButton;
 
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
@@ -62,6 +82,7 @@ private:
 	// Utility functions for turn ordering
 	void nextUnitTurn();
 	void selectUnit(Unit * unit);
+	void startGame();
 
 	// Reference to the current unit that is taking its action
 	int unitIndex;

@@ -71,3 +71,10 @@ public:
 private:
 	int distance;
 };
+
+class MoveEffect : public AttackEffect {
+public:
+	MoveEffect() {}
+	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
+private:
+};

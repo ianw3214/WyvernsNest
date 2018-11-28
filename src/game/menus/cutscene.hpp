@@ -27,12 +27,14 @@ public:
 	void update(int delta) override;
 	void render() override;
 
+	void addSprite(std::string path);
+
 private:
 	bool m_timed_scene;
 	State *m_state;
 	std::clock_t m_start;
 	int m_scene_time;
-	Sprite *m_curr_img;
+
 	unsigned int m_position;
-	std::vector<Sprite *> m_sprites;
+	std::vector<Sprite> m_sprites;
 };

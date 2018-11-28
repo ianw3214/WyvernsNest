@@ -9,6 +9,13 @@ Enemy::Enemy() :
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	// Randomize enemy stats
+	UnitData data;
+	data.strength = rand() % 10 + 1;
+	data.dexterity = rand() % 10 + 1;
+	data.intelligence = rand() % 10 + 1;
+	data.constitution = rand() % 10 + 1;
+	setData(data);
 }
 
 Enemy::Enemy(UnitType type, const std::string& spritePath) :
@@ -87,7 +94,7 @@ void Enemy::handleMovement() {
 	// Try to move to a random valid location
 	int x_offset;
 	int y_offset;
-	int tries = 20;
+	int tries = 10;
 	while (tries > 0) {
 		x_offset = rand() % (getMoveSpeed() * 2 + 1) - getMoveSpeed();
 		y_offset = rand() % (std::abs(getMoveSpeed() - std::abs(x_offset)) * 2 + 1) - std::abs(getMoveSpeed() - std::abs(x_offset));

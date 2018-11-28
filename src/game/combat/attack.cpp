@@ -3,6 +3,7 @@
 #include "../combat.hpp"
 #include "unit.hpp"
 #include "status.hpp"
+#include "../util/particleloader.hpp"
 
 // Construct an invalid attack by default
 Attack::Attack() :
@@ -42,6 +43,7 @@ Attack::Attack(std::string name,
 	
 }
 
+#include <iostream>
 Attack::Attack(const Attack & other, Unit * source) :
 	name(other.name),
 	source(source),
@@ -51,6 +53,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 	aoe(other.aoe),
 	affect_self(other.affect_self),
 	effectModifiers(other.effectModifiers),
+	particles(other.particles),
 	validSprite("res/assets/tiles/valid.png"),
 	targetValidSprite("res/assets/tiles/valid_circle.png"),
 	targetInvalidSprite("res/assets/tiles/invalid_circle.png")
@@ -68,28 +71,29 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			attackAoE(source->position, combat);
 		} break;
 		case AttackType::MELEE: {
-			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
 		} break;
 		case AttackType::RANGED: {
-			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
-
-			Emitter * flame = new Emitter(pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2, pos.y() *combat.grid.tile_height, 0, 120, 50, 0, 10, true, 5, 10, 5, true);
-			flame->SetSprite(0, 100, 100, 100);
-			combat.ps.addEmitter(flame);
 		} break;
 		case AttackType::PIERCE: {
-			// TOOD: Make sure the attack is valid before running it
 			// TODO: Make peircing attack based on range
 			effect->attack(pos, combat, *this);
 			effect->attack(pos + pos - source->position, combat, *this);
 		} break;
 		}
 	}
-	// TODO: figure out how to apply the attack effect to the surrounding aoe
+	// Apply the particles
+	for (ParticleData& particle : particles) {
+		if (particle.position == ParticlePosition::TARGET) {
+			// Set the target to the center of the target
+			int x = pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2;
+			int y = pos.y() * combat.grid.tile_height + combat.grid.tile_height / 2;
+			combat.addEmitter(Particles::get(particle.name, x, y));
+		}
+	}
 }
 
 void Attack::addEffectModifier(EffectModifier modifier) {
@@ -98,6 +102,10 @@ void Attack::addEffectModifier(EffectModifier modifier) {
 
 void Attack::addEffectModifier(Stat stat, float multiplier) {
 	effectModifiers.emplace_back(stat, multiplier);
+}
+
+void Attack::addParticle(std::string name, ParticlePosition pos) {
+	particles.push_back(ParticleData{ name, pos });
 }
 
 // Display the valid attack tiles on the grid
@@ -280,5 +288,17 @@ void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
 	Unit *unit = combat.getUnitAt(pos);
 	if (unit) {
 		unit->push(distance, attack.getSource()->screenPosition);
+	}
+}
+
+#include <iostream>
+// TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
+void MoveEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
+	if (combat.isPosEmpty(pos)) {
+		// This is really bad, do not do this in the future
+		Unit * unit = const_cast<Unit*>(attack.getSource());
+		if (!unit->move(combat, pos)) {
+			std::cout << "FAILED" << std::endl;
+		}
 	}
 }

@@ -62,6 +62,13 @@ bool AttackLoader::loadAttack(const json & data) {
 	for (const json& modifier : data["modifiers"]) {
 		attacks[name].addEffectModifier(parseModifier(modifier));
 	}
+	// Parse the particles here
+	for (const json& particle : data["particles"]) {
+		std::string particle_name = particle["name"];
+		if (particle["position"] == "TARGET") {
+			attacks[name].addParticle(particle_name, ParticlePosition::TARGET);
+		}
+	}
 	return true;
 }
 
@@ -106,6 +113,9 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 	if (data["type"] == "push") {
 		int distance = data["distance"];
 		return new PushEffect(distance);
+	}
+	if (data["type"] == "move") {
+		return new MoveEffect();
 	}
 	return nullptr;
 }

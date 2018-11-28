@@ -3,7 +3,13 @@
         {
             "id": 1,
             "name": "initial",
-            "file": "level1.json"
+            "file": "level1.json",
+            "cutscene": {
+                "images":[
+                    "res/assets/cutscenes/scene1.png",
+                    "res/assets/cutscenes/scene2.png"
+                ]
+            }
         },{
             "id": 2,
             "name": "initial",

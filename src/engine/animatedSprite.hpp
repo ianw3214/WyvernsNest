@@ -19,7 +19,9 @@ public:
 	~AnimatedSprite();
 
 	void render() override;
+	void renderWithoutUpdate();
 	void addAnimation(unsigned int start, unsigned int end);
+	void updateFrame();
 
 	void playAnimation(unsigned int animation, unsigned int loops = 1);
 	void queueAnimation(unsigned int animation, unsigned int loops = 1);
