@@ -2,6 +2,15 @@
 
 #include "../engine/core.hpp"
 
+#define NUM_BUTTONS_SET 1
+
+#define TITLE_TEXT	"SETTINGS"
+#define VOLUME_TEXT	"VOLUME"
+#define RES_TEXT	"RESOLUTION"
+#define BACK_TEXT	"BACK"
+
+#define NUM_OPTIONS 3
+
 class SettingsMenu : public State {
 
 public:
@@ -13,8 +22,16 @@ public:
 	void render();                          // Handles entity rendering
 
 private:
+	// Sprites
 	Sprite background;
-	int counter = 0;
-	bool render_text = true;
+	Sprite cursor;
+	Sprite cursorPress;
+	Sprite slider;
+	Sprite aspect;
+
+	// Menu state
+	int selected_option;
+	int mouseX, mouseY;
+	bool mouseDown;
 };
 

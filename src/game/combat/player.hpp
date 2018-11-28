@@ -7,19 +7,26 @@
 #include "attack.hpp"
 #include "unit.hpp"
 
+#include <nlohmann/json.hpp>
+
 #define PLAYER_DEFAULT_MOVE_COUNTER		20
 #define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
 
-#define UI_X_OFFSET					   -10
-#define UI_Y_OFFSET					    5
-#define UI_OPTION_HEIGHT				30
+// Enumeration to represent the player 'state'
+enum class PlayerState {
+	CHOOSING,
+	ATTACKING
+};
 
 // Enumeration to represent the possible player actions
 enum class PlayerAction {
 	NONE,
 	MOVE,
 	ATTACK_1,
-	ATTACK_2
+	ATTACK_2,
+	ATTACK_3,
+	ATTACK_4,
+	PASS
 };
 
 // Enumeration to represent player animation states
@@ -39,26 +46,29 @@ public:
 
 	Player();
 	Player(int x, int y);
+	Player(int x, int y, const nlohmann::json& data);
+
 	~Player();
 		
 	void handleEvent(const SDL_Event& event);
 	void update(int delta);
 
 	// The render function and its' corresponding helper functions
-	virtual void renderBottom() override;
+	virtual void renderBottom(Combat * combat) override;
 	virtual void render() override;
-	virtual void renderTop() override;
+	virtual void renderTop(Combat * combat) override;
 	void renderTurnUI();
 	void renderValidMoves();
 	
-	// The click function to handle player logic depending on player state when cursor clicked
-	void click(Vec2<int> to);
+	// The function to execute the players action on the position
+	void execute(Vec2<int> to);
 	
 	// Various helper methods
 	void setPathLine(Vec2<int> dest);
 
 	// The action that is being expected from the player
 	PlayerAction current_action;
+	PlayerState player_state;
 
 protected:
 	// Override callback function to customize functionality
@@ -67,13 +77,20 @@ protected:
 
 private:
 
+	// helper variables/functions
+	void init();
+	PlayerAction getActionAtCoord(ScreenCoord coord);
+
 	// The attacks of the player
 	Attack attack1;
 	Attack attack2;
+	Attack attack3;
+	Attack attack4;
 
 	// The outline of the player movement path to the cursor
 	std::vector<ScreenCoord> path_line;
 
+	// Movement helper functions
 	std::vector<ScreenCoord> getPossibleMoves();
 	void updatePossibleMoves();
 	std::vector<ScreenCoord> possibleMoves;
@@ -81,6 +98,7 @@ private:
 	// Player sprites
 	AnimatedSprite player_sprite;
 	Sprite valid_tile;
+	AnimatedSprite valid_move;
 
 	bool moved;
 };

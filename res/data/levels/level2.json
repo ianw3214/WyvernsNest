@@ -1,0 +1,30 @@
+{
+    "map": "map1.json",
+    "enemies": [
+        {
+            "type": "BABY GOOMBA",
+            "x": 5,
+            "y": 2
+        },{
+            "type": "BABY GOOMBA",
+            "x": 5,
+            "y": 4
+        }
+    ],
+    "player_spawns": [
+        {
+            "x": 0,
+            "y": 2
+        },{
+            "x": 0,
+            "y": 4
+        },{
+            "x": 3,
+            "y": 3
+        },{
+            "x": 4,
+            "y": 4
+        }
+    ],
+    "experience": 200
+}

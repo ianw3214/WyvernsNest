@@ -18,6 +18,17 @@ enum class AttackType {
 	PIERCE
 };
 
+// Enumeration for particle target types
+enum class ParticlePosition {
+	TARGET
+};
+
+// Struct to keep track of particles
+struct ParticleData {
+	std::string name;
+	ParticlePosition position;
+};
+
 // Use an integer to represent the range of the attack
 using AttackRange = int;
 
@@ -51,10 +62,14 @@ public:
 	void addEffectModifier(EffectModifier modifier);
 	void addEffectModifier(Stat stat, float multiplier);
 
+	// Particle functions
+	void addParticle(std::string name, ParticlePosition pos);
+
 	// Utility methods
-	void renderValidGrid(int tile_width, int tile_height);
-	void renderValidTarget(int tile_width, int tile_height);
-	bool isValid(ScreenCoord pos);
+	void renderValidGrid(int tile_width, int tile_height, const Combat& combat);
+	void renderValidTarget(int tile_width, int tile_height, const Combat& combat);
+	void renderValidSprite(int tile_width, int tile_height, int x, int y, const Combat& combat);
+	bool isValid(ScreenCoord pos, const Combat& combat);
 	const Unit * getSource() const { return source; }
 
 	// Getter functions for attack properties
@@ -78,6 +93,9 @@ private:
 
 	// Attack modifiers
 	std::vector<EffectModifier> effectModifiers;
+
+	// Attack particles
+	std::vector<ParticleData> particles;
 
 	// Common attack sprites
 	Sprite validSprite;

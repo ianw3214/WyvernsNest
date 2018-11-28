@@ -62,6 +62,13 @@ bool AttackLoader::loadAttack(const json & data) {
 	for (const json& modifier : data["modifiers"]) {
 		attacks[name].addEffectModifier(parseModifier(modifier));
 	}
+	// Parse the particles here
+	for (const json& particle : data["particles"]) {
+		std::string particle_name = particle["name"];
+		if (particle["position"] == "TARGET") {
+			attacks[name].addParticle(particle_name, ParticlePosition::TARGET);
+		}
+	}
 	return true;
 }
 
@@ -85,6 +92,30 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 	if (data["type"] == "damage") {
 		int damage = data["damage"];
 		return new DamageEffect(damage);
+	}
+	if (data["type"] == "burn") {
+		int damage = data["damage"];
+		int ticks = data["ticks"];
+		// TODO: Add ability to add infinite effect in file
+		return new BurnEffect(damage, ticks);
+	}
+	if (data["type"] == "buff") {
+		Stat stat;
+		if (data["stat"] == "STR") stat = Stat::STR;
+		if (data["stat"] == "DEX") stat = Stat::DEX;
+		if (data["stat"] == "INT") stat = Stat::INT;
+		if (data["stat"] == "CON") stat = Stat::CON;
+		float added_percent = data["percent"];
+		int ticks = data["ticks"];
+		// TODO: Add ability to add infinite effect in file
+		return new StatBuffEffect(stat, added_percent, ticks, false);
+	}
+	if (data["type"] == "push") {
+		int distance = data["distance"];
+		return new PushEffect(distance);
+	}
+	if (data["type"] == "move") {
+		return new MoveEffect();
 	}
 	return nullptr;
 }

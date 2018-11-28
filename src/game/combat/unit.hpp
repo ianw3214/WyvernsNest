@@ -2,11 +2,16 @@
 
 #include "../../engine/core.hpp"
 
+#include <vector>
+
 #include "attack.hpp"
+#include "status.hpp"
 #include "../unitData.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 200
-#define DEFAULT_SPRITE_HEIGHT 200
+#define DEFAULT_SPRITE_WIDTH 300
+#define DEFAULT_SPRITE_HEIGHT 300
+
+class Combat;
 
 // Enumeration of unit types
 enum class UnitType {
@@ -37,9 +42,9 @@ public:
 	ScreenCoord screenPosition;
 
 	// Render methods
-	virtual void renderBottom();
+	virtual void renderBottom(Combat * combat);
 	// virtual void renderUnit();	<-- USE THE ORIGINAL ENTITY RENDER FUNCTION FOR THIS
-	virtual void renderTop();
+	virtual void renderTop(Combat * combat);
 	virtual void renderHealth();
 
 	// Getter methods
@@ -47,10 +52,10 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
-	int getSTR() const { return data.strength; }
-	int getDEX() const { return data.dexterity; }
-	int getINT() const { return data.intelligence; }
-	int getCON() const { return data.constitution; }
+	int getSTR() const;
+	int getDEX() const;
+	int getINT() const;
+	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
 
@@ -63,22 +68,30 @@ public:
 	int health;
 	int maxHealth;
 
+	// Utility status effect functions
+	void addStatus(Status * status);
+
 	// Utility functions common across all units
 	void select();
 	void deselect();
 	void takeDamage(int damage);
 	void heal(int health);
 	bool move(Combat& combat, Vec2<int> pos);
+	void push(int push, ScreenCoord src_pos);
 
 	// Utility references to the combat state to access needed data
 	Combat * combat;
-
 protected:
+
+	void setData(UnitData data) { 
+		this->data = data;
+		loadPropertiesFromUnitData();
+	}
 
 	// Variables that contain various useful stats for the unit
 	int move_speed;
 	bool selected = false;
-	void loadPropertiesFromUnitData();
+	void loadPropertiesFromUnitData(bool resetHealth=true);
 
 	// State variable of the unit
 	UnitState state;
@@ -101,7 +114,6 @@ protected:
 	// Helper functions to calculate the screen position and movement of the player
 	void calculateScreenPositionMovement();
 	void incrementMovement();
-
 
 	// Helper method to calculate the screen position based on grid position
 	void calculateScreenPosition();
@@ -127,5 +139,9 @@ private:
 	// The unit data of the unit
 	UnitData data;
 	void generateDefaultUnitData();
+
+	public:
+	// The status effects of the unit
+	std::vector<Status*> statusList;
 
 };

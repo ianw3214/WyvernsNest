@@ -11,11 +11,14 @@ public:
 
 private:
 
-	// TODO: Add attacks to class variables
+	// TODO: Add attacks to class variables 
 
 	// Helper method to handle the movement portion of an enemy turn
 	virtual void handleMovement();
 	// Helper method to handle the attack portion of an enemy turn
 	virtual void handleAttack();
+
+	Attack hit;
+	Attack block;
 
 };

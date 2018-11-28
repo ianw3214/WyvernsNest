@@ -1,0 +1,23 @@
+{
+    "levels": [
+        {
+            "id": 1,
+            "name": "initial",
+            "file": "level1.json",
+            "cutscene": {
+                "images":[
+                    "res/assets/cutscenes/scene1.png",
+                    "res/assets/cutscenes/scene2.png"
+                ]
+            }
+        },{
+            "id": 2,
+            "name": "more",
+            "file": "level2.json"
+        },{
+            "id": 3,
+            "name": "mage dude",
+            "file": "level3.json"
+        }
+    ]
+}
