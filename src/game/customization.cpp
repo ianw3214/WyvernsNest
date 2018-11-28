@@ -50,7 +50,6 @@ Customization::Customization(const std::string& file) :
 	button3 = SkillTreeLinkButton(coord3);
 	ScreenCoord coord4 = ScreenCoord(SubDiv::hPos(6, 5), SubDiv::vPos(10, 7));
 	button4 = SkillTreeLinkButton(coord4);
-	
 }
 
 Customization::~Customization() {
@@ -99,6 +98,7 @@ void Customization::update(int delta) {
 
 }
 
+#include <iostream>
 // Renders Unit data where x,y is the left top corner of the unit data box and unit is the unit to be render
 void Customization::renderUnit(int x, int y, UnitData unit){
 	// Render the base sprite first
@@ -126,10 +126,63 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 
 	// Skills
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
-	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5)), 1.f);
-	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 30), 1.f);
-	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 60), 1.f);
-	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + (Core::windowWidth() / 5), y + (Core::windowHeight() / 5) + 90), 1.f);
+	Core::Text_Renderer::render(unit.attack1, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1)), 1.f);
+	Core::Text_Renderer::render(unit.attack2, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 30), 1.f);
+	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 60), 1.f);
+	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 90), 1.f);
+
+	// Skill Cycle Buttons
+	// Left side
+	ScreenCoord skillCycleButton1Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 8);
+	ScreenCoord skillCycleButton2Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 38);
+	ScreenCoord skillCycleButton3Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 68);
+	ScreenCoord skillCycleButton4Coord = ScreenCoord(x + SubDiv::hPos(5, 1) - 32, y + SubDiv::vPos(5, 1) + 98);
+	// Right side
+	ScreenCoord skillCycleButton5Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 8);
+	ScreenCoord skillCycleButton6Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 38);
+	ScreenCoord skillCycleButton7Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 68);
+	ScreenCoord skillCycleButton8Coord = ScreenCoord(x + SubDiv::hPos(5, 1) + 138, y + SubDiv::vPos(5, 1) + 98);
+
+	ButtonData skillCycleButton1 = ButtonData(skillCycleButton1Coord, 32, 23);
+	ButtonData skillCycleButton2 = ButtonData(skillCycleButton2Coord, 32, 23);
+	ButtonData skillCycleButton3 = ButtonData(skillCycleButton3Coord, 32, 23);
+	ButtonData skillCycleButton4 = ButtonData(skillCycleButton4Coord, 32, 23);
+	ButtonData skillCycleButton5 = ButtonData(skillCycleButton5Coord, 32, 23);
+	ButtonData skillCycleButton6 = ButtonData(skillCycleButton6Coord, 32, 23);
+	ButtonData skillCycleButton7 = ButtonData(skillCycleButton7Coord, 32, 23);
+	ButtonData skillCycleButton8 = ButtonData(skillCycleButton8Coord, 32, 23);
+	
+	skillCycleButton1.render();
+	skillCycleButton2.render();
+	skillCycleButton3.render();
+	skillCycleButton4.render();
+	skillCycleButton5.render();
+	skillCycleButton6.render();
+	skillCycleButton7.render();
+	skillCycleButton8.render();
+
+	// if mouse button clicked
+	Vec2<int> mousePos;
+	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+
+	if(skillCycleButton1.colliding(mousePos)) {
+		
+	} else if(skillCycleButton2.colliding(mousePos)) {
+
+	} else if(skillCycleButton3.colliding(mousePos)) {
+
+	} else if(skillCycleButton4.colliding(mousePos)) {
+
+	} else if(skillCycleButton5.colliding(mousePos)) {
+
+	} else if(skillCycleButton6.colliding(mousePos)) {
+
+	} else if(skillCycleButton7.colliding(mousePos)) {
+
+	} else if(skillCycleButton8.colliding(mousePos)) {
+
+	}
+
 
 	// EXP BAR
 	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions

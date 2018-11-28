@@ -49,6 +49,8 @@ private:
 	SkillTreeLinkButton button4;
 	ButtonData continueButton;
 
+	std::vector<ButtonData> skillCycleButtons;
+	
 	void initSprites();
 	// Sprites used to render the customization state
 	Sprite base;
