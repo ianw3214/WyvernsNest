@@ -117,7 +117,10 @@
     <ClCompile Include="src\game\menus\settingsmenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\game\combat\attackEffects.cpp">
+    <ClCompile Include="src\engine\particleSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game\util\particleloader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -200,9 +203,6 @@
     <ClInclude Include="src\engine\text\textRenderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\textureManager.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\animatedSprite.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -246,6 +246,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\game\util\util.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\textureManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\particleSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game\util\particleloader.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -101,6 +101,9 @@ std::vector<ScreenCoord> Unit::getPath(Combat & combat, ScreenCoord to) {
 	std::vector<ScreenCoord> root;
 	root.push_back(position);
 
+	// Check to see if the target position is valid first
+	if (!combat.grid.isPosValid(to)) return std::vector<ScreenCoord>();
+
 	open.push_back(root);
 	while (!(open.empty())) {
 		std::vector<ScreenCoord> n = heuristic(&open);
@@ -227,6 +230,8 @@ void Unit::generateDefaultUnitData() {
 void Unit::addStatus(Status * status) {
 	statusList.push_back(status);
 	status->setTarget(this);
+	// The status may affect unit stats, so recalculate utility variables
+	loadPropertiesFromUnitData();
 }
 
 void Unit::select() {
@@ -242,6 +247,8 @@ void Unit::select() {
 	for (int i : removeIndex) {
 		statusList.erase(statusList.begin() + i);
 	}
+	// Recalculate the stats in case anything was removed
+	loadPropertiesFromUnitData(false);
 }
 
 void Unit::deselect() {
@@ -262,6 +269,25 @@ void Unit::heal(int health) {
 	this->health += health;
 	if (this->health > maxHealth) {
 		this->health = maxHealth;
+	}
+}
+
+void Unit::push(int p, ScreenCoord src_pos) {
+	if (src_pos[0] - position[0] > 0) {
+		// move(*combat, position - Vec2<int>(-1*p, 0));
+		position = position - Vec2<int>(1 * p, 0);
+	}
+	else if (src_pos[0] - position[0] < 0) {
+		// move(*combat, position - Vec2<int>(1*p, 0));
+		position = position - Vec2<int>(-1 * p, 0);
+	}
+	else if (src_pos[1] - position[1] > 0) {
+		// move(*combat, position - Vec2<int>(0, -1*p))
+		position = position - Vec2<int>(0, 1 * p);
+	}
+	else if (src_pos[1] - position[1] < 0) {
+		// move(*combat, position - Vec2<int>(0, 1*p));
+		position = position - Vec2<int>(0, -1 * p);
 	}
 }
 
@@ -298,23 +324,43 @@ void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;
 	pos.x() += (sprite_width - tile_width) / 2;
+	if (pos.y() < 0) pos.y() = 10;
 	int healthBarWidth = tile_width;
 	int tick = lerp(0, healthBarWidth, static_cast<float>(health) / static_cast<float>(maxHealth));
 	// TODO: Use rectangle rendering (implement in engine)
 	for (int i = 0; i < 10; ++i) {
-		Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
+		if (pos.y() > 0) {
+			Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
+			Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
+		}
+		else {
+			Core::Renderer::drawLine(pos + ScreenCoord(0, -i), pos + ScreenCoord(tick, -i), Colour(0.0f, 1.0f, 0.0f));
+			Core::Renderer::drawLine(pos + ScreenCoord(tick, -i), pos + ScreenCoord(healthBarWidth, -i), Colour(1.0f, 0.0f, 0.0f));
+		}
 	}
 	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	if (pos.y() <= 0) {
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, -10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(0, -10), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+	}
+	else {
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	}
 }
 
-void Unit::loadPropertiesFromUnitData() {
+void Unit::loadPropertiesFromUnitData(bool resetHealth) {
 	// The health of the unit depends on it's constitution
-	health = data.constitution;
-	maxHealth = data.constitution;
+	maxHealth = data.constitution * 2;
+	if (resetHealth) {
+		health = getCON() * 2;
+		if (health > maxHealth) health = maxHealth;
+	}
 	// The movement speed in terms of grid units of the unit
-	move_speed = data.dexterity / 5 + 1;
+	move_speed = getDEX() / 5 + 1;
+	// TEMPORARY HARD CAP, CHANGE THIS BY OPTIMIZING IN THE FUTURE
+	// TODO: Profile pathfinding code to find bottleneck
+	if (move_speed > 4) move_speed = 4;
 }

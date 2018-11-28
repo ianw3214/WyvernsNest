@@ -77,10 +77,10 @@ public:
 	void takeDamage(int damage);
 	void heal(int health);
 	bool move(Combat& combat, Vec2<int> pos);
+	void push(int push, ScreenCoord src_pos);
 
 	// Utility references to the combat state to access needed data
 	Combat * combat;
-
 protected:
 
 	void setData(UnitData data) { 
@@ -91,7 +91,7 @@ protected:
 	// Variables that contain various useful stats for the unit
 	int move_speed;
 	bool selected = false;
-	void loadPropertiesFromUnitData();
+	void loadPropertiesFromUnitData(bool resetHealth=true);
 
 	// State variable of the unit
 	UnitState state;

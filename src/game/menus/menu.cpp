@@ -3,6 +3,7 @@
 #include "settingsmenu.hpp"
 #include "creditsmenu.hpp"
 #include "../combat.hpp"
+#include "cutscene.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -33,7 +34,7 @@ Menu::Menu() :
 }
 
 Menu::~Menu() {
-	SDL_ShowCursor(SDL_ENABLE);
+	
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -49,6 +50,10 @@ void Menu::handleEvent(const SDL_Event & e) {
 		}
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			switchToCurrentState();
+		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			if (selected_option == NUM_BUTTONS - 1) exit(0);
+			else selected_option = NUM_BUTTONS - 1;
 		}
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -72,13 +77,11 @@ void Menu::update(int delta) {
 
 void Menu::render() {
 	background.render();
-	/*
 	if (render_text) {
-		ScreenCoord pos(380, 450);
-		Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
-		Core::Text_Renderer::render("Press any key to begin", pos, 2.f);
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+		Core::Text_Renderer::setColour(Colour(7.f, .8f, .9f));
+		Core::Text_Renderer::render("Press  ENTER  to  begin", ScreenCoord(SubDiv::hCenter(), Core::windowHeight() - 10), 0.8f);
 	}
-	*/
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	ScreenCoord version_pos(10, Core::windowHeight() - 10);
@@ -156,6 +159,7 @@ void Menu::changeToCombatState() {
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
+	bool has_cutscene = false;
 	std::string combatLevelLocation;
 	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
 	json masterData;
@@ -165,13 +169,23 @@ void Menu::changeToCombatState() {
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
 			std::string name = level["file"];
 			combatLevelLocation = std::string("res/data/levels/") + name;
+			// If a cutscene is found, switch to it
+			if (level.find("cutscene") != level.end()) {
+				has_cutscene = true;
+				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation));
+				for (std::string img : level["cutscene"]["images"]) {
+					cutscene->addSprite(img);
+				}
+				changeState(cutscene);
+			} else {
+				changeState(new Combat(combatLevelLocation));
+			}
 		}
 	}
 
-	changeState(new Combat(combatLevelLocation));
-
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Menu::initializeSaveFile() {

@@ -51,8 +51,40 @@ void AnimatedSprite::render()
 	Core::Renderer::drawSprite(*this);
 }
 
+void AnimatedSprite::renderWithoutUpdate() {
+	// Actually draw the sprite
+	Core::Renderer::drawSprite(*this);
+}
+
 void AnimatedSprite::addAnimation(unsigned int start, unsigned int end) {
 	frames.push_back(Vec2<unsigned int>(start, end));
+}
+
+void AnimatedSprite::updateFrame() {
+	// Only update the frame if the timer is up
+	// TODO: switch this to use a timer instead of tick counting
+	if (counter < 2) {
+		counter++;
+	} else {
+		counter = 0;
+		frame_index++;
+		if (frame_index > frames[animation_index].y()) {
+			// Determine if we are done with the current animation state
+			if (!animations.empty()) {
+				animations.front().loops--;
+				// If we have no loops left, remove the animation state from the sprite
+				if (animations.front().loops == 0) {
+					animations.pop();
+				}
+				// If there is still an animtion state left, use that as the new animation index
+				if (!animations.empty()) animation_index = animations.front().animation_index;
+			}
+			frame_index = frames[animation_index].x();
+		}
+
+		// Update the sprite source to the correct animation frame
+		updateSourcePosFromFrame();
+	}
 }
 
 void AnimatedSprite::playAnimation(unsigned int animation, unsigned int loops) {
