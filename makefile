@@ -33,7 +33,7 @@ vertexBuffer.o: vertexBuffer.cpp
 renderer.o: renderer.cpp glwrappers.hpp math.hpp
 sprite.o: sprite.cpp glwrappers.hpp
 state.o: state.cpp
-combat.o: combat.cpp core.hpp
+combat.o: combat.cpp core.hpp mageDudeEnemy.hpp basicWarriorEnemy.hpp
 customization.o: customization.cpp core.hpp unitData.hpp
 skillTree.o: skillTree.cpp core.hpp unitData.hpp
 cutscene.o: cutscene.cpp core.hpp
@@ -44,6 +44,8 @@ enemy.o: enemy.cpp core.hpp vec.hpp
 menu.o: menu.cpp core.hpp
 unit.o: unit.cpp core.hpp attack.hpp unitData.hpp
 attack.o: attack.cpp core.hpp vec.hpp
+mageDudeEnemy.o: mageDudeEnemy.cpp
+basicWarriorEnemy.o: basicWarriorEnemy.cpp
 attackloader.o: attackloader.cpp attack.hpp
 textureManager.o: textureManager.cpp
 animatedSprite.o: animatedSprite.cpp glwrappers.hpp vec.hpp sprite.hpp
