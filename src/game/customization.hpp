@@ -59,5 +59,6 @@ private:
 	// Helper functions
 	void switchToCombatState();
 	void initAvailableAttacks();
+	void cycleAttack(int unit, int button, int i_attack, bool forward);
 
 };

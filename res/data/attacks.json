@@ -39,6 +39,44 @@
             ],
             "nodeid": 1
         },{
+            "name": "DASH",
+            "type": "ranged",
+            "range": 10,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 2
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 20.0
+                }
+            ],
+            "nodeid": 1
+        },{
+            "name": "BLOCK",
+            "type": "ranged",
+            "range": 10,
+            "aoe": 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 2
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 20.0
+                }
+            ],
+            "nodeid": 1
+        },{
             "name": "BURN",
             "type": "ranged",
             "range": 3,

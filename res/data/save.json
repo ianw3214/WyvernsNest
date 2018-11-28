@@ -8,8 +8,8 @@
             "STR": 10,
             "attack1": "PUNCH",
             "attack2": "THROW ROCK",
-            "attack3": "BURN",
-            "attack4": "SELF STR BUFF",
+            "attack3": "DASH",
+            "attack4": "BLOCK",
             "experience": 166,
             "level": 2,
             "name": "DEFAULT",
@@ -17,39 +17,21 @@
                 1,
                 2
             ]
-        },
-        {
+        },{
             "CON": 10,
             "DEX": 10,
             "INT": 10,
             "STR": 10,
             "attack1": "PUNCH",
             "attack2": "THROW ROCK",
-            "attack3": "BURN",
-            "attack4": "SELF STR BUFF",
+            "attack3": "DASH",
+            "attack4": "BLOCK",
             "experience": 166,
             "level": 2,
             "name": "DEFAULT",
             "selected": [
                 1,
-                2
-            ]
-        },
-        {
-            "CON": 10,
-            "DEX": 10,
-            "INT": 10,
-            "STR": 10,
-            "attack1": "PUNCH",
-            "attack2": "THROW ROCK",
-            "attack3": "BURN",
-            "attack4": "SELF STR BUFF",
-            "experience": 166,
-            "level": 2,
-            "name": "DEFAULT",
-            "selected": [
-                1,
-                2
+                3
             ]
         }
     ]
