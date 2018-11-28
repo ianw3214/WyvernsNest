@@ -280,6 +280,10 @@ void Player::handleEvent(const SDL_Event & event)
 					player_state = PlayerState::ATTACKING;
 					if (current_action == PlayerAction::MOVE) updatePossibleMoves();
 				}
+				if (current_action == PlayerAction::PASS) {
+					execute(Vec2<int>());
+					player_state = PlayerState::CHOOSING;
+				}
 				return;
 			}
 			if (player_state == PlayerState::ATTACKING) {

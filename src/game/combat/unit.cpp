@@ -270,20 +270,30 @@ void Unit::heal(int health) {
 	}
 }
 
+#include <iostream>
 void Unit::push(int p, ScreenCoord src_pos) {
 	printf("PUSHING!!!\n");
-	if (src_pos[0] - screenPosition[0] > 0) {
-		move(*combat, screenPosition - Vec2<int>(-1*p, 0));
+	if (src_pos[0] - position[0] > 0) {
+		std::cout << "1: " << p << std::endl;
+		// move(*combat, position - Vec2<int>(-1*p, 0));
+		position = position - Vec2<int>(1 * p, 0);
 	}
-	else if (src_pos[0] - screenPosition[0] < 0) {
-		move(*combat, screenPosition - Vec2<int>(1*p, 0));
+	else if (src_pos[0] - position[0] < 0) {
+		std::cout << "2: " << p << std::endl;
+		// move(*combat, position - Vec2<int>(1*p, 0));
+		position = position - Vec2<int>(-1 * p, 0);
 	}
-	else if (src_pos[1] - screenPosition[1] > 0) {
-		move(*combat, screenPosition - Vec2<int>(0, -1*p));
+	else if (src_pos[1] - position[1] > 0) {
+		std::cout << "3: " << p << std::endl;
+		// move(*combat, position - Vec2<int>(0, -1*p))
+		position = position - Vec2<int>(0, 1 * p);
 	}
-	else if (src_pos[1] - screenPosition[1] < 0) {
-		move(*combat, screenPosition - Vec2<int>(0, 1*p));
+	else if (src_pos[1] - position[1] < 0) {
+		std::cout << "4: " << p << std::endl;
+		// move(*combat, position - Vec2<int>(0, 1*p));
+		position = position - Vec2<int>(0, -1 * p);
 	}
+	std::cout << position.x() << " : " << position.y() << std::endl;
 }
 
 bool Unit::move(Combat & combat, Vec2<int> pos) {

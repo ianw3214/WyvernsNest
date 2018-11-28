@@ -289,7 +289,7 @@ void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attac
 void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
 	Unit *unit = combat.getUnitAt(pos);
 	if (unit) {
-		unit->push(distance, attack.getSource()->screenPosition);
+		unit->push(distance, attack.getSource()->position);
 	}
 }
 

@@ -165,7 +165,7 @@
             "effects": [
                 {
                     "type": "push",
-                    "distance": 2
+                    "distance": 1
                 }
             ],
             "modifiers": [
