@@ -12,8 +12,12 @@
             }
         },{
             "id": 2,
-            "name": "initial",
-            "file": "level1.json"
+            "name": "more",
+            "file": "level2.json"
+        },{
+            "id": 3,
+            "name": "mage dude",
+            "file": "level3.json"
         }
     ]
 }
