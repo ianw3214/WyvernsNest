@@ -310,21 +310,36 @@ void Unit::renderTop(Combat * combat) {
 	// Let the unit subclasses handle this one
 }
 
+#include <iostream>
 void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;
 	pos.x() += (sprite_width - tile_width) / 2;
+	if (pos.y() < 0) pos.y() = 10;
 	int healthBarWidth = tile_width;
 	int tick = lerp(0, healthBarWidth, static_cast<float>(health) / static_cast<float>(maxHealth));
 	// TODO: Use rectangle rendering (implement in engine)
 	for (int i = 0; i < 10; ++i) {
-		Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
+		if (pos.y() > 0) {
+			Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
+			Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
+		}
+		else {
+			Core::Renderer::drawLine(pos + ScreenCoord(0, -i), pos + ScreenCoord(tick, -i), Colour(0.0f, 1.0f, 0.0f));
+			Core::Renderer::drawLine(pos + ScreenCoord(tick, -i), pos + ScreenCoord(healthBarWidth, -i), Colour(1.0f, 0.0f, 0.0f));
+		}
 	}
 	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	if (pos.y() <= 0) {
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, -10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(0, -10), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+	}
+	else {
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+		Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	}
 }
 
 void Unit::loadPropertiesFromUnitData() {
