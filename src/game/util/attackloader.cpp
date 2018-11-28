@@ -78,6 +78,9 @@ AttackType AttackLoader::getTypeFromString(const std::string & str) const {
 	if (str == "pierce") {
 		return AttackType::PIERCE;
 	}
+	if (str == "push") {
+		return AttackType::PUSH;
+	}
 	return AttackType::INVALID;
 }
 

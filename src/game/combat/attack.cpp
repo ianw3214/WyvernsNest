@@ -87,6 +87,10 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			effect->attack(pos, combat, *this);
 			effect->attack(pos + pos - source->position, combat, *this);
 		} break;
+		case AttackType::PUSH: {
+			printf("about to push\n");
+			effect->attack(pos, combat, *this);
+		} break;
 		}
 	}
 	// TODO: figure out how to apply the attack effect to the surrounding aoe
@@ -222,6 +226,12 @@ bool Attack::isValid(ScreenCoord pos, const Combat& combat) {
 		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
+	case AttackType::PUSH: {
+		int x_diff = std::abs(pos.x() - source->position.x());
+		int y_diff = std::abs(pos.y() - source->position.y());
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
+		return false;
+	} break;
 	}
 	return false;
 }
@@ -273,5 +283,15 @@ void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attac
 	if (unit) {
 		// TODO: Add modifiers (or don't)
 		unit->addStatus(new StatBuffStatus(stat, percent, ticks, infinite, unit));
+	}
+}
+
+#include <iostream>
+void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
+	std::cout << "ATTACK EFFECT PUSH" << std::endl;
+	Unit *unit = combat.getUnitAt(pos);
+	if (unit) {
+		std::cout << "EXECTUTING UNIT PUSH" << std::endl;
+		unit->push(p, attack.getSource()->screenPosition);
 	}
 }
