@@ -60,15 +60,17 @@
             "particles": [],
             "nodeid": 1
         },{
-            "name": "BLOCK",
-            "type": "ranged",
-            "range": 10,
+            "name": "SPEED BOOST",
+            "type": "self",
+            "range": 0,
             "aoe": 0,
             "affect_self": true,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 2
+                    "type": "buff",
+                    "stat": "DEX",
+                    "percent": 0.5,
+                    "ticks": 3
                 }
             ],
             "modifiers": [

@@ -230,6 +230,8 @@ void Unit::generateDefaultUnitData() {
 void Unit::addStatus(Status * status) {
 	statusList.push_back(status);
 	status->setTarget(this);
+	// The status may affect unit stats, so recalculate utility variables
+	loadPropertiesFromUnitData();
 }
 
 void Unit::select() {
@@ -346,10 +348,11 @@ void Unit::renderHealth() {
 
 void Unit::loadPropertiesFromUnitData() {
 	// The health of the unit depends on it's constitution
-	health = data.constitution * 2;
 	maxHealth = data.constitution * 2;
+	health = getCON() * 2;
+	if (health > maxHealth) health = maxHealth;
 	// The movement speed in terms of grid units of the unit
-	move_speed = data.dexterity / 5 + 1;
+	move_speed = getDEX() / 5 + 1;
 	// TEMPORARY HARD CAP, CHANGE THIS BY OPTIMIZING IN THE FUTURE
 	// TODO: Profile pathfinding code to find bottleneck
 	if (move_speed > 4) move_speed = 4;
