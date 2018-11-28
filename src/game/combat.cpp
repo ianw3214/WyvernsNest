@@ -293,3 +293,7 @@ bool Combat::isPosEmpty(Vec2<int> pos) const {
 	}
 	return true;
 }
+
+void Combat::addEmitter(Emitter * emitter) {
+	ps.addEmitter(emitter);
+}

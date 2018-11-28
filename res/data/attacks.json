@@ -18,6 +18,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 1
         },{
             "name": "THROW ROCK",
@@ -35,6 +36,12 @@
                 {
                     "type": "INT",
                     "mod": 20.0
+                }
+            ],
+            "particles": [
+                {
+                    "name": "DIRT",
+                    "position": "TARGET"
                 }
             ],
             "nodeid": 1
@@ -56,6 +63,7 @@
                     "mod": 20.0
                 }
             ],
+            "particles": [],
             "nodeid": 1
         },{
             "name": "BLOCK",
@@ -75,37 +83,9 @@
                     "mod": 20.0
                 }
             ],
+            "particles": [],
             "nodeid": 1
-        },{
-            "name": "BURN",
-            "type": "ranged",
-            "range": 3,
-            "aoe": 0,
-            "affect_self": true,
-            "effects": [
-                {
-                    "type": "burn",
-                    "damage": 3,
-                    "ticks": 3
-                }
-            ],
-            "modifiers": []
-        },{
-            "name": "SELF STR BUFF",
-            "type": "self",
-            "range": 0,
-            "aoe": 0,
-            "affect_self": true,
-            "effects": [
-                {
-                    "type": "buff",
-                    "stat": "STR",
-                    "percent": 0.2,
-                    "ticks": 3
-                }
-            ],
-            "modifiers": []
-        },{
+        }, {
             "name": "FIREBALL",
             "type": "ranged",
             "range": 4,
@@ -117,7 +97,8 @@
                     "damage": 2
                 }
             ],
-            "modifiers": []
+            "modifiers": [],
+            "particles": []
         },{
             "name": "DRAGONS RAGE",
             "type": "ranged",
@@ -129,9 +110,11 @@
                     "type": "buff",
                     "stat": "STR",
                     "percent": 0.2,
-                    "ticks": 3                }
+                    "ticks": 3                
+                }
             ],
-            "modifiers": []
+            "modifiers": [],
+            "particles": []
         },{
             "name" : "PIERCING",
             "type" : "melee",
@@ -150,6 +133,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 2
         },{
             "name" : "RANGED BASIC",
@@ -169,6 +153,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 3
         },{
             "name" : "BASIC PUSH",
@@ -188,6 +173,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 4
         },{
             "name" : "ATK BOOST",
@@ -207,6 +193,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 5
         },{
             "name" : "DEFENSE BOOST",
@@ -226,6 +213,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 6
         },{
             "name" : "BASIC TELEPORT",
@@ -245,6 +233,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 7
         },{
             "name" : "SPIN TO WIN",
@@ -264,6 +253,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 8
         },{
             "name" : "LAT ON HANDS",
@@ -283,6 +273,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 9
         },{
             "name" : "HYPER BEAM",
@@ -302,6 +293,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 10
         },{
             "name" : "DRAMATIC PULL DMG (FISHING)",
@@ -321,6 +313,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 13
         },{
             "name" : "RESSURECT",
@@ -340,6 +333,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 14
         },{
             "name" : "RAISE WALLS",
@@ -359,6 +353,7 @@
                     "mod": 1.5
                 }
             ],
+            "particles": [],
             "nodeid": 15
         }
     ]

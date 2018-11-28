@@ -1,6 +1,13 @@
 #include "particleloader.hpp"
 #pragma once
 
+#ifdef _DEBUG
+#include <iostream>
+#define LOG(x) std::cout << x << std::endl
+#else
+#define LOG(x)
+#endif
+
 #include <fstream>
 
 Emitter * ParticleLoader::get(const std::string & name, int x, int y) {

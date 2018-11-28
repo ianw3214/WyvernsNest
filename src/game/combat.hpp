@@ -46,8 +46,9 @@ public:
 	bool isPosEmpty(Vec2<int> pos) const;
 
 
-	//Particle System
+	// Particle System
 	ParticleSystem ps;
+	void addEmitter(Emitter * emitter);
 
 private:
 
