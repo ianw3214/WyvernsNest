@@ -76,6 +76,10 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
+
+			Emitter * flame = new Emitter(pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2, pos.y() *combat.grid.tile_height, 0, 120, 50, 0, 10, true, 5, 10, 5, true);
+			flame->SetSprite(0, 100, 100, 100);
+			combat.ps.addEmitter(flame);
 		} break;
 		case AttackType::PIERCE: {
 			// TOOD: Make sure the attack is valid before running it
