@@ -15,7 +15,7 @@
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 1.5
+                    "mod": 0.1
                 }
             ],
             "particles": [],
@@ -126,13 +126,13 @@
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 2.0
+                    "mod": 0.5
                 }
             ],
             "particles": [],
             "nodeid": 2
         },{
-            "name" : "RANGED BASIC",
+            "name" : "EMBER",
             "type" : "ranged",
             "range" : 2,
             "aoe" : 0,
@@ -145,11 +145,16 @@
             ],
             "modifiers": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "type": "INT",
+                    "mod": 0.5
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "FIRE",
+                    "position": "TARGET"
+                }
+            ],
             "nodeid": 3
         },{
             "name" : "BASIC PUSH",

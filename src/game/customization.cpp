@@ -116,10 +116,22 @@ void Customization::handleEvent(const SDL_Event& e) {
 	Vec2<int> mousePos;
 	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 	if (e.type == SDL_MOUSEBUTTONUP) {
-		if (button1.colliding(mousePos)) changeState(new SkillTree(0));
-		if (button2.colliding(mousePos)) changeState(new SkillTree(1));
-		if (button3.colliding(mousePos)) changeState(new SkillTree(2));
-		if (button4.colliding(mousePos)) changeState(new SkillTree(3));
+		if (units.size() > 0 && button1.colliding(mousePos)) {
+			saveData();
+			changeState(new SkillTree(0));
+		}
+		if (units.size() > 1 && button2.colliding(mousePos)) {
+			saveData();
+			changeState(new SkillTree(1));
+		}
+		if (units.size() > 2 && button3.colliding(mousePos)) {
+			saveData();
+			changeState(new SkillTree(2));
+		}
+		if (units.size() > 3 && button4.colliding(mousePos)) {
+			saveData();
+			changeState(new SkillTree(3));
+		}
 		if (continueButton.colliding(mousePos)) switchToCombatState();
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
