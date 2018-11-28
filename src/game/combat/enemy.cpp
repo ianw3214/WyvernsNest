@@ -110,28 +110,34 @@ void Enemy::handleMovement() {
 }
 
 void Enemy::handleAttack() {
-	if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
+	Unit *targ_unit;
+	
+	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(1, 0), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(0, 1), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(-1, 0), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(0, -1), *combat);
 		state = UnitState::ATTACK;
