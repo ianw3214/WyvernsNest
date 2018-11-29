@@ -51,7 +51,7 @@
         },{
             "name": "THROW ROCK",
             "type": "ranged",
-            "range": 10,
+            "range": 3,
             "aoe": 0,
             "affect_self": true,
             "effects": [
