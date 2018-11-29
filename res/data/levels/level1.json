@@ -1,10 +1,20 @@
-{
+    {
     "map": "map1.json",
     "enemies": [
         {
+            "type": "BASIC WARRIOR",
+            "x": 11,
+            "y": 1
+        },
+        {
             "type": "BABY GOOMBA",
             "x": 5,
-            "y": 3
+            "y": 4
+        },
+        {
+            "type": "MAGE DUDE",
+            "x": 6,
+            "y": 5
         }
     ],
     "player_spawns": [
@@ -25,5 +35,22 @@
             "y": 4
         }
     ],
-    "experience": 200
+    "reward": {
+        "experience": 200,
+        "units": [
+            {
+                "CON": 10,
+                "DEX": 10,
+                "INT": 10,
+                "STR": 10,
+                "attack1": "PUNCH",
+                "attack2": "THROW ROCK",
+                "attack3": "DASH",
+                "attack4": "SPEED BOOST",
+                "experience": 0.0,
+                "level": 1,
+                "name": "BOB"
+            }
+        ]
+    }
 }

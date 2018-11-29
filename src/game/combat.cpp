@@ -21,7 +21,9 @@ using json = nlohmann::json;
 Combat::Combat(const std::string & filePath) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
-	pauseBase("res/assets/UI/pauseBase.png")
+	pauseBase("res/assets/UI/pauseBase.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png")
 {
 	initSprites();
 
@@ -74,7 +76,31 @@ Combat::Combat(const std::string & filePath) :
 			}
 		}
 
-		experienceReward = data["experience"];
+		// Load the rewards
+		json reward= data["reward"];
+		experienceReward = reward["experience"];
+		if (reward.find("units") != reward.end()) {
+			for (json unit : reward["units"]) {
+				std::string name = unit["name"];
+				std::string attack1 = unit["attack1"];
+				std::string attack2 = unit["attack2"];
+				std::string attack3 = unit["attack3"];
+				std::string attack4 = unit["attack4"];
+				UnitData data;
+				data.name = name;
+				data.strength = unit["STR"];
+				data.dexterity = unit["DEX"];
+				data.intelligence = unit["INT"];
+				data.constitution = unit["CON"];
+				data.attack1 = attack1;
+				data.attack2 = attack2;
+				data.attack3 = attack3;
+				data.attack4 = attack4;
+				data.level = unit["level"];
+				data.experience = unit["experience"];
+				unitRewards.push_back(data);
+			}
+		}
 	}
 	for (Unit * unit : units) unit->combat = this;
 
@@ -151,6 +177,14 @@ void Combat::handleEvent(const SDL_Event& e) {
 			exit(0);
 		}
 	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+	}
 }
 
 void Combat::update(int delta) {
@@ -208,8 +242,9 @@ void Combat::render() {
 			Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
 			Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
 			Core::Text_Renderer::render("VICTORY", ScreenCoord(SubDiv::hCenter(), SubDiv::vPos(10, 3)), 2.5f);
+			unsigned int i = 0;
 			// Render the player stats
-			for (unsigned int i = 0; i < gameOverData.size(); ++i) {
+			for (; i < gameOverData.size(); ++i) {
 				Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 				Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
 				Core::Text_Renderer::render(gameOverData[i].name, ScreenCoord(SubDiv::hPos(12, 3), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.5f);
@@ -220,6 +255,15 @@ void Combat::render() {
 					Core::Text_Renderer::setColour(Colour(.9f, 1.f, .9f));
 					Core::Text_Renderer::render("LEVEL UP!", ScreenCoord(SubDiv::hPos(24, 15), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.2f);
 				}
+			}
+			// Render gained units
+			for (; i < gameOverData.size() + unitRewards.size(); ++i) {
+				int j = i - gameOverData.size();
+				Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
+				Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
+				Core::Text_Renderer::render(unitRewards[j].name, ScreenCoord(SubDiv::hPos(12, 3), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.5f);
+				Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
+				Core::Text_Renderer::render("NEW UNIT!", ScreenCoord(SubDiv::hPos(24, 15), SubDiv::vPos(5, 2) + SubDiv::vSize(12, i)), 1.2f);
 			}
 			// Render the continue button
 			continueButton.render();
@@ -254,6 +298,15 @@ void Combat::render() {
 		Core::Text_Renderer::render("MAIN MENU", menuButton.position + Vec2<int>(120, 32), 1.8f);
 		quitButton.render();
 		Core::Text_Renderer::render("QUIT", quitButton.position + Vec2<int>(120, 32), 1.8f);
+	}
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
 	}
 }
 
@@ -392,8 +445,8 @@ void Combat::updateWinStatus() {
 			for (const json& unit : inputData["players"]) {
 				playerCount += 1;
 			}
+			// Give each player their corresponding amount of experience
 			float expPerPlayer = experienceReward / (float)playerCount;
-
 			std::vector<json> updatedPlayers;
 			for (json unit : inputData["players"]) {
 				std::string name = unit["name"];
@@ -409,6 +462,26 @@ void Combat::updateWinStatus() {
 				}
 				updatedPlayers.push_back(unit);
 				gameOverData.push_back(GameOverData{ name, static_cast<int>(expPerPlayer), level_up });
+			}
+			// Add the new units to the updated players
+			for (UnitData unit : unitRewards) {
+				json res;
+				res["name"] = unit.name;
+				res["STR"] = unit.strength;
+				res["DEX"] = unit.dexterity;
+				res["INT"] = unit.intelligence;
+				res["CON"] = unit.constitution;
+				res["attack1"] = unit.attack1;
+				res["attack2"] = unit.attack2;
+				res["attack3"] = unit.attack3;
+				res["attack4"] = unit.attack4;
+				res["level"] = unit.level;
+				res["experience"] = unit.experience;
+				// Initialize the skill tree to default (root)
+				std::vector<int> selected;
+				selected.push_back(1);
+				res["selected"] = selected;
+				updatedPlayers.push_back(res);
 			}
 			old_save.close();
 			json outputData;

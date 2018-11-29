@@ -68,6 +68,9 @@ bool AttackLoader::loadAttack(const json & data) {
 		if (particle["position"] == "TARGET") {
 			attacks[name].addParticle(particle_name, ParticlePosition::TARGET);
 		}
+		if (particle["position"] == "SELF") {
+			attacks[name].addParticle(particle_name, ParticlePosition::SELF);
+		}
 	}
 	return true;
 }

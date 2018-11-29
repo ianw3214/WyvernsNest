@@ -20,7 +20,7 @@
             ],
             "particles": [
                 {
-                    "name": "BLOW",
+                    "name": "DIRT",
                     "position": "TARGET"
                 }],
             "nodeid": 1
@@ -37,8 +37,7 @@
                 }
             ],
             "modifiers": [],
-            "particles": [],
-            "nodeid": 1
+            "particles": []
         },{
             "name": "THROW ROCK",
             "type": "ranged",
@@ -98,7 +97,11 @@
                     "mod": 20.0
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BUFF",
+                    "position": "SELF"
+                }],
             "nodeid": 1
         }, {
             "name": "FIREBALL",

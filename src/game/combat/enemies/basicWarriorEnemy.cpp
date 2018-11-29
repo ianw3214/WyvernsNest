@@ -8,20 +8,51 @@
 
 WarriorEnemy::WarriorEnemy() : 
 	// Init class vars
-	Enemy(UnitType::ENEMY, "res/assets/enemies/WyvernFighter_Sprite.png"),
+	Enemy(UnitType::ENEMY, "res/assets/enemies/warrior.png", 196, 196),
 	// Attack init
 	hit(Attacks::get("HIT", this)),
 	block(Attacks::get("BLOCK", this))
 {
-	sprite.setSize(sprite_width, sprite_height);
+	sprite.addAnimation(0, 0);			// IDLE
+	sprite.addAnimation(1, 1);			// DAMAGE
+	sprite.addAnimation(2, 2);			// DEAD
+	sprite.addAnimation(10, 21);		// ATTACK
 }
 
 WarriorEnemy::~WarriorEnemy() {
+
 }
 
-//calculates euclidian distance between 2 positions
+void WarriorEnemy::setTileSizeCallback(int width, int height) {
+	// TODO: include this in a metadata file
+	float width_to_tile = 1.6f;
+	float sprite_ratio = 1.6f;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(196 / WARRIOR_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(196 / WARRIOR_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+
+	// Also set the units height
+	unit_height = static_cast<int>(WARRIOR_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 196.f);
+}
+
+void WarriorEnemy::takeDamageCallback(int damage) {
+	if (health >= 0) {
+		if (health - damage < 0) {
+			sprite.playAnimation(2);
+		} else {
+			sprite.playAnimation(1, 10);
+			sprite.queueAnimation(0);
+		}
+	}
+}
+
+// Calculates euclidian distance between 2 positions
 int distance(Vec2<int> p1, Vec2<int> p2){
-	return sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2));
+	return static_cast<int>(sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2)));
 }	
 
 void WarriorEnemy::handleMovement() {
@@ -78,9 +109,9 @@ void WarriorEnemy::handleMovement() {
 		target_position=temp_target;
 	}
 
-	//set the actual position to one in range in case the target_position is out of range
+	// Set the actual position to one in range in case the target_position is out of range
 	Vec2<int> position_within_range=target_position;
-	if(getPath(*combat, target_position).size()>(moveSpeed+1)){
+	if(getPath(*combat, target_position).size() > static_cast<unsigned int>(moveSpeed+1)){
 		position_within_range = {getPath(*combat, target_position)[moveSpeed][0],getPath(*combat, target_position)[moveSpeed][1]};
 		printf("%d,%d\n",position_within_range[0],position_within_range[1]);
 	}	
@@ -113,24 +144,32 @@ void WarriorEnemy::handleAttack() {
         hit.attack(position - Vec2<int>(1, 0), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
         hit.attack(position - Vec2<int>(0, 1), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
         hit.attack(position - Vec2<int>(-1, 0), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
         hit.attack(position - Vec2<int>(0, -1), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     // If no attacks could be done, set the unit to be at done state

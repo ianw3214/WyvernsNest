@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-Menu::Menu() :
+Menu::Menu(bool start_music) :
 	background("res/assets/menu/background.png"),
 	highlight("res/assets/menu/blur.png"),
 	cursor("res/assets/UI/cursor.png"),
@@ -31,6 +31,12 @@ Menu::Menu() :
 	selected_option = 0;
 
 	SDL_ShowCursor(SDL_DISABLE);
+
+	// Play menu music
+	if (start_music) {
+		Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
+		Core::Mixer::playAudio("res/music/track1.wav", 10, 0.8f);
+	}
 }
 
 Menu::~Menu() {
@@ -137,6 +143,9 @@ void Menu::switchToCurrentState() {
 }
 
 void Menu::changeToCombatState() {
+	// Stop playing menu music
+	Core::Mixer::fadeOutAllMusic(500);
+
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
 	// Create a new save file for the user if it doesn't exist
@@ -185,7 +194,11 @@ void Menu::changeToCombatState() {
 
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
-	SDL_ShowCursor(SDL_ENABLE);
+
+	// For now, just play combat music here
+	// TODO: Load combat music from the combat state
+	Core::Mixer::loadAudio("res/music/track2.wav", AudioType::Music);
+	Core::Mixer::fadeInAllMusic("res/music/track2.wav", 1500);
 }
 
 void Menu::initializeSaveFile() {
@@ -200,7 +213,7 @@ void Menu::initializeSaveFile() {
 	player["experience"] = 0;
 	player["level"] = 1;
 	// TODO: Randomize this
-	player["name"] = "DEFAULT";
+	player["name"] = "ALICE";
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;

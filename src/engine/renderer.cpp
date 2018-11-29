@@ -1,5 +1,7 @@
 #include "renderer.hpp"
 
+#include <algorithm>
+
 #include "engine.hpp"
 #include "sprite.hpp"
 
@@ -64,7 +66,7 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 	va.addBuffer(vb, layout);
 
 	// Set the uniform to draw the right colour
-	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), 1.f);
+	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), alpha);
 	drawLines(va, ib, basicShader);
 }
 
@@ -88,7 +90,7 @@ void Renderer::drawRect(ScreenCoord v, int width, int height, Colour colour) {
 	va.addBuffer(vb, layout);
 
 	// Issue the actual draw call
-	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), 1.f);
+	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), alpha);
 	drawTriangles(va, ib, basicShader);
 }
 
@@ -178,4 +180,8 @@ void Renderer::draw(const VertexArray & va, const IndexBuffer & ib, const Shader
 
 	// TODO: Get GLtype from index buffer
 	glDrawElements(type, ib.getCount(), GL_UNSIGNED_INT, nullptr);
+}
+
+void Renderer::setAlpha(float a) {
+	alpha = std::fmin(1.f, std::fmax(0.f, a));
 }

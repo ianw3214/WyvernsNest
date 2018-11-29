@@ -20,7 +20,7 @@ class Cutscene : public State {
 public:
 
 	// The constructor takes the next State to transition to as input
-	Cutscene(State * state, int scene_time=5, bool timed_scene=true);
+	Cutscene(State * state, int scene_time=5, bool timed_scene=false);
 	~Cutscene();
 
 	void handleEvent(const SDL_Event& e) override;
