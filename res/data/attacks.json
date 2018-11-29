@@ -387,24 +387,23 @@
             ],
             "nodeid": 13
         },{
-            "name" : "RESSURECT",
+            "name" : "RESURRECT",
             "type" : "melee",
             "range" : 0,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "resurrect"
                 }
             ],
-            "modifiers": [
+            "modifiers": [],
+            "particles": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "name": "HEAL",
+                    "position": "TARGET"
                 }
             ],
-            "particles": [],
             "nodeid": 14
         },{
             "name" : "SUPER FIREBALL",

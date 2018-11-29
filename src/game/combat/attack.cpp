@@ -327,3 +327,16 @@ void BlinkEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack
 		unit->calculateScreenPosition();
 	}
 }
+
+// TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
+void ResurrectEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
+	if (combat.isPosEmpty(pos)) {
+		// This is really bad, do not do this in the future
+		Unit * unit = const_cast<Unit*>(attack.getSource());
+		if (unit->getState() == UnitState::DEAD) {
+			unit->health = 1;
+			unit->setState(UnitState::IDLE);
+			// TODO: Update animations
+		}
+	}
+}

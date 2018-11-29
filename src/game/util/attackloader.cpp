@@ -27,12 +27,12 @@ void AttackLoader::loadAttacks() {
 	std::ifstream inp(ATTACK_FILE_LOCATION);
 	// Use the provided overloaded operators to load the json data
 	json data;
-	inp >> data;
+inp >> data;
 
-	// Load all the attacks individually
-	for (const json& attack : data["attacks"]) {
-		loadAttack(attack);
-	}
+// Load all the attacks individually
+for (const json& attack : data["attacks"]) {
+	loadAttack(attack);
+}
 }
 
 // The helper function to load an attack to the map based on its json data
@@ -51,12 +51,12 @@ bool AttackLoader::loadAttack(const json & data) {
 	}
 	if (effects.size() == 0) return false;
 	attacks[name] = Attack(
-		name, 
-		nullptr, 
-		type, 
-		range, 
-		effects[0], 
-		aoe, 
+		name,
+		nullptr,
+		type,
+		range,
+		effects[0],
+		aoe,
 		affect_self);
 	// Parse the modifiers here
 	for (const json& modifier : data["modifiers"]) {
@@ -126,6 +126,9 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 	}
 	if (data["type"] == "blink") {
 		return new BlinkEffect();
+	}
+	if (data["type"] == "resurrect") {
+		return new ResurrectEffect();
 	}
 	return nullptr;
 }

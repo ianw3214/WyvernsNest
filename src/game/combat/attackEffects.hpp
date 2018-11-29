@@ -85,3 +85,9 @@ public:
 	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
 private:
 };
+
+class ResurrectEffect : public AttackEffect {
+public:
+	ResurrectEffect() {}
+	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
+};
