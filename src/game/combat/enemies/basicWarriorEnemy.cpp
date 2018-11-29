@@ -19,9 +19,9 @@ WarriorEnemy::WarriorEnemy() :
 WarriorEnemy::~WarriorEnemy() {
 }
 
-//calculates euclidian distance between 2 positions
+// Calculates euclidian distance between 2 positions
 int distance(Vec2<int> p1, Vec2<int> p2){
-	return sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2));
+	return static_cast<int>(sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2)));
 }	
 
 void WarriorEnemy::handleMovement() {
@@ -80,7 +80,7 @@ void WarriorEnemy::handleMovement() {
 
 	//set the actual position to one in range in case the target_position is out of range
 	Vec2<int> position_within_range=target_position;
-	if(getPath(*combat, target_position).size()>(moveSpeed+1)){
+	if(getPath(*combat, target_position).size() > static_cast<unsigned int>(moveSpeed+1)){
 		position_within_range = {getPath(*combat, target_position)[moveSpeed][0],getPath(*combat, target_position)[moveSpeed][1]};
 		printf("%d,%d\n",position_within_range[0],position_within_range[1]);
 	}	

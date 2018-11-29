@@ -119,11 +119,11 @@ void Grid::render()
 
 	// Render the debugging outline if set
 	if (renderOutline) {
-		Core::Renderer::setAlpha(.10 + .07*sin(Core::getSeconds()));
+		Core::Renderer::setAlpha(.10f + .07f * sin(Core::getSeconds()));
 		// Render horizontal lines
 		for (int i = 1; i < map_height; ++i) {
 		Core::Renderer::drawRect(
-				ScreenCoord(0.f, tile_height * i),
+				ScreenCoord(0, tile_height * i),
 				Core::windowWidth(),
 				thickness,
 				Colour(1.f, 1.f, 1.f));
@@ -131,7 +131,7 @@ void Grid::render()
 		// Render vertical lines
 		for (int i = 0; i < map_width; ++i) {
 			Core::Renderer::drawRect(
-				ScreenCoord(tile_width * i, 0.f),
+				ScreenCoord(tile_width * i, 0),
 				thickness,
 				Core::windowHeight(),
 				Colour(1.f, 1.f, 1.f));
