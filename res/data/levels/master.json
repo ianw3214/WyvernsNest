@@ -2,8 +2,8 @@
     "levels": [
         {
             "id": 1,
-            "name": "initial",
-            "file": "level1.json",
+            "name": "tutorial 1",
+            "file": "tutorial1.json",
             "cutscene": {
                 "images":[
                     "res/assets/cutscenes/scene1.png",
@@ -12,12 +12,72 @@
             }
         },{
             "id": 2,
-            "name": "more",
-            "file": "level2.json"
+            "name": "tutorial 2",
+            "file": "tutorial2.json",
+            "cutscene": {
+                "images": [
+                    "res/assets/cutscenes/scene2.png"
+                ]
+            }
         },{
             "id": 3,
-            "name": "mage dude",
+            "name": "tutorial 3",
+            "file": "tutorial3.json",
+            "cutscene": {
+                "images": [
+                    "res/assets/cutscenes/scene3.png"
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "name": "level 1",
+            "file": "level1.json"
+        },
+        {
+            "id": 5,
+            "name": "level 2",
+            "file": "level2.json"
+        },
+        {
+            "id": 6,
+            "name": "level 3",
             "file": "level3.json"
+        },
+        {
+            "id": 7,
+            "name": "level 4",
+            "file": "level4.json"
+        },
+        {
+            "id": 8,
+            "name": "level 5",
+            "file": "level5.json"
+        },
+        {
+            "id": 9,
+            "name": "level 6",
+            "file": "level6.json"
+        },
+        {
+            "id": 10,
+            "name": "level 7",
+            "file": "level7.json"
+        },
+        {
+            "id": 11,
+            "name": "level 8",
+            "file": "level8.json"
+        },
+        {
+            "id": 12,
+            "name": "level 9",
+            "file": "level9.json"
+        },
+        {
+            "id": 13,
+            "name": "level 10",
+            "file": "level10.json"
         }
     ]
 }

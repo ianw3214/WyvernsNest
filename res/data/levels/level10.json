@@ -14,19 +14,19 @@
             "x": 14,
             "y": 4
         },{
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 5,
             "y": 1
         },{
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 6,
             "y": 4
         },{
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 4,
             "y": 7
         },{
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 13,
             "y": 4
         }
@@ -49,5 +49,7 @@
             "y": 5
         }
     ],
-    "experience": 1000
+    "reward": {
+        "experience": 1000
+    }
 }

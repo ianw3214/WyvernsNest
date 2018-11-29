@@ -1,0 +1,21 @@
+{
+    "level": 1,
+    "players": [
+        {
+            "CON": 10,
+            "DEX": 10,
+            "INT": 10,
+            "STR": 10,
+            "attack1": "PUNCH",
+            "attack2": "THROW ROCK",
+            "attack3": "DASH",
+            "attack4": "SPEED BOOST",
+            "experience": 0,
+            "level": 1,
+            "name": "ALICE",
+            "selected": [
+                1
+            ]
+        }
+    ]
+}
