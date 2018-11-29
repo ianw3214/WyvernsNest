@@ -63,6 +63,8 @@ private:
 	bool game_win;
 	Unit * current;
 	std::vector<GameOverData> gameOverData;
+	int mouseX, mouseY;
+	bool mouseDown;
 
 	// Counter variable for showing the game over screen after the player wins
 	int game_over_counter;
@@ -74,6 +76,8 @@ private:
 	void initSprites();
 	Sprite gameOverBase;
 	Sprite pauseBase;
+	Sprite cursor;
+	Sprite cursorPress;
 
 	// Buttons
 	ButtonData continueButton;

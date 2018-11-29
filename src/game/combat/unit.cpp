@@ -231,7 +231,7 @@ void Unit::addStatus(Status * status) {
 	statusList.push_back(status);
 	status->setTarget(this);
 	// The status may affect unit stats, so recalculate utility variables
-	loadPropertiesFromUnitData();
+	loadPropertiesFromUnitData(false);
 }
 
 void Unit::select() {

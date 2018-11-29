@@ -194,7 +194,6 @@ void Menu::changeToCombatState() {
 
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
-	SDL_ShowCursor(SDL_ENABLE);
 
 	// For now, just play combat music here
 	// TODO: Load combat music from the combat state

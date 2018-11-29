@@ -37,8 +37,7 @@
                 }
             ],
             "modifiers": [],
-            "particles": [],
-            "nodeid": 1
+            "particles": []
         },{
             "name": "THROW ROCK",
             "type": "ranged",

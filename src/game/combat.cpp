@@ -21,7 +21,9 @@ using json = nlohmann::json;
 Combat::Combat(const std::string & filePath) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
-	pauseBase("res/assets/UI/pauseBase.png")
+	pauseBase("res/assets/UI/pauseBase.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png")
 {
 	initSprites();
 
@@ -151,6 +153,14 @@ void Combat::handleEvent(const SDL_Event& e) {
 			exit(0);
 		}
 	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+	}
 }
 
 void Combat::update(int delta) {
@@ -254,6 +264,15 @@ void Combat::render() {
 		Core::Text_Renderer::render("MAIN MENU", menuButton.position + Vec2<int>(120, 32), 1.8f);
 		quitButton.render();
 		Core::Text_Renderer::render("QUIT", quitButton.position + Vec2<int>(120, 32), 1.8f);
+	}
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
 	}
 }
 
