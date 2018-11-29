@@ -8,8 +8,13 @@
 #include "status.hpp"
 #include "../unitData.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 300
-#define DEFAULT_SPRITE_HEIGHT 300
+#define DEFAULT_SPRITE_WIDTH	300
+#define DEFAULT_SPRITE_HEIGHT	300
+
+// The scale of the sprite in relation to the tile size
+#define DEFAULT_WIDTH_TO_TILE	1.f
+// The scale of the height of the sprite in relation to the width
+#define DEFAULT_SPRITE_RATIO	1.5f
 
 class Combat;
 
@@ -129,6 +134,7 @@ protected:
 	int top_margin;
 
 	// Virtual functions that units can override to customize functionality
+	virtual void setTileSizeCallback(int width, int height);
 	virtual void takeDamageCallback(int damage);
 	virtual void selectCallback();
 

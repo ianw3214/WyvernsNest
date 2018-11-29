@@ -147,6 +147,18 @@ void Enemy::handleAttack() {
 	state = UnitState::DONE;
 }
 
+void Enemy::setTileSizeCallback(int width, int height) {
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(64 / ENEMY_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * DEFAULT_WIDTH_TO_TILE * width);
+	float height_ratio = static_cast<float>(64 / ENEMY_HEIGHT_IN_SOURCE);
+	// TODO: include this in file metadata as well
+	float sprite_ratio = 1.f;
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+}
+
 void Enemy::takeDamageCallback(int damage) {
 	if (health >= 0) {
 		if (health - damage < 0) {

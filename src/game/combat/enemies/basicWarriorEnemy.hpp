@@ -2,6 +2,10 @@
 
 #include "../enemy.hpp"
 
+// TODO: Put this data in a file w/ metadata
+#define WARRIOR_WIDTH_IN_SOURCE				66.f
+#define WARRIOR_HEIGHT_IN_SOURCE			72.f
+
 class WarriorEnemy : public Enemy {
 
 public:
@@ -12,7 +16,8 @@ public:
 protected:
 
 	// Override callback function to customize functionality
-	void takeDamageCallback(int damage) override;
+	virtual void setTileSizeCallback(int width, int height) override;
+	virtual void takeDamageCallback(int damage) override;
 
 private:
 

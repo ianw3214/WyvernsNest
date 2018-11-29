@@ -466,6 +466,19 @@ void Player::updatePossibleMoves()
 	possibleMoves = getPossibleMoves();
 }
 
+void Player::setTileSizeCallback(int width, int height) {
+	// TODO: include these in file metadata as well
+	float width_to_tile = 1.3f;
+	float sprite_ratio = 1.8f;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(96 / PLAYER_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(96 / PLAYER_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	player_sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+}
+
 void Player::takeDamageCallback(int damage) {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::TAKE_DAMAGE));
 	// Decide what the next animation is based on whether the player is still alive or not

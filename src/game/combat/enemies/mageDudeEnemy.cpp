@@ -22,6 +22,19 @@ MageDudeEnemy::~MageDudeEnemy() {
 
 }
 
+void MageDudeEnemy::setTileSizeCallback(int width, int height) {
+	// TODO: include this in a metadata file
+	float width_to_tile = 1.4f;
+	float sprite_ratio = 1.8;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(128 / MAGE_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(128 / MAGE_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+}
+
 void MageDudeEnemy::takeDamageCallback(int damage) {
 	if (health >= 0) {
 		if (health - damage < 0) {

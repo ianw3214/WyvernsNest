@@ -89,6 +89,9 @@ void Unit::setTileSize(int width, int height) {
 	shadow.setSize(width, height / 2);
 	// Recalculate the screen position based on the tile size
 	calculateScreenPosition();
+
+	// Call the tile size callback
+	setTileSizeCallback(width, height);
 }
 
 void Unit::setTopMargin(int margin) {
@@ -213,6 +216,7 @@ void Unit::calculateScreenPosition() {
 }
 
 // Not implemented in base unit, should be implemented in specialized classes
+void Unit::setTileSizeCallback(int width, int height) {}
 void Unit::takeDamageCallback(int damage) {}
 void Unit::selectCallback() {}
 

@@ -7,6 +7,10 @@
 #include "unit.hpp"
 #include "attack.hpp"
 
+// TODO: Put this data in a file w/ metadata
+#define ENEMY_WIDTH_IN_SOURCE			33.f
+#define ENEMY_HEIGHT_IN_SOURCE			33.f
+
 #define ENEMY_DEFAULT_MOVE_COUNTER		20
 #define ENEMY_DEFAULT_ATTACK_COUNTER	20
 
@@ -31,7 +35,8 @@ protected:
 	virtual void handleAttack();
 
 	// Override callback function to customize functionality
-	void takeDamageCallback(int damage) override;
+	virtual void setTileSizeCallback(int width, int height) override;
+	virtual void takeDamageCallback(int damage) override;
 
 	// Enemy sprite
 	AnimatedSprite sprite;
