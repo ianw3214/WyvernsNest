@@ -1,7 +1,7 @@
 #include "grid.hpp"
 
 #include <cmath> 
-#include <algorithm>
+#include <set>
 #include <fstream>
 
 // File JSON handling
@@ -34,10 +34,10 @@ Grid::Grid(std::string file) : tilesheet("INVALID") {
 	source_width = data["tilesheet_width"];
 	source_height = data["tilesheet_height"];
 
-	std::vector<int> colIndices = { 2, 5 };
+	std::set<int> colIndices = { 2, 5 };
 	for (int tile : data["tilemap"]) {
 		tilemap.push_back(tile);
-		collisionmap.push_back((std::find(colIndices.begin(), colIndices.end(), tile) != colIndices.end() ? 1 : 0));
+		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);
 	}
 
 	// Initialize other grid attributes based on current map attributes
