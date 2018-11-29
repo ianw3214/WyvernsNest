@@ -1,40 +1,40 @@
 {
-    "map": "map3.json",
+    "map": "map10.json",
     "enemies": [
         {
-            "type": "BABY GOOMBA",
-            "x": 8,
-            "y": 4
+            "type": "MAGE DUDE",
+            "x": 6,
+            "y": 1
+        },{
+            "type": "MAGE DUDE",
+            "x": 6,
+            "y": 8
         },{
             "type": "MAGE DUDE",
             "x": 14,
-            "y": 6
-        },{
-            "type": "BABY GOOMBA",
-            "x": 9,
-            "y": 5
-        },{
-            "type": "BABY GOOMBA",
-            "x": 9,
-            "y": 3
-        },{
-            "type": "BABY GOOMBA",
-            "x": 5,
             "y": 4
         },{
             "type": "BABY GOOMBA",
-            "x": 1,
+            "x": 5,
+            "y": 1
+        },{
+            "type": "BABY GOOMBA",
+            "x": 6,
+            "y": 4
+        },{
+            "type": "BABY GOOMBA",
+            "x": 4,
             "y": 7
+        },{
+            "type": "BABY GOOMBA",
+            "x": 13,
+            "y": 4
         }
     ],
     "player_spawns": [
         {
             "x": 0,
-            "y": 3
-        },
-        {
-            "x": 1,
-            "y": 3
+            "y": 4
         },
         {
             "x": 1,
@@ -42,6 +42,10 @@
         },
         {
             "x": 0,
+            "y": 5
+        },
+        {
+            "x": 1,
             "y": 5
         }
     ],

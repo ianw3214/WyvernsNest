@@ -3,7 +3,7 @@
   "enemies": [
     {
       "type": "BABY GOOMBA",
-      "x": 11,
+      "x": 8,
       "y": 1
     },
 
@@ -11,25 +11,31 @@
       "type": "BABY GOOMBA",
       "x": 5,
       "y": 4
+    },
+
+    {
+      "type": "BABY GOOMBA",
+      "x": 10,
+      "y": 7
     }
   ],
     "player_spawns": [
         {
             "x": 0,
-            "y": 3
-        },
-        {
-            "x": 2,
-            "y": 2
-        },
-        {
-            "x": 3,
-            "y": 3
-        },
-        {
-            "x": 4,
             "y": 4
+        },
+        {
+            "x": 1,
+            "y": 5
+        },
+        {
+            "x": 0,
+            "y": 6
+        },
+        {
+            "x": 0,
+            "y": 5
         }
     ],
-    "experience": 200
+    "experience": 1000
 }
