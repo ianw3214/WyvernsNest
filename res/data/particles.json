@@ -72,6 +72,25 @@
                 "width": 100,
                 "height": 100
             }
+        },
+        {
+            "name": "BLOW",
+            "angle": 0,
+            "spread": 45,
+            "max_y": 50,
+            "lifespan": 0,
+            "spawnrate": 5,
+            "burst": true,
+            "speed": 5,
+            "particle_lifespan": 20,
+            "spawn_radius": 5,
+            "gravity": false,
+            "image_data": {
+                "x": 100,
+                "y": 0,
+                "width": 100,
+                "height": 100
+            }
         }
     ]
 }

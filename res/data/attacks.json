@@ -18,6 +18,25 @@
                     "mod": 0.1
                 }
             ],
+            "particles": [
+                {
+                    "name": "BLOW",
+                    "position": "TARGET"
+                }],
+            "nodeid": 1
+        },{
+            "name" : "HIT",
+            "type" : "melee",
+            "range" : 1,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 4
+                }
+            ],
+            "modifiers": [],
             "particles": [],
             "nodeid": 1
         },{
@@ -157,7 +176,7 @@
             ],
             "nodeid": 3
         },{
-            "name" : "BASIC PUSH",
+            "name" : "PUSH",
             "type" : "melee",
             "range" : 1,
             "aoe" : 0,
@@ -177,43 +196,37 @@
             "particles": [],
             "nodeid": 4
         },{
-            "name" : "ATK BOOST",
-            "type" : "melee",
-            "range" : 0,
+            "name" : "STR BOOST",
+            "type" : "ranged",
+            "range" : 3,
             "aoe" : 0,
-            "affect_self": false,
+            "affect_self": true,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.5,
+                    "ticks": 3
                 }
             ],
-            "modifiers": [
-                {
-                    "type": "STR",
-                    "mod": 1.5
-                }
-            ],
+            "modifiers": [],
             "particles": [],
             "nodeid": 5
         },{
-            "name" : "DEFENSE BOOST",
-            "type" : "melee",
-            "range" : 0,
+            "name" : "CONSTITUTION BOOST",
+            "type" : "ranged",
+            "range" : 2,
             "aoe" : 0,
-            "affect_self": false,
+            "affect_self": true,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "buff",
+                    "stat": "CON",
+                    "percent": 0.4,
+                    "ticks": 3
                 }
             ],
-            "modifiers": [
-                {
-                    "type": "STR",
-                    "mod": 1.5
-                }
-            ],
+            "modifiers": [],
             "particles": [],
             "nodeid": 6
         },{

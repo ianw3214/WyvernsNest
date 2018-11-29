@@ -33,14 +33,14 @@
             "level": 2
         },{
             "id": 5,
-            "data": "ATTACK BOOST",
+            "data": "STRENGTH BOOST",
             "sprite_index": 4,
             "children": [9],
             "x_offset": -1,
             "level": 2
         },{
             "id": 6,
-            "data": "DEFENCE BOOST",
+            "data": "CONSTITUTION BOOST",
             "sprite_index": 5,
             "children": [9],
             "x_offset": 1,

@@ -8,14 +8,13 @@
             "STR": 10,
             "attack1": "PUNCH",
             "attack2": "THROW ROCK",
-            "attack3": "BASIC PUSH",
+            "attack3": "DASH",
             "attack4": "SPEED BOOST",
-            "experience": 400,
-            "level": 3,
+            "experience": 0,
+            "level": 1,
             "name": "DEFAULT",
             "selected": [
-                1,
-                3
+                1
             ]
         }
     ]

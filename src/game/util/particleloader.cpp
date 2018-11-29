@@ -27,6 +27,23 @@ Emitter * ParticleLoader::get(const std::string & name, int x, int y) {
 	return emitter;
 }
 
+Emitter * ParticleLoader::get(const std::string & name, int x, int y, int angle) {
+	if (emitters.find(name) == emitters.end()) return nullptr;
+	Emitter * emitter = new Emitter(x, y,
+		angle,
+		emitters[name].spread,
+		emitters[name].max_y,
+		emitters[name].lifespan,
+		emitters[name].spawnrate,
+		emitters[name].burst,
+		emitters[name].speed,
+		emitters[name].particle_lifespan,
+		emitters[name].spawn_radius,
+		emitters[name].gravity);
+	emitter->SetSprite(emitters[name].source_x, emitters[name].source_y, emitters[name].source_w, emitters[name].source_h);
+	return emitter;
+}
+
 ParticleLoader::ParticleLoader() {
 	loadParticles();
 }
