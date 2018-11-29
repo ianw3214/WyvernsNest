@@ -143,6 +143,8 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	sprite_selected("res/assets/UI/NodeBase.png"),
 	sprite_empty("res/assets/UI/NodeEmpty.png"),
 	sprite_reachable("res/assets/UI/NodeReachable.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png"),
 	icons(NODE_ICONS_FILE)
 {
 	{	// Read skill tree data from a file
@@ -226,6 +228,14 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 			exit(0);
 		}
 	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+	}
 }
 
 void SkillTree::update(int delta) {
@@ -263,6 +273,15 @@ void SkillTree::render() {
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	std::string text = std::string("Available skill points: ") + std::to_string(playerLevel - selected.size());
 	Core::Text_Renderer::render(text, ScreenCoord(10, Core::windowHeight() - 20));
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
+	}
 }
 
 void SkillTree::initSprites() {

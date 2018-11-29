@@ -100,7 +100,7 @@ void CreditsMenu::render() {
 void CreditsMenu::switchToCurrentState() {
 	switch (selected_option) {
 	case 0: {
-		changeState(new Menu());
+		changeState(new Menu(false));
 	} break;
 	default: {
 		exit(1);

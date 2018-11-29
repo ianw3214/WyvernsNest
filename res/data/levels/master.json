@@ -7,7 +7,7 @@
             "cutscene": {
                 "images":[
                     "res/assets/cutscenes/scene1.png",
-                    "res/assets/cutscenes/scene2.png"
+                    "res/assets/cutscenes/tutorial.png"
                 ]
             }
         },{

@@ -11,7 +11,9 @@ using json = nlohmann::json;
 
 Customization::Customization(const std::string& file) :
 	base("res/assets/UI/UnitBase.png"),
-	empty("res/assets/UI/EmptyUnit.png")
+	empty("res/assets/UI/EmptyUnit.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png")
 {
 	std::ifstream player_file(file);
 	if (player_file.is_open()) {
@@ -161,6 +163,14 @@ void Customization::handleEvent(const SDL_Event& e) {
 			exit(0);
 		}
 	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+	}
 }
 
 void Customization::update(int delta) {
@@ -251,6 +261,15 @@ void Customization::render() {
 	}
 	
 	continueButton.render();
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
+	}
 }
 
 void Customization::displayUnitData(const UnitData & data) {
@@ -289,6 +308,7 @@ void Customization::saveData() {
 	out_save_file.close();
 }
 
+#include <iostream>
 void Customization::switchToCombatState() {
 	saveData();
 	// Assume the save file is always valid
@@ -312,6 +332,12 @@ void Customization::switchToCombatState() {
 			combatLevelLocation = std::string("res/data/levels/") + name;
 			level_found = true;
 		}
+		// Temporary debugging code
+		// TODO: remove this
+		if (!level_found) {
+			std::string name = level["file"];
+			combatLevelLocation = std::string("res/data/levels/") + name;
+		}
 	}
 	save_file.close();
 	masterFile.close();
@@ -322,7 +348,7 @@ void Customization::switchToCombatState() {
 		out_save_file << inputData.dump(4);
 		out_save_file.close();
 	}
-	changeState(new Combat(combatLevelLocation));
+	changeState(new Combat(combatLevelLocation)); 
 }
 
 void Customization::initAvailableAttacks() {

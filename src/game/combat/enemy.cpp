@@ -5,10 +5,17 @@
 
 Enemy::Enemy() :
 	Unit(UnitType::ENEMY),
-	sprite("res/assets/enemies/WyrmSprite.png"),
+	sprite("res/assets/enemies/babygoomba.png", 64, 64),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	sprite.setSourceSize(64, 64);
+	
+	sprite.addAnimation(0, 0);			// IDLE
+	sprite.addAnimation(1, 1);			// DAMAGE
+	sprite.addAnimation(10, 17);		// DYING
+	sprite.addAnimation(18, 18);		// DEAD
+
 	// Randomize enemy stats
 	UnitData data;
 	data.strength = rand() % 10 + 1;
@@ -18,12 +25,13 @@ Enemy::Enemy() :
 	setData(data);
 }
 
-Enemy::Enemy(UnitType type, const std::string& spritePath) :
+Enemy::Enemy(UnitType type, const std::string& spritePath, int src_w, int src_h) :
 	Unit(type),
-	sprite(spritePath),
+	sprite(spritePath, src_w, src_h),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	sprite.setSourceSize(src_w, src_h);
 }
 
 Enemy::~Enemy()
@@ -32,19 +40,10 @@ Enemy::~Enemy()
 
 void Enemy::render()
 {
-
-	if (state != UnitState::DEAD) {
-		shadow.render();
-
-		sprite.setPos(screenPosition.x(), screenPosition.y());
-		sprite.render();
-	}
+	sprite.setPos(screenPosition.x(), screenPosition.y());
+	sprite.render();
 
 	renderHealth();
-
-	if (statusList.size() > 0) {
-		Core::Text_Renderer::render("DEBUG: " + std::to_string(statusList.size()), ScreenCoord(100, 100));
-	}
 }
 
 void Enemy::update(int delta) {
@@ -146,5 +145,32 @@ void Enemy::handleAttack() {
 	}
 	// If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;
+}
+
+void Enemy::setTileSizeCallback(int width, int height) {
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(64 / ENEMY_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * DEFAULT_WIDTH_TO_TILE * width);
+	float height_ratio = static_cast<float>(64 / ENEMY_HEIGHT_IN_SOURCE);
+	// TODO: include this in file metadata as well
+	float sprite_ratio = 1.f;
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+
+	// Also set the units height
+	unit_height = static_cast<int>(ENEMY_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 64.f);
+}
+
+void Enemy::takeDamageCallback(int damage) {
+	if (health >= 0) {
+		if (health - damage < 0) {
+			sprite.playAnimation(2);
+			sprite.queueAnimation(3);
+		} else {
+			sprite.playAnimation(1, 10);
+			sprite.queueAnimation(0);
+		}
+	}
 }
 

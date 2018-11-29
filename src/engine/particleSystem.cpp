@@ -82,30 +82,6 @@ Emitter::Emitter(int x, int y, int angle, int spread, int maxY, int lifespan, in
 	}
 }
 
-
-//Emitter::Emitter(int x, int y, int a, int s, int m, int ls, int sr, bool b)
-//{
-//	position = ScreenCoord(x, y);
-//	counter = 0;
-//
-//	angle = a;
-//	spread = s;
-//	maxY = m;
-//
-//	spawnRate = sr;
-//	lifespan = ls;
-//
-//	burst = b;
-//
-//	if (burst) {
-//		for (int i = 0; i < spawnRate; i++) {
-//			Particle * newParticle = new Particle(position, angle + (rand() % (spread * 2) - spread), maxY, 10);
-//			particles.push_back(newParticle);
-//		}
-//	}
-//
-//}
-
 void Emitter::render(Sprite s)
 {
 	for (Particle * p : particles) {
@@ -116,7 +92,6 @@ void Emitter::render(Sprite s)
 void Emitter::update()
 {
 	for (std::vector<Particle *>::iterator it = particles.begin(); it != particles.end();) {
-
 		(*it)->update();
 		if ((*it)->counter > (*it)->lifespan) {
 			Particle * toDelete = (*it);
@@ -128,47 +103,39 @@ void Emitter::update()
 			it++;
 		}
 	}
+	// Regardless of whether the particle was burst or not, create more particles
+	counter++;
+	if (counter > spawnRate && counter2 < lifespan) {
+		counter = 0;
+		ScreenCoord origin;
+		int pAngle;
+		int pMaxY;
 
-	//for (Particle * p : particles) {
-	//	p->update();
-	//	if (p->counter > p->lifespan) {
-	//		delete p;
-	//	}
-	//}
-	if (!burst) {
-		counter++;
-		if (counter > spawnRate && counter2 < lifespan) {
-			counter = 0;
-			ScreenCoord origin;
-			int pAngle;
-			int pMaxY;
-
-			if (spawnRadius == 0) {
-				origin = position;
-			}
-			else {
-				origin = position + ScreenCoord(rand() % (spawnRadius * 2) - spawnRadius, rand() % (spawnRadius * 2) - spawnRadius);
-			}
-
-			if (spread == 0) {
-				pAngle = angle;
-			}
-			else {
-				pAngle = angle + (rand() % (spread * 2) - spread);
-			}
-
-			if (maxY == 0) {
-				pMaxY = 0;
-			}
-			else {
-				pMaxY = origin.y() + maxY + (rand() % (maxY / 2) - (maxY / 4));
-			}
-
-			int pSpeed = speed + (rand() % speed - (speed / 2));
-			Particle * newParticle = new Particle(origin, pAngle, pMaxY, pSpeed, pLifeSpan, gravity);
-			newParticle->SetSprite(sourceX, sourceY, sourceW, sourceH);
-			particles.push_back(newParticle);
+		if (spawnRadius == 0) {
+			origin = position;
 		}
+		else {
+			origin = position + ScreenCoord(rand() % (spawnRadius * 2) - spawnRadius, rand() % (spawnRadius * 2) - spawnRadius);
+		}
+
+		if (spread == 0) {
+			pAngle = angle;
+		}
+		else {
+			pAngle = angle + (rand() % (spread * 2) - spread);
+		}
+
+		if (maxY == 0) {
+			pMaxY = 0;
+		}
+		else {
+			pMaxY = origin.y() + maxY + (rand() % (maxY / 2) - (maxY / 4));
+		}
+
+		int pSpeed = speed + (rand() % speed - (speed / 2));
+		Particle * newParticle = new Particle(origin, pAngle, pMaxY, pSpeed, pLifeSpan, gravity);
+		newParticle->SetSprite(sourceX, sourceY, sourceW, sourceH);
+		particles.push_back(newParticle);
 	}
 	counter2++;
 }

@@ -101,15 +101,16 @@ void Player::renderTop(Combat * combat) {
 	}
 	renderHealth();
 }
+
 void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
-	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
-	else {
-		pos.x() += SubDiv::hSize(5, 1);
+	if (pos.x() < Core::windowWidth() / 2) {
+		pos.x() += unit_width + (sprite_width - unit_width) / 2;
+	} else {
+		pos.x() += (sprite_width - unit_width) / 2 - SubDiv::hSize(5, 1);
 	}
-	if (pos.y() < 0) pos.y() = 0;
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
@@ -464,6 +465,23 @@ std::vector<ScreenCoord> Player::getPossibleMoves() {
 void Player::updatePossibleMoves()
 {
 	possibleMoves = getPossibleMoves();
+}
+
+void Player::setTileSizeCallback(int width, int height) {
+	// TODO: include these in file metadata as well
+	float width_to_tile = 1.3f;
+	float sprite_ratio = 1.8f;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(96 / PLAYER_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(96 / PLAYER_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	player_sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+
+	// Also set the units height
+	unit_width = static_cast<int>(PLAYER_WIDTH_IN_SOURCE * static_cast<float>(sprite_width) / 96.f);
+	unit_height = static_cast<int>(PLAYER_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 96.f);
 }
 
 void Player::takeDamageCallback(int damage) {

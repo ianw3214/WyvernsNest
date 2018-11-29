@@ -6,6 +6,9 @@
 #include "combat/grid.hpp"
 #include "../engine/particleSystem.hpp"
 #include "util/button.hpp"
+#include "unitData.hpp"
+
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -31,7 +34,7 @@ class Combat : public State {
 
 public:
 
-	Combat(const std::string& gridPath);
+	Combat(const std::string& gridPath, bool last_level = false);
 	~Combat();
 
 	// Default state functions called from the state handler
@@ -63,6 +66,9 @@ private:
 	bool game_win;
 	Unit * current;
 	std::vector<GameOverData> gameOverData;
+	int mouseX, mouseY;
+	bool mouseDown;
+	bool last_level;
 
 	// Counter variable for showing the game over screen after the player wins
 	int game_over_counter;
@@ -74,6 +80,8 @@ private:
 	void initSprites();
 	Sprite gameOverBase;
 	Sprite pauseBase;
+	Sprite cursor;
+	Sprite cursorPress;
 
 	// Buttons
 	ButtonData continueButton;
@@ -94,6 +102,7 @@ private:
 
 	// The total experience granted to players upon completing the level
 	float experienceReward;
+	std::vector<UnitData> unitRewards;
 
 	// Other helper functions
 	void updateWinStatus();
