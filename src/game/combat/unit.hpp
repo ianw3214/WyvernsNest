@@ -131,7 +131,8 @@ protected:
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
-	// Height of the unit within the sprite
+	// Width/height of the unit within the sprite
+	int unit_width;
 	int unit_height;
 
 	// Virtual functions that units can override to customize functionality
