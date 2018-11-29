@@ -143,6 +143,9 @@ void Menu::switchToCurrentState() {
 }
 
 void Menu::changeToCombatState() {
+	// Stop playing menu music
+	Core::Mixer::fadeOutAllMusic(500);
+
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
 	// Create a new save file for the user if it doesn't exist
@@ -193,8 +196,10 @@ void Menu::changeToCombatState() {
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 	SDL_ShowCursor(SDL_ENABLE);
 
-	// Stop playing menu music
-	Core::Mixer::fadeOutAllMusic(500);
+	// For now, just play combat music here
+	// TODO: Load combat music from the combat state
+	Core::Mixer::loadAudio("res/music/track2.wav", AudioType::Music);
+	Core::Mixer::fadeInAllMusic("res/music/track2.wav", 1500);
 }
 
 void Menu::initializeSaveFile() {
