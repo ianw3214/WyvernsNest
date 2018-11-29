@@ -2,6 +2,7 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "../../engine/animatedSprite.hpp"
 
 #include "unit.hpp"
 #include "attack.hpp"
@@ -29,8 +30,11 @@ protected:
 	// Helper method to handle the attack portion of an enemy turn
 	virtual void handleAttack();
 
+	// Override callback function to customize functionality
+	void takeDamageCallback(int damage) override;
+
 	// Enemy sprite
-	Sprite sprite;
+	AnimatedSprite sprite;
 
 private:
 

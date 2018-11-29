@@ -5,10 +5,17 @@
 
 Enemy::Enemy() :
 	Unit(UnitType::ENEMY),
-	sprite("res/assets/enemies/WyrmSprite.png"),
+	sprite("res/assets/enemies/babygoomba.png", 64, 64),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	sprite.setSourceSize(64, 64);
+	
+	sprite.addAnimation(0, 0);			// IDLE
+	sprite.addAnimation(1, 1);			// DAMAGE
+	sprite.addAnimation(10, 17);		// DYING
+	sprite.addAnimation(18, 18);		// DISAPPEARED
+
 	// Randomize enemy stats
 	UnitData data;
 	data.strength = rand() % 10 + 1;
@@ -20,7 +27,7 @@ Enemy::Enemy() :
 
 Enemy::Enemy(UnitType type, const std::string& spritePath) :
 	Unit(type),
-	sprite(spritePath),
+	sprite(spritePath, 64, 64),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
@@ -32,19 +39,10 @@ Enemy::~Enemy()
 
 void Enemy::render()
 {
-
-	if (state != UnitState::DEAD) {
-		shadow.render();
-
-		sprite.setPos(screenPosition.x(), screenPosition.y());
-		sprite.render();
-	}
+	sprite.setPos(screenPosition.x(), screenPosition.y());
+	sprite.render();
 
 	renderHealth();
-
-	if (statusList.size() > 0) {
-		Core::Text_Renderer::render("DEBUG: " + std::to_string(statusList.size()), ScreenCoord(100, 100));
-	}
 }
 
 void Enemy::update(int delta) {
@@ -146,5 +144,17 @@ void Enemy::handleAttack() {
 	}
 	// If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;
+}
+
+void Enemy::takeDamageCallback(int damage) {
+	if (health >= 0) {
+		if (health - damage < 0) {
+			sprite.playAnimation(2);
+			sprite.queueAnimation(3);
+		} else {
+			sprite.playAnimation(1, 10);
+			sprite.queueAnimation(0);
+		}
+	}
 }
 
