@@ -12,18 +12,20 @@
 #include "combat/enemies/basicWarriorEnemy.hpp"
 
 #include "menus/menu.hpp"
+#include "menus/creditsmenu.hpp"
 #include "customization.hpp"
 
 #include <utility>
 #include <fstream>
 using json = nlohmann::json;
 
-Combat::Combat(const std::string & filePath) :
+Combat::Combat(const std::string & filePath, bool last_level) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
 	pauseBase("res/assets/UI/pauseBase.png"),
 	cursor("res/assets/UI/cursor.png"),
-	cursorPress("res/assets/UI/cursorPress.png")
+	cursorPress("res/assets/UI/cursorPress.png"),
+	last_level(last_level)
 {
 	initSprites();
 
@@ -130,7 +132,11 @@ void Combat::handleEvent(const SDL_Event& e) {
 				if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 					if (render_game_over) {
 						// Move on to the next state
-						changeState(new Customization());
+						if (last_level) {
+							changeState(new CreditsMenu());
+						} else {
+							changeState(new Customization());
+						}
 					}
 				}
 			}
@@ -139,7 +145,12 @@ void Combat::handleEvent(const SDL_Event& e) {
 				SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 				if (continueButton.colliding(mousePos)) {
 					if (game_win) {
-						changeState(new Customization());
+						// Move on to the next state
+						if (last_level) {
+							changeState(new CreditsMenu());
+						} else {
+							changeState(new Customization());
+						}
 					} else {
 						changeState(new Menu());
 					}
