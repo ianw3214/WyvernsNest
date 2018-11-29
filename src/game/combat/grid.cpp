@@ -34,7 +34,7 @@ Grid::Grid(std::string file) : tilesheet("INVALID") {
 	source_width = data["tilesheet_width"];
 	source_height = data["tilesheet_height"];
 
-	std::set<int> colIndices = { 2, 5 };
+	std::set<int> colIndices = { 2, 4, 5 };
 	for (int tile : data["tilemap"]) {
 		tilemap.push_back(tile);
 		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);
