@@ -1,0 +1,31 @@
+{
+    "map": "map2.json",
+    "enemies": [
+        {
+            "type": "MAGE DUDE",
+            "x": 5,
+            "y": 3
+        }
+    ],
+    "player_spawns": [
+        {
+            "x": 0,
+            "y": 3
+        },
+        {
+            "x": 2,
+            "y": 2
+        },
+        {
+            "x": 3,
+            "y": 3
+        },
+        {
+            "x": 4,
+            "y": 4
+        }
+    ],
+    "reward": {
+        "experience": 200
+    }
+}

@@ -9,11 +9,11 @@ using json = nlohmann::json;
 #include "customization.hpp"
 
 //creates a new node
-Node::Node(std::string n_data, int n_id, std::string n_spritePath,
-	std::vector<int> n_children, int n_x_offset, int n_level) {
+Node::Node(std::string n_data, int n_id, int n_sprite_index,
+	std::vector<int> n_children, int n_x_offset, int n_level){
 	data=n_data;
 	id=n_id;
-	spritePath=n_spritePath;
+	sprite_index = n_sprite_index;
 	children=n_children;
 	x_offset=n_x_offset;
 	level=n_level;
@@ -58,12 +58,12 @@ void SkillTree::renderNode(Node * node) {
 	int y_pos = top_margin + (node->level*100);
 	// Set x,y positions for node (data structure)
 
-	// Draw node
+	// Draw node base
 	if (std::find(selected.begin(), selected.end(), node->id) != selected.end()) {
-		Sprite sprite(node->spritePath.c_str());
-		sprite.setSize(node_width, node_height);
-		sprite.setPos(x_pos, y_pos);
-		sprite.render();
+		// Check if selected
+		sprite_selected.setSize(node_width, node_height);
+		sprite_selected.setPos(x_pos, y_pos);
+		sprite_selected.render();
 	} else {
 		// Check if reachable
 		if (std::find(reachable.begin(), reachable.end(), node->id) != reachable.end()) {
@@ -76,6 +76,11 @@ void SkillTree::renderNode(Node * node) {
 			sprite_empty.render();
 		}
 	}
+	// Draw node sprite
+	icons.setSourcePos(NODE_X(node->sprite_index), NODE_Y(node->sprite_index));
+	icons.setSize(node_width, node_height);
+	icons.setPos(x_pos, y_pos);
+	icons.render();
 
 	// Update location tracking (upper left corner)
 	node->x_position=x_pos;
@@ -135,8 +140,12 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	playerId(playerId),
 	selected(selected),
 	base("res/assets/UI/SkillTreeBase.png"),
+	sprite_selected("res/assets/UI/NodeBase.png"),
 	sprite_empty("res/assets/UI/NodeEmpty.png"),
-	sprite_reachable("res/assets/UI/NodeReachable.png")
+	sprite_reachable("res/assets/UI/NodeReachable.png"),
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png"),
+	icons(NODE_ICONS_FILE)
 {
 	{	// Read skill tree data from a file
 		std::ifstream f(skillTreePath);
@@ -146,11 +155,11 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 		for (const json& node : data["nodes"]) {
 			int id = node["id"];
 			std::string data = node["data"];
-			std::string sprite = node["sprite"];
+			int sprite_index = node["sprite_index"];
 			int x_offset = node["x_offset"];
 			int level = node["level"];
 			// Construct the node object and add its children
-			Node obj = Node(data, id, sprite, std::vector<int>(), x_offset, level);
+			Node obj = Node(data, id, sprite_index, std::vector<int>(), x_offset, level);
 			for (int child : node["children"]) {
 				obj.children.push_back(child);
 			}
@@ -181,6 +190,7 @@ SkillTree::SkillTree(int playerId, const std::string & skillTreePath) :
 	updateReachableNodes();
 	backButton = ButtonData(ScreenCoord(Core::windowWidth() / 2 - 64, Core::windowHeight() - 90), 128, 64);
 	backButton.setSprites("res/assets/UI/BackButton.png", "res/assets/UI/BackButtonHover.png", "res/assets/UI/BackButton.png");
+	icons.setSourceSize(NODE_ICONS_SOURCE_SIZE, NODE_ICONS_SOURCE_SIZE);
 }
 
 SkillTree::~SkillTree() {
@@ -211,9 +221,20 @@ void SkillTree::handleEvent(const SDL_Event& e) {
 	}
 
 	if (e.type == SDL_KEYDOWN) {
-		if (e.key.keysym.sym == SDLK_RETURN) {
+		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			returnToCustomization();
 		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			exit(0);
+		}
+	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
 	}
 }
 
@@ -252,6 +273,15 @@ void SkillTree::render() {
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	std::string text = std::string("Available skill points: ") + std::to_string(playerLevel - selected.size());
 	Core::Text_Renderer::render(text, ScreenCoord(10, Core::windowHeight() - 20));
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
+	}
 }
 
 void SkillTree::initSprites() {

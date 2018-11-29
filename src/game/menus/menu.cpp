@@ -3,12 +3,13 @@
 #include "settingsmenu.hpp"
 #include "creditsmenu.hpp"
 #include "../combat.hpp"
+#include "cutscene.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-Menu::Menu() :
+Menu::Menu(bool start_music) :
 	background("res/assets/menu/background.png"),
 	highlight("res/assets/menu/blur.png"),
 	cursor("res/assets/UI/cursor.png"),
@@ -30,10 +31,16 @@ Menu::Menu() :
 	selected_option = 0;
 
 	SDL_ShowCursor(SDL_DISABLE);
+
+	// Play menu music
+	if (start_music) {
+		Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
+		Core::Mixer::playAudio("res/music/track1.wav", 10, 0.8f);
+	}
 }
 
 Menu::~Menu() {
-	SDL_ShowCursor(SDL_ENABLE);
+	
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -49,6 +56,10 @@ void Menu::handleEvent(const SDL_Event & e) {
 		}
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			switchToCurrentState();
+		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			if (selected_option == NUM_BUTTONS - 1) exit(0);
+			else selected_option = NUM_BUTTONS - 1;
 		}
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -72,13 +83,11 @@ void Menu::update(int delta) {
 
 void Menu::render() {
 	background.render();
-	/*
 	if (render_text) {
-		ScreenCoord pos(380, 450);
-		Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
-		Core::Text_Renderer::render("Press any key to begin", pos, 2.f);
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+		Core::Text_Renderer::setColour(Colour(7.f, .8f, .9f));
+		Core::Text_Renderer::render("Press  ENTER  to  begin", ScreenCoord(SubDiv::hCenter(), Core::windowHeight() - 10), 0.8f);
 	}
-	*/
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	ScreenCoord version_pos(10, Core::windowHeight() - 10);
@@ -134,6 +143,9 @@ void Menu::switchToCurrentState() {
 }
 
 void Menu::changeToCombatState() {
+	// Stop playing menu music
+	Core::Mixer::fadeOutAllMusic(500);
+
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
 	// Create a new save file for the user if it doesn't exist
@@ -156,6 +168,7 @@ void Menu::changeToCombatState() {
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
+	bool has_cutscene = false;
 	std::string combatLevelLocation;
 	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
 	json masterData;
@@ -165,13 +178,27 @@ void Menu::changeToCombatState() {
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
 			std::string name = level["file"];
 			combatLevelLocation = std::string("res/data/levels/") + name;
+			// If a cutscene is found, switch to it
+			if (level.find("cutscene") != level.end()) {
+				has_cutscene = true;
+				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation));
+				for (std::string img : level["cutscene"]["images"]) {
+					cutscene->addSprite(img);
+				}
+				changeState(cutscene);
+			} else {
+				changeState(new Combat(combatLevelLocation));
+			}
 		}
 	}
 
-	changeState(new Combat(combatLevelLocation));
-
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+
+	// For now, just play combat music here
+	// TODO: Load combat music from the combat state
+	Core::Mixer::loadAudio("res/music/track2.wav", AudioType::Music);
+	Core::Mixer::fadeInAllMusic("res/music/track2.wav", 1500);
 }
 
 void Menu::initializeSaveFile() {
@@ -186,7 +213,7 @@ void Menu::initializeSaveFile() {
 	player["experience"] = 0;
 	player["level"] = 1;
 	// TODO: Randomize this
-	player["name"] = "DEFAULT";
+	player["name"] = "ALICE";
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;

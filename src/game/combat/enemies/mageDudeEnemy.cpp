@@ -5,16 +5,49 @@
 
 MageDudeEnemy::MageDudeEnemy() :
 	// Init class vars
-	Enemy(UnitType::ENEMY, "res/assets/enemies/MageDude_Sprite.png"),
+	Enemy(UnitType::ENEMY, "res/assets/enemies/mage.png", 128, 128),
 	// Attack init
 	fireball(Attacks::get("FIREBALL", this)),
 	dragons_rage(Attacks::get("DRAGONS RAGE", this))
 {
-	sprite.setSize(sprite_width, sprite_height);
+	sprite.addAnimation(0, 0);			// IDLE
+	sprite.addAnimation(1, 1);			// DAMAGE
+	sprite.addAnimation(10, 23);		// GENERIC SPELL
+	sprite.addAnimation(30, 43);		// FIRE SPELL
+	sprite.addAnimation(50, 58);		// DYING
+	sprite.addAnimation(58, 58);		// DEAD
 }
 
 MageDudeEnemy::~MageDudeEnemy() {
 
+}
+
+void MageDudeEnemy::setTileSizeCallback(int width, int height) {
+	// TODO: include this in a metadata file
+	float width_to_tile = 1.4f;
+	float sprite_ratio = 1.8f;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(128 / MAGE_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(128 / MAGE_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+
+	// Also set the units height
+	unit_height = static_cast<int>(MAGE_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 128.f);
+}
+
+void MageDudeEnemy::takeDamageCallback(int damage) {
+	if (health >= 0) {
+		if (health - damage < 0) {
+			sprite.playAnimation(4);
+			sprite.queueAnimation(5);
+		} else {
+			sprite.playAnimation(1, 10);
+			sprite.queueAnimation(0);
+		}
+	}
 }
 
 void MageDudeEnemy::handleMovement() {
@@ -110,6 +143,8 @@ void MageDudeEnemy::handleAttack() {
 						fireball.attack(position - Vec2<int>(i, j), *combat);
 						state = UnitState::ATTACK;
 						startCounter();
+						sprite.playAnimation(3);
+						sprite.queueAnimation(0);
 						return;
 					}
 				} else {
@@ -118,6 +153,8 @@ void MageDudeEnemy::handleAttack() {
 						fireball.attack(position - Vec2<int>(i, -2), *combat);
 						state = UnitState::ATTACK;
 						startCounter();
+						sprite.playAnimation(3);
+						sprite.queueAnimation(0);
 						return;
 					}
 					curr_unit = combat->getUnitAt(position - Vec2<int>(i, 2));
@@ -125,6 +162,8 @@ void MageDudeEnemy::handleAttack() {
 						fireball.attack(position - Vec2<int>(i, 2), *combat);
 						state = UnitState::ATTACK;
 						startCounter();
+						sprite.playAnimation(3);
+						sprite.queueAnimation(0);
 						return;
 					}
 				}
@@ -137,6 +176,8 @@ void MageDudeEnemy::handleAttack() {
 			dragons_rage.attack(position - Vec2<int>(0, 1), *combat);
 			state = UnitState::ATTACK;
 			startCounter();
+			sprite.playAnimation(2);
+			sprite.queueAnimation(0);
 			return;
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
@@ -144,6 +185,8 @@ void MageDudeEnemy::handleAttack() {
 			dragons_rage.attack(position - Vec2<int>(0, -1), *combat);
 			state = UnitState::ATTACK;
 			startCounter();
+			sprite.playAnimation(2);
+			sprite.queueAnimation(0);
 			return;
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
@@ -151,6 +194,8 @@ void MageDudeEnemy::handleAttack() {
 			dragons_rage.attack(position - Vec2<int>(1, 0), *combat);
 			state = UnitState::ATTACK;
 			startCounter();
+			sprite.playAnimation(2);
+			sprite.queueAnimation(0);
 			return;
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
@@ -158,6 +203,8 @@ void MageDudeEnemy::handleAttack() {
 			dragons_rage.attack(position - Vec2<int>(-1, 0), *combat);
 			state = UnitState::ATTACK;
 			startCounter();
+			sprite.playAnimation(2);
+			sprite.queueAnimation(0);
 			return;
 		}
 	}

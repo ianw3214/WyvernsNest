@@ -8,8 +8,13 @@
 #include "status.hpp"
 #include "../unitData.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 300
-#define DEFAULT_SPRITE_HEIGHT 300
+#define DEFAULT_SPRITE_WIDTH	300
+#define DEFAULT_SPRITE_HEIGHT	300
+
+// The scale of the sprite in relation to the tile size
+#define DEFAULT_WIDTH_TO_TILE	1.f
+// The scale of the height of the sprite in relation to the width
+#define DEFAULT_SPRITE_RATIO	1.5f
 
 class Combat;
 
@@ -34,7 +39,6 @@ public:
 
 	Unit();
 	Unit(UnitType type);
-	Unit(UnitType type, Attack attack1, Attack attack2);
 
 	// The position of the unit in terms of grid coordinates
 	Vec2<int> position;
@@ -58,6 +62,10 @@ public:
 	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
+	int getSpriteWidth() const { return sprite_width; }
+	int getSpriteHeight() const { return sprite_height; };
+	int getTileWidth() const { return tile_width; }
+	int getTileHeight() const { return tile_height; }
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -77,10 +85,10 @@ public:
 	void takeDamage(int damage);
 	void heal(int health);
 	bool move(Combat& combat, Vec2<int> pos);
+	void push(int push, ScreenCoord src_pos);
 
 	// Utility references to the combat state to access needed data
 	Combat * combat;
-
 protected:
 
 	void setData(UnitData data) { 
@@ -91,7 +99,7 @@ protected:
 	// Variables that contain various useful stats for the unit
 	int move_speed;
 	bool selected = false;
-	void loadPropertiesFromUnitData();
+	void loadPropertiesFromUnitData(bool resetHealth=true);
 
 	// State variable of the unit
 	UnitState state;
@@ -123,8 +131,11 @@ protected:
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
+	// Height of the unit within the sprite
+	int unit_height;
 
 	// Virtual functions that units can override to customize functionality
+	virtual void setTileSizeCallback(int width, int height);
 	virtual void takeDamageCallback(int damage);
 	virtual void selectCallback();
 

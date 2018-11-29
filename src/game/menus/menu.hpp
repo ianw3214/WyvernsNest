@@ -20,14 +20,14 @@
 
 #define DEFAULT_PLAYER_ATTACK_1	"PUNCH"
 #define DEFAULT_PLAYER_ATTACK_2	"THROW ROCK"
-#define DEFAULT_PLAYER_ATTACK_3	"BURN"
-#define DEFAULT_PLAYER_ATTACK_4	"SELF STR BUFF"
+#define DEFAULT_PLAYER_ATTACK_3	"DASH"
+#define DEFAULT_PLAYER_ATTACK_4	"SPEED BOOST"
 
 class Menu : public State {
 
 public:
 
-	Menu();
+	Menu(bool start_music = true);
 	~Menu();
 
 	void handleEvent(const SDL_Event& e);   // Handles incoming events
