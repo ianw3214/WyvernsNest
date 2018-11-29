@@ -213,7 +213,7 @@ void Menu::initializeSaveFile() {
 	player["experience"] = 0;
 	player["level"] = 1;
 	// TODO: Randomize this
-	player["name"] = "DEFAULT";
+	player["name"] = "ALICE";
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;

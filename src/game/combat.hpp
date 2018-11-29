@@ -6,6 +6,9 @@
 #include "combat/grid.hpp"
 #include "../engine/particleSystem.hpp"
 #include "util/button.hpp"
+#include "unitData.hpp"
+
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -98,6 +101,7 @@ private:
 
 	// The total experience granted to players upon completing the level
 	float experienceReward;
+	std::vector<UnitData> unitRewards;
 
 	// Other helper functions
 	void updateWinStatus();

@@ -26,5 +26,7 @@
             "y": 4
         }
     ],
-    "experience": 200
+    "reward": {
+        "experience": 200
+    }
 }
