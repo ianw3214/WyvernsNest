@@ -1,32 +1,40 @@
 {
-    "map": "map1.json",
+    "map": "map2.json",
     "enemies": [
         {
             "type": "BABY GOOMBA",
-            "x": 5,
-            "y": 2
+            "x": 11,
+            "y": 3
         },{
             "type": "BABY GOOMBA",
-            "x": 5,
+            "x": 13,
+            "y": 3
+        },{
+            "type": "BABY GOOMBA",
+            "x": 12,
             "y": 4
+        },{
+            "type": "BABY GOOMBA",
+            "x": 14,
+            "y": 1
         }
     ],
     "player_spawns": [
         {
-            "x": 0,
-            "y": 2
+            "x": 1,
+            "y": 3
+        },{
+            "x": 2,
+            "y": 3
         },{
             "x": 0,
             "y": 4
         },{
-            "x": 3,
-            "y": 3
-        },{
-            "x": 4,
+            "x": 1,
             "y": 4
         }
     ],
-    "reward": {
-        "experience": 200
-    }
+
+    "experience": 1000
+
 }
