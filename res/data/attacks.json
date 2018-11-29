@@ -340,19 +340,19 @@
         },{
             "name" : "HYPER BEAM",
             "type" : "pierce",
-            "range" : 20,
+            "range" : 10,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
                     "type": "damage",
-                    "damage": 4
+                    "damage": 3
                 }
             ],
             "modifiers": [
                 {
                     "type": "INT",
-                    "mod": 0.6
+                    "mod": 0.2
                 }
             ],
             "particles": [
