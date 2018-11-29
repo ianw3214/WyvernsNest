@@ -34,7 +34,7 @@ class Combat : public State {
 
 public:
 
-	Combat(const std::string& gridPath);
+	Combat(const std::string& gridPath, bool last_level = false);
 	~Combat();
 
 	// Default state functions called from the state handler
@@ -68,6 +68,7 @@ private:
 	std::vector<GameOverData> gameOverData;
 	int mouseX, mouseY;
 	bool mouseDown;
+	bool last_level;
 
 	// Counter variable for showing the game over screen after the player wins
 	int game_over_counter;

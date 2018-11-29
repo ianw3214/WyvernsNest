@@ -17,6 +17,14 @@ WarriorEnemy::WarriorEnemy() :
 	sprite.addAnimation(1, 1);			// DAMAGE
 	sprite.addAnimation(2, 2);			// DEAD
 	sprite.addAnimation(10, 21);		// ATTACK
+
+	// Randomize enemy stats
+	UnitData data;
+	data.strength = rand() % 15 + 10;
+	data.dexterity = rand() % 15 + 10;
+	data.intelligence = rand() % 10 + 10;
+	data.constitution = rand() % 20 + 20;
+	setData(data);
 }
 
 WarriorEnemy::~WarriorEnemy() {
@@ -83,8 +91,8 @@ void WarriorEnemy::handleMovement() {
 
 	Vec2<int> target_position;
 
-	//set target_position one of these: left,right,top,bottom of target_player
-	//according to which one is closer
+	// Set target_position one of these: left,right,top,bottom of target_player
+	// According to which one is closer
 	min_distance=INT_MAX;
 	Vec2<int> temp_target =target_position;
 
@@ -113,13 +121,11 @@ void WarriorEnemy::handleMovement() {
 	Vec2<int> position_within_range=target_position;
 	if(getPath(*combat, target_position).size() > static_cast<unsigned int>(moveSpeed+1)){
 		position_within_range = {getPath(*combat, target_position)[moveSpeed][0],getPath(*combat, target_position)[moveSpeed][1]};
-		printf("%d,%d\n",position_within_range[0],position_within_range[1]);
 	}	
 
 	if (!move(*combat,position_within_range)) {
-		printf("failed move\n");
-        // Directly handle the attacks if no movement could be done
-        handleAttack();
+		// Use base enemies random movement if movement fails
+		Enemy::handleMovement();
     }
 }
 

@@ -13,6 +13,7 @@ Unit::Unit() :
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
 	shadow("res/assets/shadow.png"),
+	unit_width(-1),
 	unit_height(-1)
 {
 	generateDefaultUnitData();
@@ -26,6 +27,7 @@ Unit::Unit(UnitType type) :
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
 	shadow("res/assets/shadow.png"),
+	unit_width(-1),
 	unit_height(-1)
 {
 	generateDefaultUnitData();
