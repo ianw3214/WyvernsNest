@@ -362,24 +362,29 @@
             ],
             "nodeid": 10
         },{
-            "name" : "DRAMATIC PULL DMG (FISHING)",
-            "type" : "melee",
+            "name" : "SUPER SPIN TO WIN",
+            "type" : "self",
             "range" : 0,
-            "aoe" : 0,
+            "aoe" : 3,
             "affect_self": false,
             "effects": [
                 {
                     "type": "damage",
-                    "damage": 3
+                    "damage": 4
                 }
             ],
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 1.5
+                    "mod": 0.5
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BURST",
+                    "position": "SELF"
+                }
+            ],
             "nodeid": 13
         },{
             "name" : "RESSURECT",
@@ -402,11 +407,11 @@
             "particles": [],
             "nodeid": 14
         },{
-            "name" : "RAISE WALLS",
-            "type" : "melee",
-            "range" : 0,
-            "aoe" : 0,
-            "affect_self": false,
+            "name" : "SUPER FIREBALL",
+            "type" : "ranged",
+            "range" : 4,
+            "aoe" : 2,
+            "affect_self": true,
             "effects": [
                 {
                     "type": "damage",
@@ -415,11 +420,16 @@
             ],
             "modifiers": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "type": "INT",
+                    "mod": 0.6
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "FIRE",
+                    "position": "TARGET"
+                }
+            ],
             "nodeid": 15
         }
     ]

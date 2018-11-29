@@ -89,7 +89,7 @@
             "level": 4
         },{
             "id": 13,
-            "data": "DRAMATIC PULL W/ DAMAGE (NOT IMPLEMENTED)",
+            "data": "SUPER SPIN TO WIN",
             "sprite_index": 12,
             "children": [],
             "x_offset": -2,
@@ -103,7 +103,7 @@
             "level": 5
         },{
             "id": 15,
-            "data": "RAISE WALLS (NOT IMPLEMENTED)",
+            "data": "SUPER FIREBALL",
             "sprite_index": 14,
             "children": [],
             "x_offset": 2,
