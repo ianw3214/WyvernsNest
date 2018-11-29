@@ -47,7 +47,7 @@
             "level": 2
         },{
             "id": 7,
-            "data": "BASIC TELEPORT (NOT IMPLEMENTED)",
+            "data": "BLINK",
             "sprite_index": 6,
             "children": [10],
             "x_offset": 2,

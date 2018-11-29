@@ -273,24 +273,23 @@
             ],
             "nodeid": 6
         },{
-            "name" : "BASIC TELEPORT",
-            "type" : "melee",
-            "range" : 0,
+            "name" : "BLINK",
+            "type" : "ranged",
+            "range" : 4,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "blink"
                 }
             ],
-            "modifiers": [
+            "modifiers": [],
+            "particles": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "name": "BLINK",
+                    "position": "SELF"
                 }
             ],
-            "particles": [],
             "nodeid": 7
         },{
             "name" : "SPIN TO WIN",

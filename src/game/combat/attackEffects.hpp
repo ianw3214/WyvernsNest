@@ -78,3 +78,10 @@ public:
 	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
 private:
 };
+
+class BlinkEffect : public AttackEffect {
+public:
+	BlinkEffect() {}
+	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
+private:
+};

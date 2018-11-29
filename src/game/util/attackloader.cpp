@@ -124,6 +124,9 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 	if (data["type"] == "move") {
 		return new MoveEffect();
 	}
+	if (data["type"] == "blink") {
+		return new BlinkEffect();
+	}
 	return nullptr;
 }
 

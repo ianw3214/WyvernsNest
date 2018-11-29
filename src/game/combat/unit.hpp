@@ -67,6 +67,9 @@ public:
 	int getTileWidth() const { return tile_width; }
 	int getTileHeight() const { return tile_height; }
 
+	// Helper method to calculate the screen position based on grid position
+	void calculateScreenPosition();
+
 	// Setter methods
 	void setTileSize(int width, int height);
 	void setTopMargin(int margin);
@@ -122,9 +125,6 @@ protected:
 	// Helper functions to calculate the screen position and movement of the player
 	void calculateScreenPositionMovement();
 	void incrementMovement();
-
-	// Helper method to calculate the screen position based on grid position
-	void calculateScreenPosition();
 
 	// Helper methods/variables needed for proper sprite rendering
 	int sprite_width;

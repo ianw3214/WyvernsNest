@@ -108,6 +108,24 @@
                 "width": 100,
                 "height": 100
             }
+        }, {
+            "name": "BLINK",
+            "angle": 0,
+            "spread": 0,
+            "max_y": 50,
+            "lifespan": 0,
+            "spawnrate": 30,
+            "burst": true,
+            "speed": 10,
+            "particle_lifespan": 10,
+            "spawn_radius": 50,
+            "gravity": false,
+            "image_data": {
+                "x": 200,
+                "y": 0,
+                "width": 100,
+                "height": 100
+            }
         }
     ]
 }
