@@ -1,7 +1,9 @@
 #include "menu.hpp"
+#include "../util/util.hpp"
 #include "settingsmenu.hpp"
-#include "../combat.hpp"
 #include "creditsmenu.hpp"
+#include "../combat.hpp"
+#include "cutscene.hpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -21,10 +23,10 @@ Menu::Menu() :
 	buttons.push_back("CREDITS");
 	buttons.push_back("EXIT");
 
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 60);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 120);
-	buttonCoords.emplace_back(Core::windowWidth() - 150, Core::windowHeight() / 2 + 20 + 180);
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 5));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 6));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 7));
+	buttonCoords.emplace_back(SubDiv::hPos(10, 9), SubDiv::vPos(10, 8));
 
 	selected_option = 0;
 
@@ -32,7 +34,7 @@ Menu::Menu() :
 }
 
 Menu::~Menu() {
-	SDL_ShowCursor(SDL_ENABLE);
+	
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -48,6 +50,10 @@ void Menu::handleEvent(const SDL_Event & e) {
 		}
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 			switchToCurrentState();
+		}
+		if (e.key.keysym.sym == SDLK_ESCAPE) {
+			if (selected_option == NUM_BUTTONS - 1) exit(0);
+			else selected_option = NUM_BUTTONS - 1;
 		}
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -71,13 +77,11 @@ void Menu::update(int delta) {
 
 void Menu::render() {
 	background.render();
-	/*
 	if (render_text) {
-		ScreenCoord pos(380, 450);
-		Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
-		Core::Text_Renderer::render("Press any key to begin", pos, 2.f);
+		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
+		Core::Text_Renderer::setColour(Colour(7.f, .8f, .9f));
+		Core::Text_Renderer::render("Press  ENTER  to  begin", ScreenCoord(SubDiv::hCenter(), Core::windowHeight() - 10), 0.8f);
 	}
-	*/
 	// Render the version
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::bottom);
 	ScreenCoord version_pos(10, Core::windowHeight() - 10);
@@ -148,10 +152,14 @@ void Menu::changeToCombatState() {
 		if (inputData.find("players") == inputData.end()) valid = false;
 		if (inputData.find("level") == inputData.end()) valid = false;
 		// Generate a new save file if the current one is corrupted
-		if (!valid) initializeSaveFile();
+		if (!valid) {
+			save_file.close();
+			initializeSaveFile();
+			}
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
+	bool has_cutscene = false;
 	std::string combatLevelLocation;
 	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
 	json masterData;
@@ -161,13 +169,23 @@ void Menu::changeToCombatState() {
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
 			std::string name = level["file"];
 			combatLevelLocation = std::string("res/data/levels/") + name;
+			// If a cutscene is found, switch to it
+			if (level.find("cutscene") != level.end()) {
+				has_cutscene = true;
+				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation));
+				for (std::string img : level["cutscene"]["images"]) {
+					cutscene->addSprite(img);
+				}
+				changeState(cutscene);
+			} else {
+				changeState(new Combat(combatLevelLocation));
+			}
 		}
 	}
 
-	changeState(new Combat(combatLevelLocation));
-
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
+	SDL_ShowCursor(SDL_ENABLE);
 }
 
 void Menu::initializeSaveFile() {
@@ -186,17 +204,23 @@ void Menu::initializeSaveFile() {
 	std::vector<int> selected;
 	selected.push_back(1);
 	player["selected"] = selected;
+	// Initialize player attacks
+	std::vector<std::string> attacks;
+	player["attack1"] = DEFAULT_PLAYER_ATTACK_1;
+	player["attack2"] = DEFAULT_PLAYER_ATTACK_2;
+	player["attack3"] = DEFAULT_PLAYER_ATTACK_3;
+	player["attack4"] = DEFAULT_PLAYER_ATTACK_4;
 	initialPlayers.push_back(player);
 	// Construct the actual save file data
 	outputData["players"] = initialPlayers;
-	outputData["level"] = 0;
+	outputData["level"] = 1;
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
 }
 
 int Menu::getButtonIndexAtPos(ScreenCoord coord) {
 	for (int i = 0; i < NUM_BUTTONS; ++i) {
-		int left = buttonCoords[i].x() - Core::windowWidth() / 2 + 100;
+		int left = buttonCoords[i].x() - SubDiv::hSize(5, 2);
 		int right = buttonCoords[i].x();
 		int top = buttonCoords[i].y() + 10;
 		int bottom = buttonCoords[i].y() + 65;

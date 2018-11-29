@@ -9,6 +9,13 @@ Enemy::Enemy() :
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	// Randomize enemy stats
+	UnitData data;
+	data.strength = rand() % 10 + 1;
+	data.dexterity = rand() % 10 + 1;
+	data.intelligence = rand() % 10 + 1;
+	data.constitution = rand() % 10 + 1;
+	setData(data);
 }
 
 Enemy::Enemy(UnitType type, const std::string& spritePath) :
@@ -87,7 +94,7 @@ void Enemy::handleMovement() {
 	// Try to move to a random valid location
 	int x_offset;
 	int y_offset;
-	int tries = 20;
+	int tries = 10;
 	while (tries > 0) {
 		x_offset = rand() % (getMoveSpeed() * 2 + 1) - getMoveSpeed();
 		y_offset = rand() % (std::abs(getMoveSpeed() - std::abs(x_offset)) * 2 + 1) - std::abs(getMoveSpeed() - std::abs(x_offset));
@@ -103,28 +110,34 @@ void Enemy::handleMovement() {
 }
 
 void Enemy::handleAttack() {
-	if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
+	Unit *targ_unit;
+	
+	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(1, 0), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(0, 1), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(-1, 0), *combat);
 		state = UnitState::ATTACK;
 		startCounter();
 		return;
 	}
-	if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
 		// do the action here
 		bite.attack(position - Vec2<int>(0, -1), *combat);
 		state = UnitState::ATTACK;

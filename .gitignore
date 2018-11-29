@@ -69,5 +69,7 @@ ipch/
 # ZIP files
 *.zip
 
-# ASESprite files
+# art files
+*.ase
 *.aseprite
+*.psd

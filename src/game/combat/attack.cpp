@@ -3,6 +3,7 @@
 #include "../combat.hpp"
 #include "unit.hpp"
 #include "status.hpp"
+#include "../util/particleloader.hpp"
 
 // Construct an invalid attack by default
 Attack::Attack() :
@@ -42,6 +43,7 @@ Attack::Attack(std::string name,
 	
 }
 
+#include <iostream>
 Attack::Attack(const Attack & other, Unit * source) :
 	name(other.name),
 	source(source),
@@ -51,6 +53,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 	aoe(other.aoe),
 	affect_self(other.affect_self),
 	effectModifiers(other.effectModifiers),
+	particles(other.particles),
 	validSprite("res/assets/tiles/valid.png"),
 	targetValidSprite("res/assets/tiles/valid_circle.png"),
 	targetInvalidSprite("res/assets/tiles/invalid_circle.png")
@@ -59,9 +62,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 }
 
 void Attack::attack(ScreenCoord pos, Combat& combat) {
-	if (isValid(pos)) {
-
-
+	if (isValid(pos, combat)) {
 		switch (type) {
 		case AttackType::SELF: {
 			if (affect_self) {
@@ -70,24 +71,36 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			attackAoE(source->position, combat);
 		} break;
 		case AttackType::MELEE: {
-			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
 		} break;
 		case AttackType::RANGED: {
-			// TODO: Make sure the attack is valid before running it
 			effect->attack(pos, combat, *this);
 			attackAoE(pos, combat);
 		} break;
 		case AttackType::PIERCE: {
-			// TOOD: Make sure the attack is valid before running it
 			// TODO: Make peircing attack based on range
-			effect->attack(pos, combat, *this);
-			effect->attack(pos + pos - source->position, combat, *this);
+			Vec2<int> step = pos - source->position;
+			for (int i = 0; i < range; ++i) {
+				effect->attack(pos + step * i, combat, *this);
+			}
 		} break;
 		}
 	}
-	// TODO: figure out how to apply the attack effect to the surrounding aoe
+	// Apply the particles
+	for (ParticleData& particle : particles) {
+		if (particle.position == ParticlePosition::TARGET) {
+			// Set the target to the center of the target
+			int x = pos.x() * combat.grid.tile_width + combat.grid.tile_width / 2;
+			int y = pos.y() * combat.grid.tile_height + combat.grid.tile_height / 2;
+			int angle;
+			if (pos.y() < source->position.y()) angle = 0;
+			if (pos.y() > source->position.y()) angle = 180;
+			if (pos.x() < source->position.x()) angle = 270;
+			if (pos.x() > source->position.x()) angle = 90;
+			combat.addEmitter(Particles::get(particle.name, x, y, angle));
+		}
+	}
 }
 
 void Attack::addEffectModifier(EffectModifier modifier) {
@@ -98,56 +111,51 @@ void Attack::addEffectModifier(Stat stat, float multiplier) {
 	effectModifiers.emplace_back(stat, multiplier);
 }
 
+void Attack::addParticle(std::string name, ParticlePosition pos) {
+	particles.push_back(ParticleData{ name, pos });
+}
+
 // Display the valid attack tiles on the grid
-void Attack::renderValidGrid(int tile_width, int tile_height) {
+void Attack::renderValidGrid(int tile_width, int tile_height, const Combat& combat) {
 
 	// Set the tile width/height before rendering
 	validSprite.setSize(tile_width, tile_height);
 
 	switch (type) {
 	case AttackType::SELF: {
-		// TODO: Somehow display the valid sprite
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y(), combat);
 	} break;
 	case AttackType::MELEE: {
-		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() - 1) * tile_height);
-		validSprite.render();
-		validSprite.setPos((source->position.x() + 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
-		validSprite.render();
+		renderValidSprite(tile_width, tile_height, source->position.x() - 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() + 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y() + 1, combat);
+		renderValidSprite(tile_width, tile_height, source->position.x(), source->position.y() - 1, combat);
 	} break;
 	case AttackType::RANGED: {
 		for (int y = -range; y < range + 1 ; y++) {
 			for (int x = -range; x < range + 1 ; x++) {
 				if (!(y == x && y == 0)) {
 					if (abs(x) + abs(y) <= range) {
-						validSprite.setPos((source->position.x() + x) * tile_width, (source->position.y() + y) * tile_height);
-						validSprite.render();
+						renderValidSprite(tile_width, tile_height, source->position.x() + x, source->position.y() + y, combat);
 					}
 				}
 			}
 		}
 	} break;
 	case AttackType::PIERCE: {
-		validSprite.setPos((source->position.x() - 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() - 1) * tile_height);
-		validSprite.render();
-		validSprite.setPos((source->position.x() + 1) * tile_width, source->position.y() * tile_height);
-		validSprite.render();
-		validSprite.setPos(source->position.x() * tile_width, (source->position.y() + 1) * tile_height);
-		validSprite.render();
+		renderValidSprite(tile_width, tile_height, source->position.x() - 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() + 1, source->position.y(), combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() , source->position.y() + 1, combat);
+		renderValidSprite(tile_width, tile_height, source->position.x() , source->position.y() - 1, combat);
 	} break;
 	}
 
 	//mouse rendering
-	renderValidTarget(tile_width, tile_height);
+	renderValidTarget(tile_width, tile_height, combat);
 	
 }
 
-void Attack::renderValidTarget(int tile_width, int tile_height) {
+void Attack::renderValidTarget(int tile_width, int tile_height, const Combat& combat) {
 
 	// Set the tile width/height before rendering
 	validSprite.setSize(tile_width, tile_height);
@@ -163,9 +171,9 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 	// Render the valid target based on whether it IS valid or not
 	switch (type) {
 	case AttackType::MELEE: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
-			targetValidSprite.render();
+			targetValidSprite.render();	
 		}
 		else {
 			targetInvalidSprite.setPos(x * tile_width, y * tile_height);
@@ -173,7 +181,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 		}
 	} break;
 	case AttackType::RANGED: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
 		}
@@ -183,7 +191,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 		}
 	} break;
 	case AttackType::PIERCE: {
-		if (isValid(ScreenCoord(x, y))) {
+		if (isValid(ScreenCoord(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
 			validSprite.setPos((x + x - source->position.x()) * tile_width, (y + y - source->position.y()) * tile_height);
@@ -199,7 +207,14 @@ void Attack::renderValidTarget(int tile_width, int tile_height) {
 	}
 }
 
-bool Attack::isValid(ScreenCoord pos) {
+void Attack::renderValidSprite(int tile_width, int tile_height, int x, int y, const Combat & combat) {
+	if (combat.grid.isPosValid(Vec2<int>(x, y))) {
+		validSprite.setPos(x * tile_width, y * tile_height);
+		validSprite.render();
+	}
+}
+
+bool Attack::isValid(ScreenCoord pos, const Combat& combat) {
 	switch (type) {
 	case AttackType::SELF: {
 		return pos == source->position;
@@ -207,19 +222,19 @@ bool Attack::isValid(ScreenCoord pos) {
 	case AttackType::MELEE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return true;
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::RANGED: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff <= range) return true;
+		if (x_diff + y_diff <= range) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	case AttackType::PIERCE: {
 		int x_diff = std::abs(pos.x() - source->position.x());
 		int y_diff = std::abs(pos.y() - source->position.y());
-		if (x_diff + y_diff == 1) return true;
+		if (x_diff + y_diff == 1) return combat.grid.isPosValid(pos);
 		return false;
 	} break;
 	}
@@ -273,5 +288,24 @@ void StatBuffEffect::attack(ScreenCoord pos, Combat& combat, const Attack& attac
 	if (unit) {
 		// TODO: Add modifiers (or don't)
 		unit->addStatus(new StatBuffStatus(stat, percent, ticks, infinite, unit));
+	}
+}
+
+void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
+	Unit *unit = combat.getUnitAt(pos);
+	if (unit) {
+		unit->push(distance, attack.getSource()->position);
+	}
+}
+
+#include <iostream>
+// TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
+void MoveEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
+	if (combat.isPosEmpty(pos)) {
+		// This is really bad, do not do this in the future
+		Unit * unit = const_cast<Unit*>(attack.getSource());
+		if (!unit->move(combat, pos)) {
+			std::cout << "FAILED" << std::endl;
+		}
 	}
 }

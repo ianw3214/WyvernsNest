@@ -15,11 +15,31 @@
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 1.5
+                    "mod": 0.1
                 }
-            ]
+            ],
+            "particles": [
+                {
+                    "name": "BLOW",
+                    "position": "TARGET"
+                }],
+            "nodeid": 1
         },{
-            "name": "RANGED",
+            "name" : "HIT",
+            "type" : "melee",
+            "range" : 1,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 4
+                }
+            ],
+            "modifiers": [],
+            "nodeid": 1
+        },{
+            "name": "THROW ROCK",
             "type": "ranged",
             "range": 10,
             "aoe": 0,
@@ -35,23 +55,30 @@
                     "type": "INT",
                     "mod": 20.0
                 }
-            ]
+            ],
+            "particles": [
+                {
+                    "name": "DIRT",
+                    "position": "TARGET"
+                }
+            ],
+            "nodeid": 1
         },{
-            "name": "BURN",
+            "name": "DASH",
             "type": "ranged",
             "range": 3,
             "aoe": 0,
             "affect_self": true,
             "effects": [
                 {
-                    "type": "burn",
-                    "damage": 3,
-                    "ticks": 3
+                    "type": "move"
                 }
             ],
-            "modifiers": []
+            "modifiers": [],
+            "particles": [],
+            "nodeid": 1
         },{
-            "name": "SELF STR BUFF",
+            "name": "SPEED BOOST",
             "type": "self",
             "range": 0,
             "aoe": 0,
@@ -59,12 +86,288 @@
             "effects": [
                 {
                     "type": "buff",
-                    "stat": "STR",
-                    "percent": 0.2,
+                    "stat": "DEX",
+                    "percent": 0.5,
                     "ticks": 3
                 }
             ],
-            "modifiers": []
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 20.0
+                }
+            ],
+            "particles": [],
+            "nodeid": 1
+        }, {
+            "name": "FIREBALL",
+            "type": "ranged",
+            "range": 4,
+            "aoe": 1,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 2
+                }
+            ],
+            "modifiers": [],
+            "particles": []
+        },{
+            "name": "DRAGONS RAGE",
+            "type": "ranged",
+            "range": 1,
+            "aoe": 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.2,
+                    "ticks": 3                
+                }
+            ],
+            "modifiers": [],
+            "particles": []
+        },{
+            "name" : "PIERCING",
+            "type" : "pierce",
+            "range" : 2,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 0.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 2
+        },{
+            "name" : "EMBER",
+            "type" : "ranged",
+            "range" : 2,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 1
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 0.5
+                }
+            ],
+            "particles": [
+                {
+                    "name": "FIRE",
+                    "position": "TARGET"
+                }
+            ],
+            "nodeid": 3
+        },{
+            "name" : "PUSH",
+            "type" : "melee",
+            "range" : 1,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "push",
+                    "distance": 1
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 4
+        },{
+            "name" : "STR BOOST",
+            "type" : "ranged",
+            "range" : 3,
+            "aoe" : 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "STR",
+                    "percent": 0.5,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": [],
+            "particles": [],
+            "nodeid": 5
+        },{
+            "name" : "CONSTITUTION BOOST",
+            "type" : "ranged",
+            "range" : 2,
+            "aoe" : 0,
+            "affect_self": true,
+            "effects": [
+                {
+                    "type": "buff",
+                    "stat": "CON",
+                    "percent": 0.4,
+                    "ticks": 3
+                }
+            ],
+            "modifiers": [],
+            "particles": [],
+            "nodeid": 6
+        },{
+            "name" : "BASIC TELEPORT",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 7
+        },{
+            "name" : "SPIN TO WIN",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 8
+        },{
+            "name" : "LAT ON HANDS",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 9
+        },{
+            "name" : "HYPER BEAM",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 10
+        },{
+            "name" : "DRAMATIC PULL DMG (FISHING)",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 13
+        },{
+            "name" : "RESSURECT",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 14
+        },{
+            "name" : "RAISE WALLS",
+            "type" : "melee",
+            "range" : 0,
+            "aoe" : 0,
+            "affect_self": false,
+            "effects": [
+                {
+                    "type": "damage",
+                    "damage": 3
+                }
+            ],
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 1.5
+                }
+            ],
+            "particles": [],
+            "nodeid": 15
         }
     ]
 }

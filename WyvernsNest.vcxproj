@@ -137,6 +137,7 @@
     <ClCompile Include="src\engine\opengl\texture.cpp" />
     <ClCompile Include="src\engine\opengl\vertexArray.cpp" />
     <ClCompile Include="src\engine\opengl\vertexBuffer.cpp" />
+    <ClCompile Include="src\engine\particleSystem.cpp" />
     <ClCompile Include="src\engine\renderer.cpp" />
     <ClCompile Include="src\engine\sprite.cpp" />
     <ClCompile Include="src\engine\state.cpp" />
@@ -145,7 +146,6 @@
     <ClCompile Include="src\engine\text\textRenderer.cpp" />
     <ClCompile Include="src\game\combat.cpp" />
     <ClCompile Include="src\game\combat\attack.cpp" />
-    <ClCompile Include="src\game\combat\attackEffects.cpp" />
     <ClCompile Include="src\game\combat\enemies\basicWarriorEnemy.cpp" />
     <ClCompile Include="src\game\combat\enemies\mageDudeEnemy.cpp" />
     <ClCompile Include="src\game\combat\enemy.cpp" />
@@ -161,6 +161,7 @@
     <ClCompile Include="src\game\skillTree.cpp" />
     <ClCompile Include="src\game\util\attackloader.cpp" />
     <ClCompile Include="src\game\util\button.cpp" />
+    <ClCompile Include="src\game\util\particleloader.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
@@ -177,6 +178,7 @@
     <ClInclude Include="src\engine\opengl\vertexArray.hpp" />
     <ClInclude Include="src\engine\opengl\vertexBuffer.hpp" />
     <ClInclude Include="src\engine\opengl\vertexBufferLayout.hpp" />
+    <ClInclude Include="src\engine\particleSystem.hpp" />
     <ClInclude Include="src\engine\renderer.hpp" />
     <ClInclude Include="src\engine\sprite.hpp" />
     <ClInclude Include="src\engine\state.hpp" />
@@ -202,6 +204,8 @@
     <ClInclude Include="src\game\unitData.hpp" />
     <ClInclude Include="src\game\util\attackloader.hpp" />
     <ClInclude Include="src\game\util\button.hpp" />
+    <ClInclude Include="src\game\util\particleloader.hpp" />
+    <ClInclude Include="src\game\util\util.hpp" />
     <ClInclude Include="src\math\math.hpp" />
     <ClInclude Include="src\math\util.hpp" />
     <ClInclude Include="src\math\vec.hpp" />

@@ -63,3 +63,18 @@ private:
 	int ticks;
 	bool infinite;
 };
+
+class PushEffect : public AttackEffect {
+public:
+	PushEffect(int distance = 1) : distance(distance) {}
+	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
+private:
+	int distance;
+};
+
+class MoveEffect : public AttackEffect {
+public:
+	MoveEffect() {}
+	virtual void attack(ScreenCoord pos, Combat &combat, const Attack &attack) override;
+private:
+};
