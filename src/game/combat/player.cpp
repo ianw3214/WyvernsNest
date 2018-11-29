@@ -111,6 +111,10 @@ void Player::renderTurnUI() {
 	} else {
 		pos.x() += (sprite_width - unit_width) / 2 - SubDiv::hSize(5, 1);
 	}
+
+	// If the turn UI is off the screen, fix it
+	if (pos.y() < 0) pos.y() = 0;
+
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
@@ -516,10 +520,13 @@ PlayerAction Player::getActionAtCoord(ScreenCoord coord) {
 	// TODO: Separate this into member variables/functions since a lot of data is shared with the rendering of options
 	int option_height = SubDiv::vSize(16, 1);
 	ScreenCoord pos = screenPosition;
-	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
-	else {
-		pos.x() += SubDiv::hSize(5, 1);
+	if (pos.x() < Core::windowWidth() / 2) {
+		pos.x() += unit_width + (sprite_width - unit_width) / 2;
+	} else {
+		pos.x() += (sprite_width - unit_width) / 2 - SubDiv::hSize(5, 1);
 	}
+
+	// If the turn UI is off the screen, fix it
 	if (pos.y() < 0) pos.y() = 0;
 	// Check move option collision if the player hasn't moved
 	if (!moved) {
