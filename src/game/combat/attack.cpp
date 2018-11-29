@@ -61,6 +61,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 
 }
 
+#include <iostream>
 void Attack::attack(ScreenCoord pos, Combat& combat) {
 	if (isValid(pos, combat)) {
 		switch (type) {
@@ -98,7 +99,14 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			if (pos.y() > source->position.y()) angle = 180;
 			if (pos.x() < source->position.x()) angle = 270;
 			if (pos.x() > source->position.x()) angle = 90;
-			combat.addEmitter(Particles::get(particle.name, x, y, angle));
+			combat.addEmitter(Particles::get(particle.name, angle, x, y));
+		}
+		if (particle.position == ParticlePosition::SELF) {
+			combat.addEmitter(Particles::get(
+				particle.name,
+				source->screenPosition.x() + source->getSpriteWidth() / 2,
+				source->screenPosition.y() + source->getSpriteHeight() - source->getTileHeight())
+			);
 		}
 	}
 }

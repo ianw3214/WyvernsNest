@@ -289,6 +289,7 @@ void Customization::saveData() {
 	out_save_file.close();
 }
 
+#include <iostream>
 void Customization::switchToCombatState() {
 	saveData();
 	// Assume the save file is always valid
@@ -312,6 +313,12 @@ void Customization::switchToCombatState() {
 			combatLevelLocation = std::string("res/data/levels/") + name;
 			level_found = true;
 		}
+		// Temporary debugging code
+		// TODO: remove this
+		if (!level_found) {
+			std::string name = level["file"];
+			combatLevelLocation = std::string("res/data/levels/") + name;
+		}
 	}
 	save_file.close();
 	masterFile.close();
@@ -322,7 +329,7 @@ void Customization::switchToCombatState() {
 		out_save_file << inputData.dump(4);
 		out_save_file.close();
 	}
-	changeState(new Combat(combatLevelLocation));
+	changeState(new Combat(combatLevelLocation)); 
 }
 
 void Customization::initAvailableAttacks() {

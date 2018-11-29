@@ -25,6 +25,7 @@ Combat::Combat(const std::string & filePath) :
 {
 	initSprites();
 
+
 	// Load grid and enemy data from the file path
 	std::ifstream file(filePath);
 	if (file.is_open()) {

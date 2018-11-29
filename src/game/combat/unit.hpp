@@ -58,6 +58,10 @@ public:
 	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
+	int getSpriteWidth() const { return sprite_width; }
+	int getSpriteHeight() const { return sprite_height; };
+	int getTileWidth() const { return tile_width; }
+	int getTileHeight() const { return tile_height; }
 
 	// Setter methods
 	void setTileSize(int width, int height);
