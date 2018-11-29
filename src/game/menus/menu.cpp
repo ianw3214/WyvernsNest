@@ -9,7 +9,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-Menu::Menu() :
+Menu::Menu(bool start_music) :
 	background("res/assets/menu/background.png"),
 	highlight("res/assets/menu/blur.png"),
 	cursor("res/assets/UI/cursor.png"),
@@ -31,6 +31,12 @@ Menu::Menu() :
 	selected_option = 0;
 
 	SDL_ShowCursor(SDL_DISABLE);
+
+	// Play menu music
+	if (start_music) {
+		Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
+		Core::Mixer::playAudio("res/music/track1.wav", 10, 0.8f);
+	}
 }
 
 Menu::~Menu() {
@@ -186,6 +192,9 @@ void Menu::changeToCombatState() {
 	// Set the text rendering colour back to normal
 	Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
 	SDL_ShowCursor(SDL_ENABLE);
+
+	// Stop playing menu music
+	Core::Mixer::fadeOutAllMusic(500);
 }
 
 void Menu::initializeSaveFile() {

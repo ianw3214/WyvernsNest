@@ -27,7 +27,7 @@ class Menu : public State {
 
 public:
 
-	Menu();
+	Menu(bool start_music = true);
 	~Menu();
 
 	void handleEvent(const SDL_Event& e);   // Handles incoming events
