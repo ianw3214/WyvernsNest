@@ -96,6 +96,10 @@ AttackEffect * AttackLoader::parseEffect(const json & data) const {
 		int damage = data["damage"];
 		return new DamageEffect(damage);
 	}
+	if (data["type"] == "heal") {
+		int heal = data["health"];
+		return new HealEffect(heal);
+	}
 	if (data["type"] == "burn") {
 		int damage = data["damage"];
 		int ticks = data["ticks"];

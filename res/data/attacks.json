@@ -15,7 +15,7 @@
             "modifiers": [
                 {
                     "type": "STR",
-                    "mod": 0.1
+                    "mod": 0.2
                 }
             ],
             "particles": [
@@ -36,8 +36,18 @@
                     "damage": 4
                 }
             ],
-            "modifiers": [],
-            "particles": []
+            "modifiers": [
+                {
+                    "type": "STR",
+                    "mod": 0.2
+                }
+            ],
+            "particles": [
+                {
+                    "name": "DIRT",
+                    "position": "TARGET"
+                }
+            ]
         },{
             "name": "THROW ROCK",
             "type": "ranged",
@@ -53,7 +63,7 @@
             "modifiers": [
                 {
                     "type": "INT",
-                    "mod": 20.0
+                    "mod": 0.4
                 }
             ],
             "particles": [
@@ -115,8 +125,18 @@
                     "damage": 2
                 }
             ],
-            "modifiers": [],
-            "particles": []
+            "modifiers": [
+                {
+                    "type": "INT",
+                    "mod": 0.4
+                }
+            ],
+            "particles": [
+                {
+                    "name": "FIRE",
+                    "position": "TARGET"
+                }
+            ]
         },{
             "name": "DRAGONS RAGE",
             "type": "ranged",
@@ -132,7 +152,12 @@
                 }
             ],
             "modifiers": [],
-            "particles": []
+            "particles": [
+                {
+                    "name": "BUFF",
+                    "position": "SELF"
+                }
+            ]
         },{
             "name" : "PIERCING",
             "type" : "pierce",
@@ -151,7 +176,12 @@
                     "mod": 0.5
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "DIRT",
+                    "position": "TARGET"
+                }
+            ],
             "nodeid": 2
         },{
             "name" : "EMBER",
@@ -190,13 +220,13 @@
                     "distance": 1
                 }
             ],
-            "modifiers": [
+            "modifiers": [],
+            "particles": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "name": "DIRT",
+                    "position": "TARGET"
                 }
             ],
-            "particles": [],
             "nodeid": 4
         },{
             "name" : "STR BOOST",
@@ -213,10 +243,15 @@
                 }
             ],
             "modifiers": [],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BUFF",
+                    "position": "SELF"
+                }
+            ],
             "nodeid": 5
         },{
-            "name" : "CONSTITUTION BOOST",
+            "name" : "INTELLIGENCE BOOST",
             "type" : "ranged",
             "range" : 2,
             "aoe" : 0,
@@ -224,13 +259,18 @@
             "effects": [
                 {
                     "type": "buff",
-                    "stat": "CON",
+                    "stat": "INT",
                     "percent": 0.4,
                     "ticks": 3
                 }
             ],
             "modifiers": [],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BUFF",
+                    "position": "SELF"
+                }
+            ],
             "nodeid": 6
         },{
             "name" : "BASIC TELEPORT",
@@ -254,7 +294,7 @@
             "nodeid": 7
         },{
             "name" : "SPIN TO WIN",
-            "type" : "melee",
+            "type" : "self",
             "range" : 0,
             "aoe" : 0,
             "affect_self": false,
@@ -270,47 +310,57 @@
                     "mod": 1.5
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BURST",
+                    "position": "SELF"
+                }
+            ],
             "nodeid": 8
         },{
-            "name" : "LAT ON HANDS",
+            "name" : "LAY ON HANDS",
             "type" : "melee",
             "range" : 0,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
-                    "type": "damage",
-                    "damage": 3
+                    "type": "heal",
+                    "health": 10
                 }
             ],
-            "modifiers": [
+            "modifiers": [],
+            "particles": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "name": "HEAL",
+                    "position": "SELF"
                 }
             ],
-            "particles": [],
             "nodeid": 9
         },{
             "name" : "HYPER BEAM",
-            "type" : "melee",
-            "range" : 0,
+            "type" : "pierce",
+            "range" : 20,
             "aoe" : 0,
             "affect_self": false,
             "effects": [
                 {
                     "type": "damage",
-                    "damage": 3
+                    "damage": 4
                 }
             ],
             "modifiers": [
                 {
-                    "type": "STR",
-                    "mod": 1.5
+                    "type": "INT",
+                    "mod": 0.6
                 }
             ],
-            "particles": [],
+            "particles": [
+                {
+                    "name": "BEAM",
+                    "position": "TARGET"
+                }
+            ],
             "nodeid": 10
         },{
             "name" : "DRAMATIC PULL DMG (FISHING)",
