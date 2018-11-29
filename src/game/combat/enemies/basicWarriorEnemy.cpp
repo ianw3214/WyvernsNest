@@ -8,15 +8,29 @@
 
 WarriorEnemy::WarriorEnemy() : 
 	// Init class vars
-	Enemy(UnitType::ENEMY, "res/assets/enemies/WyvernFighter_Sprite.png"),
+	Enemy(UnitType::ENEMY, "res/assets/enemies/warrior.png", 196, 196),
 	// Attack init
 	hit(Attacks::get("HIT", this)),
 	block(Attacks::get("BLOCK", this))
 {
-	sprite.setSize(sprite_width, sprite_height);
+	sprite.addAnimation(0, 0);			// IDLE
+	sprite.addAnimation(1, 1);			// DAMAGE
+	sprite.addAnimation(2, 2);			// DEAD
+	sprite.addAnimation(10, 21);		// ATTACK
 }
 
 WarriorEnemy::~WarriorEnemy() {
+}
+
+void WarriorEnemy::takeDamageCallback(int damage) {
+	if (health >= 0) {
+		if (health - damage < 0) {
+			sprite.playAnimation(2);
+		} else {
+			sprite.playAnimation(1, 10);
+			sprite.queueAnimation(0);
+		}
+	}
 }
 
 // Calculates euclidian distance between 2 positions
@@ -78,7 +92,7 @@ void WarriorEnemy::handleMovement() {
 		target_position=temp_target;
 	}
 
-	//set the actual position to one in range in case the target_position is out of range
+	// Set the actual position to one in range in case the target_position is out of range
 	Vec2<int> position_within_range=target_position;
 	if(getPath(*combat, target_position).size() > static_cast<unsigned int>(moveSpeed+1)){
 		position_within_range = {getPath(*combat, target_position)[moveSpeed][0],getPath(*combat, target_position)[moveSpeed][1]};
@@ -113,24 +127,32 @@ void WarriorEnemy::handleAttack() {
         hit.attack(position - Vec2<int>(1, 0), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
         hit.attack(position - Vec2<int>(0, 1), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
         hit.attack(position - Vec2<int>(-1, 0), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
         hit.attack(position - Vec2<int>(0, -1), *combat);
         state = UnitState::ATTACK;
         startCounter();
+		sprite.playAnimation(3);
+		sprite.queueAnimation(0);
         return;
     }
     // If no attacks could be done, set the unit to be at done state

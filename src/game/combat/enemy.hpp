@@ -15,7 +15,7 @@ class Enemy : public Unit {
 public:
 
 	Enemy();
-	Enemy(UnitType type, const std::string& spritePath);
+	Enemy(UnitType type, const std::string& spritePath, int src_w = 96, int src_h = 96);
 	~Enemy();
 
 	virtual void render() override;

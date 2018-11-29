@@ -2,13 +2,13 @@
     "map": "map1.json",
     "enemies": [
         {
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 11,
             "y": 1
         },
 
         {
-            "type": "BABY GOOMBA",
+            "type": "BASIC WARRIOR",
             "x": 5,
             "y": 4
         }

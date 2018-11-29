@@ -14,7 +14,7 @@ Enemy::Enemy() :
 	sprite.addAnimation(0, 0);			// IDLE
 	sprite.addAnimation(1, 1);			// DAMAGE
 	sprite.addAnimation(10, 17);		// DYING
-	sprite.addAnimation(18, 18);		// DISAPPEARED
+	sprite.addAnimation(18, 18);		// DEAD
 
 	// Randomize enemy stats
 	UnitData data;
@@ -25,12 +25,13 @@ Enemy::Enemy() :
 	setData(data);
 }
 
-Enemy::Enemy(UnitType type, const std::string& spritePath) :
+Enemy::Enemy(UnitType type, const std::string& spritePath, int src_w, int src_h) :
 	Unit(type),
-	sprite(spritePath, 64, 64),
+	sprite(spritePath, src_w, src_h),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
+	sprite.setSourceSize(src_w, src_h);
 }
 
 Enemy::~Enemy()

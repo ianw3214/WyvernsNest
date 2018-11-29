@@ -9,6 +9,11 @@ public:
 	WarriorEnemy();
 	~WarriorEnemy();
 
+protected:
+
+	// Override callback function to customize functionality
+	void takeDamageCallback(int damage) override;
+
 private:
 
 	// TODO: Add attacks to class variables 
