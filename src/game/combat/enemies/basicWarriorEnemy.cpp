@@ -34,6 +34,9 @@ void WarriorEnemy::setTileSizeCallback(int width, int height) {
 	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
 	sprite.setSize(sprite_width, sprite_height);
 	calculateScreenPosition();
+
+	// Also set the units height
+	unit_height = static_cast<int>(WARRIOR_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 196.f);
 }
 
 void WarriorEnemy::takeDamageCallback(int damage) {

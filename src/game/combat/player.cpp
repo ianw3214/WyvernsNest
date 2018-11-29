@@ -477,6 +477,9 @@ void Player::setTileSizeCallback(int width, int height) {
 	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
 	player_sprite.setSize(sprite_width, sprite_height);
 	calculateScreenPosition();
+
+	// Also set the units height
+	unit_height = static_cast<int>(PLAYER_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 96.f);
 }
 
 void Player::takeDamageCallback(int damage) {

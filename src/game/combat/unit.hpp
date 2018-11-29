@@ -39,7 +39,6 @@ public:
 
 	Unit();
 	Unit(UnitType type);
-	Unit(UnitType type, Attack attack1, Attack attack2);
 
 	// The position of the unit in terms of grid coordinates
 	Vec2<int> position;
@@ -132,6 +131,8 @@ protected:
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
+	// Height of the unit within the sprite
+	int unit_height;
 
 	// Virtual functions that units can override to customize functionality
 	virtual void setTileSizeCallback(int width, int height);

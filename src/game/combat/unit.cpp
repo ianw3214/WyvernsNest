@@ -12,7 +12,8 @@ Unit::Unit() :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	shadow("res/assets/shadow.png")
+	shadow("res/assets/shadow.png"),
+	unit_height(-1)
 {
 	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
@@ -24,19 +25,8 @@ Unit::Unit(UnitType type) :
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	shadow("res/assets/shadow.png")
-{
-	generateDefaultUnitData();
-	loadPropertiesFromUnitData();
-}
-
-Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
-	type(type),
-	state(UnitState::IDLE),
-	sprite_width(DEFAULT_SPRITE_WIDTH),
-	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	top_margin(0),
-	shadow("res/assets/shadow.png")
+	shadow("res/assets/shadow.png"),
+	unit_height(-1)
 {
 	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
@@ -353,6 +343,9 @@ void Unit::renderTop(Combat * combat) {
 void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;
+	if (unit_height > 0) {
+		pos.y() += sprite_height - unit_height;
+	}
 	pos.x() += (sprite_width - tile_width) / 2;
 	if (pos.y() < 0) pos.y() = 10;
 	int healthBarWidth = tile_width;
