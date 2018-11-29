@@ -273,21 +273,47 @@ void Unit::heal(int health) {
 }
 
 void Unit::push(int p, ScreenCoord src_pos) {
+	Vec2<int> temp_pos;
+
 	if (src_pos[0] - position[0] > 0) {
-		// move(*combat, position - Vec2<int>(-1*p, 0));
-		position = position - Vec2<int>(1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[0] - position[0] < 0) {
-		// move(*combat, position - Vec2<int>(1*p, 0));
-		position = position - Vec2<int>(-1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(-1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[1] - position[1] > 0) {
-		// move(*combat, position - Vec2<int>(0, -1*p))
-		position = position - Vec2<int>(0, 1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, 1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[1] - position[1] < 0) {
-		// move(*combat, position - Vec2<int>(0, 1*p));
-		position = position - Vec2<int>(0, -1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, -1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 }
 
