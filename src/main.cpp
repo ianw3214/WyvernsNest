@@ -11,7 +11,7 @@
 #include "game/customization.hpp"
 #include "game/skillTree.hpp"
 
-int main(int argc, char* argv[]) {
+int SDL_main(int argc, char* argv[]) {
 
 	// Initialize the engine
 	if (!Core::init("Wyverns Nest", 1280, 720)) {
