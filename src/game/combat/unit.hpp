@@ -37,7 +37,7 @@ class Unit : public Entity {
 
 public:
 
-	Unit();
+	// Units should never be default constructed, a type needs to be specified
 	Unit(UnitType type);
 
 	// The position of the unit in terms of grid coordinates
@@ -56,6 +56,7 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
+	// TODO: (Ian) Remove these functions, made redundant by getStat function
 	int getSTR() const;
 	int getDEX() const;
 	int getINT() const;

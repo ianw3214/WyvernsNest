@@ -128,6 +128,7 @@ void SkillTree::returnToCustomization() {
 			player["selected"] = selected;
 			break;
 		}
+		index++;
 	}
 	{	// Write the results to a file
 		std::ofstream f(DEFAULT_PLAYER_FILE_SKILLTREE);

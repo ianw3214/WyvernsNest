@@ -96,7 +96,7 @@
             "level": 5
         },{
             "id": 14,
-            "data": "RESURRECT (NOT IMPLEMENTED)",
+            "data": "RESURRECT",
             "sprite_index": 13,
             "children": [],
             "x_offset": 0,

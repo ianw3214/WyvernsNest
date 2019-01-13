@@ -4,35 +4,6 @@
 #include "../util/attackloader.hpp"
 #include "../util/util.hpp"
 
-// Deprecated, should not be called
-// TODO: remove
-Player::Player() :
-	Unit(UnitType::PLAYER),
-	current_action(PlayerAction::NONE),
-	player_state(PlayerState::CHOOSING),
-	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	valid_move("res/assets/tiles/valid_move.png", 32, 32)
-{
-	init();
-}
-
-// Deprecated, should not be called
-// TODO: remove
-Player::Player(int x, int y) :
-	Unit(UnitType::PLAYER),
-	current_action(PlayerAction::NONE),
-	player_state(PlayerState::CHOOSING),
-	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	valid_move("res/assets/tiles/valid_move.png", 32, 32)
-{
-	position.x() = x;
-	position.y() = y;
-
-	init();
-}
-
 Player::Player(int x, int y, const nlohmann::json& data) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
@@ -106,6 +77,7 @@ void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
+	int option_height = SubDiv::vSize(16, 1);
 	if (pos.x() < Core::windowWidth() / 2) {
 		pos.x() += unit_width + (sprite_width - unit_width) / 2;
 	} else {
@@ -114,12 +86,12 @@ void Player::renderTurnUI() {
 
 	// If the turn UI is off the screen, fix it
 	if (pos.y() < 0) pos.y() = 0;
+	if (pos.y() + option_height * 6 > Core::windowHeight()) pos.y() = Core::windowHeight() - 6 * option_height;
 
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
-	int option_height = SubDiv::vSize(16, 1);
 	// The text offset is not even because the font is rendered a little below the center
 	ScreenCoord text_offset = ScreenCoord(10, SubDiv::vSize(36, 1));
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
@@ -305,8 +277,6 @@ void Player::handleEvent(const SDL_Event & event)
 }
 
 void Player::update(int delta) {
-	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
-	Unit::update(delta);
 	// Update the current action based on the mouse position
 	if (selected) {	
 		int mouseX, mouseY;
