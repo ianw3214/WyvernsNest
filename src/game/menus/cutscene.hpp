@@ -35,6 +35,14 @@ private:
 	std::clock_t m_start;
 	int m_scene_time;
 
+	// State properties
+	int mouseX, mouseY;
+	bool mouseDown;
+
+	// Utility sprites
+	Sprite cursor;
+	Sprite cursorPress;
+
 	unsigned int m_position;
 	std::vector<Sprite> m_sprites;
 };

@@ -4,21 +4,6 @@
 #include "../combat.hpp"
 
 // TODO: Design better constructors
-
-// Construct a player unit by default
-Unit::Unit() :
-	type(UnitType::PLAYER),
-	state(UnitState::IDLE),
-	sprite_width(DEFAULT_SPRITE_WIDTH),
-	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	top_margin(0),
-	shadow("res/assets/shadow.png"),
-	unit_height(-1)
-{
-	generateDefaultUnitData();
-	loadPropertiesFromUnitData();
-}
-
 Unit::Unit(UnitType type) :
 	type(type),
 	state(UnitState::IDLE),
@@ -26,6 +11,7 @@ Unit::Unit(UnitType type) :
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
 	shadow("res/assets/shadow.png"),
+	unit_width(-1),
 	unit_height(-1)
 {
 	generateDefaultUnitData();
@@ -175,8 +161,8 @@ std::vector<ScreenCoord> Unit::getValidNeighbours(ScreenCoord pos, Combat & comb
 }
 
 void Unit::calculateScreenPositionMovement() {
-	screenPosition.x() += moveNext.x() * tile_width / 20;
-	screenPosition.y() += moveNext.y() * tile_height / 20;
+	screenPosition.x() += moveNext.x() * tile_width / 12;
+	screenPosition.y() += moveNext.y() * tile_height / 12;
 
 	// Make the shadow move during movement
 	shadow.setPos(screenPosition.x() - (tile_width - sprite_width) / 2, screenPosition.y() - tile_height / 2 + sprite_height);

@@ -74,8 +74,8 @@
     <LibraryPath>$(SolutionDir)libs\SDL2_mixer-2.0.4\lib\x86;$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\ianw3214\workspace\WyvernsNest\src\vendor;C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2_mixer-2.0.4\include;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2_mixer-2.0.4\lib\x86;$(SolutionDir)libs\SDL2-2.0.8\lib\x86;$(SolutionDir)libs\glew-2.1.0\lib\Release\Win32;$(SolutionDir)libs\freetype\Win32;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -105,12 +105,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\ianw3214\workspace\WyvernsNest\src\vendor;C:\Users\ianw3214\workspace\WyvernsNest\libs\SDL2_mixer-2.0.4\include;$(SolutionDir)libs\stb_image;$(SolutionDir)libs\SDL2-2.0.8\include;$(SolutionDir)libs\glew-2.1.0\include;$(SolutionDir)libs\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;glew32.lib;opengl32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Windows</SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

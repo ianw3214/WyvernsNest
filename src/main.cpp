@@ -1,4 +1,6 @@
+#ifdef _DEBUG
 #define SDL_MAIN_HANDLED
+#endif
 
 #include <iostream>
 

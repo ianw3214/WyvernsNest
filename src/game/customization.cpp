@@ -300,6 +300,7 @@ void Customization::saveData() {
 		unit["attack2"] = units[index].attack2;
 		unit["attack3"] = units[index].attack3;
 		unit["attack4"] = units[index].attack4;
+		index++;
 	}
 
 	// Save it to the save file
@@ -308,7 +309,6 @@ void Customization::saveData() {
 	out_save_file.close();
 }
 
-#include <iostream>
 void Customization::switchToCombatState() {
 	saveData();
 	// Assume the save file is always valid

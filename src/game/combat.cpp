@@ -12,18 +12,20 @@
 #include "combat/enemies/basicWarriorEnemy.hpp"
 
 #include "menus/menu.hpp"
+#include "menus/creditsmenu.hpp"
 #include "customization.hpp"
 
 #include <utility>
 #include <fstream>
 using json = nlohmann::json;
 
-Combat::Combat(const std::string & filePath) :
+Combat::Combat(const std::string & filePath, bool last_level) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
 	pauseBase("res/assets/UI/pauseBase.png"),
 	cursor("res/assets/UI/cursor.png"),
-	cursorPress("res/assets/UI/cursorPress.png")
+	cursorPress("res/assets/UI/cursorPress.png"),
+	last_level(last_level)
 {
 	initSprites();
 
@@ -118,9 +120,20 @@ Combat::~Combat() {
 
 void Combat::handleEvent(const SDL_Event& e) {
 
+	// If the combat state isn't paused, look for gameplay events
 	if (!pause) {
 		// Keep looking for win/lose conditions while the game hasn't ended
 		if (!game_over) {
+			#ifdef _DEBUG
+			// !! DEBUG ONLY !! - Add a way to circumvent the level
+			if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_9) {
+				for (Unit * u : units) {
+					if (u->getType() == UnitType::ENEMY) {
+						u->health = 0;
+					}
+				}
+			}
+			#endif
 			// Check for win condition if the player input triggers it
 			updateWinStatus();
 		}
@@ -130,7 +143,11 @@ void Combat::handleEvent(const SDL_Event& e) {
 				if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
 					if (render_game_over) {
 						// Move on to the next state
-						changeState(new Customization());
+						if (last_level) {
+							changeState(new CreditsMenu());
+						} else {
+							changeState(new Customization());
+						}
 					}
 				}
 			}
@@ -139,7 +156,12 @@ void Combat::handleEvent(const SDL_Event& e) {
 				SDL_GetMouseState(&mousePos.x(), &mousePos.y());
 				if (continueButton.colliding(mousePos)) {
 					if (game_win) {
-						changeState(new Customization());
+						// Move on to the next state
+						if (last_level) {
+							changeState(new CreditsMenu());
+						} else {
+							changeState(new Customization());
+						}
 					} else {
 						changeState(new Menu());
 					}
@@ -159,7 +181,9 @@ void Combat::handleEvent(const SDL_Event& e) {
 		}
 		// Update entities after updating combat state because pause depends on player state
 		for (Entity * entity : entities) entity->handleEvent(e);
-	} else {
+	}
+	// Pause menu event handling
+	else {
 		if (e.type == SDL_MOUSEBUTTONUP) {
 			ScreenCoord mouse;
 			SDL_GetMouseState(&mouse.x(), &mouse.y());
@@ -416,7 +440,6 @@ void Combat::startGame() {
 	if (current->getType() == UnitType::ENEMY) {
 		dynamic_cast<Enemy*>(current)->takeTurn();
 	}
-	
 
 }
 
@@ -456,6 +479,10 @@ void Combat::updateWinStatus() {
 				if (newExp >= DEFAULT_MAX_EXP) {
 					unit["level"] = 1 + unit["level"];
 					unit["experience"] = newExp - DEFAULT_MAX_EXP;
+					unit["STR"] = 2 + unit["STR"];
+					unit["DEX"] = 2 + unit["DEX"];
+					unit["INT"] = 2 + unit["INT"];
+					unit["CON"] = 2 + unit["CON"];
 					level_up = true;
 				} else {
 					unit["experience"] = newExp;

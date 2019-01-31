@@ -37,7 +37,7 @@ class Unit : public Entity {
 
 public:
 
-	Unit();
+	// Units should never be default constructed, a type needs to be specified
 	Unit(UnitType type);
 
 	// The position of the unit in terms of grid coordinates
@@ -56,6 +56,7 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
+	// TODO: (Ian) Remove these functions, made redundant by getStat function
 	int getSTR() const;
 	int getDEX() const;
 	int getINT() const;
@@ -66,6 +67,9 @@ public:
 	int getSpriteHeight() const { return sprite_height; };
 	int getTileWidth() const { return tile_width; }
 	int getTileHeight() const { return tile_height; }
+
+	// Helper method to calculate the screen position based on grid position
+	void calculateScreenPosition();
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -123,15 +127,13 @@ protected:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
-	// Helper method to calculate the screen position based on grid position
-	void calculateScreenPosition();
-
 	// Helper methods/variables needed for proper sprite rendering
 	int sprite_width;
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
-	// Height of the unit within the sprite
+	// Width/height of the unit within the sprite
+	int unit_width;
 	int unit_height;
 
 	// Virtual functions that units can override to customize functionality

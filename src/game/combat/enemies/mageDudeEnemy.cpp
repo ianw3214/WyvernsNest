@@ -16,6 +16,14 @@ MageDudeEnemy::MageDudeEnemy() :
 	sprite.addAnimation(30, 43);		// FIRE SPELL
 	sprite.addAnimation(50, 58);		// DYING
 	sprite.addAnimation(58, 58);		// DEAD
+
+	// Randomize enemy stats
+	UnitData data;
+	data.strength = rand() % 10 + 10;
+	data.dexterity = rand() % 10 + 10;
+	data.intelligence = rand() % 10 + 10;
+	data.constitution = rand() % 10 + 10;
+	setData(data);
 }
 
 MageDudeEnemy::~MageDudeEnemy() {
@@ -121,11 +129,10 @@ void MageDudeEnemy::handleMovement() {
 		}
 		tries--;
 	}
-	// If the movement fails, then directly execute the attack state
-	// NOTE: if movement succeeds, then the handleAttack function doesn't need to be explicitly called
+
 	if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
-		// Directly handle the attacks if no movement could be done
-		handleAttack();
+		// Use base enemies random movement if movement fails
+		Enemy::handleMovement();
 	}
 }
 
