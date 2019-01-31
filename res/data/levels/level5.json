@@ -1,0 +1,51 @@
+{
+    "map": "map5.json",
+    "enemies": [
+        {
+            "type": "MAGE DUDE",
+            "x": 4,
+            "y": 7
+        },{
+            "type": "MAGE DUDE",
+            "x": 3,
+            "y": 6
+        },{
+            "type": "MAGE DUDE",
+            "x": 13,
+            "y": 6
+        },{
+            "type": "BASIC WARRIOR",
+            "x": 6,
+            "y": 1
+        },{
+            "type": "BASIC WARRIOR",
+            "x": 8,
+            "y": 0
+        },{
+            "type": "BASIC WARRIOR",
+            "x": 10,
+            "y": 1
+        }
+    ],
+    "player_spawns": [
+        {
+            "x": 6,
+            "y": 7
+        },
+        {
+            "x": 10,
+            "y": 6
+        },
+        {
+            "x": 7,
+            "y": 7
+        },
+        {
+            "x": 9,
+            "y": 8
+        }
+    ],
+    "reward": {
+        "experience": 1000
+    }
+}
