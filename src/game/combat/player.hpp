@@ -9,8 +9,12 @@
 
 #include <nlohmann/json.hpp>
 
-#define PLAYER_DEFAULT_MOVE_COUNTER		20
-#define PLAYER_DEFAULT_ATTACK_COUNTER	20 + 16 * 2
+// TODO: Put this data in a file w/ metadata
+#define PLAYER_WIDTH_IN_SOURCE			50.f
+#define PLAYER_HEIGHT_IN_SOURCE			70.f
+
+#define PLAYER_DEFAULT_MOVE_COUNTER		12
+#define PLAYER_DEFAULT_ATTACK_COUNTER	15 + 16 * 2
 
 // Enumeration to represent the player 'state'
 enum class PlayerState {
@@ -72,8 +76,9 @@ public:
 
 protected:
 	// Override callback function to customize functionality
-	void takeDamageCallback(int damage) override;
-	void selectCallback() override;
+	virtual void setTileSizeCallback(int width, int height) override;
+	virtual void takeDamageCallback(int damage) override;
+	virtual void selectCallback() override;
 
 private:
 

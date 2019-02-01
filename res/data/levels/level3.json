@@ -1,10 +1,30 @@
 {
-    "map": "map2.json",
+    "map": "map3.json",
     "enemies": [
         {
+            "type": "BABY GOOMBA",
+            "x": 8,
+            "y": 4
+        },{
             "type": "MAGE DUDE",
-            "x": 5,
+            "x": 14,
+            "y": 6
+        },{
+            "type": "BABY GOOMBA",
+            "x": 9,
+            "y": 5
+        },{
+            "type": "BASIC WARRIOR",
+            "x": 9,
             "y": 3
+        },{
+            "type": "BASIC WARRIOR",
+            "x": 5,
+            "y": 4
+        },{
+            "type": "BABY GOOMBA",
+            "x": 1,
+            "y": 7
         }
     ],
     "player_spawns": [
@@ -13,17 +33,20 @@
             "y": 3
         },
         {
-            "x": 2,
-            "y": 2
-        },
-        {
-            "x": 3,
+            "x": 1,
             "y": 3
         },
         {
-            "x": 4,
+            "x": 1,
             "y": 4
+        },
+        {
+            "x": 0,
+            "y": 5
         }
     ],
-    "experience": 200
+    "reward": {
+        "experience": 1000
+    }
+
 }

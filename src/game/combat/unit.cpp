@@ -4,39 +4,15 @@
 #include "../combat.hpp"
 
 // TODO: Design better constructors
-
-// Construct a player unit by default
-Unit::Unit() :
-	type(UnitType::PLAYER),
-	state(UnitState::IDLE),
-	sprite_width(DEFAULT_SPRITE_WIDTH),
-	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	top_margin(0),
-	shadow("res/assets/shadow.png")
-{
-	generateDefaultUnitData();
-	loadPropertiesFromUnitData();
-}
-
 Unit::Unit(UnitType type) :
 	type(type),
 	state(UnitState::IDLE),
 	sprite_width(DEFAULT_SPRITE_WIDTH),
 	sprite_height(DEFAULT_SPRITE_HEIGHT),
 	top_margin(0),
-	shadow("res/assets/shadow.png")
-{
-	generateDefaultUnitData();
-	loadPropertiesFromUnitData();
-}
-
-Unit::Unit(UnitType type, Attack attack1, Attack attack2) :
-	type(type),
-	state(UnitState::IDLE),
-	sprite_width(DEFAULT_SPRITE_WIDTH),
-	sprite_height(DEFAULT_SPRITE_HEIGHT),
-	top_margin(0),
-	shadow("res/assets/shadow.png")
+	shadow("res/assets/shadow.png"),
+	unit_width(-1),
+	unit_height(-1)
 {
 	generateDefaultUnitData();
 	loadPropertiesFromUnitData();
@@ -89,6 +65,9 @@ void Unit::setTileSize(int width, int height) {
 	shadow.setSize(width, height / 2);
 	// Recalculate the screen position based on the tile size
 	calculateScreenPosition();
+
+	// Call the tile size callback
+	setTileSizeCallback(width, height);
 }
 
 void Unit::setTopMargin(int margin) {
@@ -182,8 +161,8 @@ std::vector<ScreenCoord> Unit::getValidNeighbours(ScreenCoord pos, Combat & comb
 }
 
 void Unit::calculateScreenPositionMovement() {
-	screenPosition.x() += moveNext.x() * tile_width / 20;
-	screenPosition.y() += moveNext.y() * tile_height / 20;
+	screenPosition.x() += moveNext.x() * tile_width / 12;
+	screenPosition.y() += moveNext.y() * tile_height / 12;
 
 	// Make the shadow move during movement
 	shadow.setPos(screenPosition.x() - (tile_width - sprite_width) / 2, screenPosition.y() - tile_height / 2 + sprite_height);
@@ -213,6 +192,7 @@ void Unit::calculateScreenPosition() {
 }
 
 // Not implemented in base unit, should be implemented in specialized classes
+void Unit::setTileSizeCallback(int width, int height) {}
 void Unit::takeDamageCallback(int damage) {}
 void Unit::selectCallback() {}
 
@@ -223,7 +203,7 @@ void Unit::generateDefaultUnitData() {
 	data.strength = 10;
 	data.dexterity = 10;
 	data.intelligence = 10;
-	data.constitution = 100;
+	data.constitution = 10;
 	// Default traits -> NOT YET IMPLEMENTED
 }
 
@@ -231,7 +211,7 @@ void Unit::addStatus(Status * status) {
 	statusList.push_back(status);
 	status->setTarget(this);
 	// The status may affect unit stats, so recalculate utility variables
-	loadPropertiesFromUnitData();
+	loadPropertiesFromUnitData(false);
 }
 
 void Unit::select() {
@@ -256,13 +236,13 @@ void Unit::deselect() {
 }
 
 void Unit::takeDamage(int damage) {
+	// Call the virtualized callback function for subclasses to customize
+	takeDamageCallback(damage);
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
-	// Call the virtualized callback function for subclasses to customize
-	takeDamageCallback(damage);
 }
 
 void Unit::heal(int health) {
@@ -273,21 +253,47 @@ void Unit::heal(int health) {
 }
 
 void Unit::push(int p, ScreenCoord src_pos) {
+	Vec2<int> temp_pos;
+
 	if (src_pos[0] - position[0] > 0) {
-		// move(*combat, position - Vec2<int>(-1*p, 0));
-		position = position - Vec2<int>(1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[0] - position[0] < 0) {
-		// move(*combat, position - Vec2<int>(1*p, 0));
-		position = position - Vec2<int>(-1 * p, 0);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(-1 * p, 0);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[1] - position[1] > 0) {
-		// move(*combat, position - Vec2<int>(0, -1*p))
-		position = position - Vec2<int>(0, 1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, 1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 	else if (src_pos[1] - position[1] < 0) {
-		// move(*combat, position - Vec2<int>(0, 1*p));
-		position = position - Vec2<int>(0, -1 * p);
+		for (int i = p; i >= 0; i--) {
+			temp_pos = position - Vec2<int>(0, -1 * p);
+			if (combat->isPosEmpty(temp_pos)) {
+				position = temp_pos;
+				calculateScreenPosition();
+				break;
+			}
+		}
 	}
 }
 
@@ -323,6 +329,9 @@ void Unit::renderTop(Combat * combat) {
 void Unit::renderHealth() {
 	// ScreenCoord pos = screenPosition + ScreenCoord((tile_width - sprite_width) / 2, (tile_height - sprite_height) / 2);
 	ScreenCoord pos = screenPosition;
+	if (unit_height > 0) {
+		pos.y() += sprite_height - unit_height;
+	}
 	pos.x() += (sprite_width - tile_width) / 2;
 	if (pos.y() < 0) pos.y() = 10;
 	int healthBarWidth = tile_width;

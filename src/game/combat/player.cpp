@@ -4,35 +4,6 @@
 #include "../util/attackloader.hpp"
 #include "../util/util.hpp"
 
-// Deprecated, should not be called
-// TODO: remove
-Player::Player() :
-	Unit(UnitType::PLAYER),
-	current_action(PlayerAction::NONE),
-	player_state(PlayerState::CHOOSING),
-	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	valid_move("res/assets/tiles/valid_move.png", 32, 32)
-{
-	init();
-}
-
-// Deprecated, should not be called
-// TODO: remove
-Player::Player(int x, int y) :
-	Unit(UnitType::PLAYER),
-	current_action(PlayerAction::NONE),
-	player_state(PlayerState::CHOOSING),
-	player_sprite("res/assets/players/FemaleSheet.png", 96, 96),
-	valid_tile("res/assets/tiles/valid.png"),
-	valid_move("res/assets/tiles/valid_move.png", 32, 32)
-{
-	position.x() = x;
-	position.y() = y;
-
-	init();
-}
-
 Player::Player(int x, int y, const nlohmann::json& data) :
 	Unit(UnitType::PLAYER),
 	current_action(PlayerAction::NONE),
@@ -101,20 +72,26 @@ void Player::renderTop(Combat * combat) {
 	}
 	renderHealth();
 }
+
 void Player::renderTurnUI() {
 	
 	// Setup the variables to draw the UI correctly
 	ScreenCoord pos = screenPosition;
-	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
-	else {
-		pos.x() += SubDiv::hSize(5, 1);
+	int option_height = SubDiv::vSize(16, 1);
+	if (pos.x() < Core::windowWidth() / 2) {
+		pos.x() += unit_width + (sprite_width - unit_width) / 2;
+	} else {
+		pos.x() += (sprite_width - unit_width) / 2 - SubDiv::hSize(5, 1);
 	}
+
+	// If the turn UI is off the screen, fix it
 	if (pos.y() < 0) pos.y() = 0;
+	if (pos.y() + option_height * 6 > Core::windowHeight()) pos.y() = Core::windowHeight() - 6 * option_height;
+
 	Colour base = Colour(.7f, .7f, .7f);
 	Colour select = Colour(.9f, .9f, .9f);
 
 	// The actual drawing of the UI elements
-	int option_height = SubDiv::vSize(16, 1);
 	// The text offset is not even because the font is rendered a little below the center
 	ScreenCoord text_offset = ScreenCoord(10, SubDiv::vSize(36, 1));
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::middle);
@@ -300,8 +277,6 @@ void Player::handleEvent(const SDL_Event & event)
 }
 
 void Player::update(int delta) {
-	// TODO: Use a better solution than this, perhaps virtual functions w/ custom callbacks
-	Unit::update(delta);
 	// Update the current action based on the mouse position
 	if (selected) {	
 		int mouseX, mouseY;
@@ -466,6 +441,23 @@ void Player::updatePossibleMoves()
 	possibleMoves = getPossibleMoves();
 }
 
+void Player::setTileSizeCallback(int width, int height) {
+	// TODO: include these in file metadata as well
+	float width_to_tile = 1.3f;
+	float sprite_ratio = 1.8f;
+	// Calculate the sprite size based on the width/height
+	float width_ratio = static_cast<float>(96 / PLAYER_WIDTH_IN_SOURCE);
+	sprite_width = static_cast<int>(width_ratio * width_to_tile * width);
+	float height_ratio = static_cast<float>(96 / PLAYER_HEIGHT_IN_SOURCE);
+	sprite_height = static_cast<int>(height_ratio * width * sprite_ratio);
+	player_sprite.setSize(sprite_width, sprite_height);
+	calculateScreenPosition();
+
+	// Also set the units height
+	unit_width = static_cast<int>(PLAYER_WIDTH_IN_SOURCE * static_cast<float>(sprite_width) / 96.f);
+	unit_height = static_cast<int>(PLAYER_HEIGHT_IN_SOURCE * static_cast<float>(sprite_height) / 96.f);
+}
+
 void Player::takeDamageCallback(int damage) {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::TAKE_DAMAGE));
 	// Decide what the next animation is based on whether the player is still alive or not
@@ -498,10 +490,13 @@ PlayerAction Player::getActionAtCoord(ScreenCoord coord) {
 	// TODO: Separate this into member variables/functions since a lot of data is shared with the rendering of options
 	int option_height = SubDiv::vSize(16, 1);
 	ScreenCoord pos = screenPosition;
-	if (pos.x() >= Core::windowWidth() / 2) pos.x() -= SubDiv::hSize(5, 1);
-	else {
-		pos.x() += SubDiv::hSize(5, 1);
+	if (pos.x() < Core::windowWidth() / 2) {
+		pos.x() += unit_width + (sprite_width - unit_width) / 2;
+	} else {
+		pos.x() += (sprite_width - unit_width) / 2 - SubDiv::hSize(5, 1);
 	}
+
+	// If the turn UI is off the screen, fix it
 	if (pos.y() < 0) pos.y() = 0;
 	// Check move option collision if the player hasn't moved
 	if (!moved) {

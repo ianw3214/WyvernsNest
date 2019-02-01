@@ -61,6 +61,7 @@ Attack::Attack(const Attack & other, Unit * source) :
 
 }
 
+#include <iostream>
 void Attack::attack(ScreenCoord pos, Combat& combat) {
 	if (isValid(pos, combat)) {
 		switch (type) {
@@ -98,7 +99,14 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			if (pos.y() > source->position.y()) angle = 180;
 			if (pos.x() < source->position.x()) angle = 270;
 			if (pos.x() > source->position.x()) angle = 90;
-			combat.addEmitter(Particles::get(particle.name, x, y, angle));
+			combat.addEmitter(Particles::get(particle.name, angle, x, y));
+		}
+		if (particle.position == ParticlePosition::SELF) {
+			combat.addEmitter(Particles::get(
+				particle.name,
+				source->screenPosition.x() + source->getSpriteWidth() / 2,
+				source->screenPosition.y() + source->getSpriteHeight() - source->getTileHeight())
+			);
 		}
 	}
 }
@@ -150,7 +158,7 @@ void Attack::renderValidGrid(int tile_width, int tile_height, const Combat& comb
 	} break;
 	}
 
-	//mouse rendering
+	// Mouse rendering
 	renderValidTarget(tile_width, tile_height, combat);
 	
 }
@@ -171,7 +179,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height, const Combat& co
 	// Render the valid target based on whether it IS valid or not
 	switch (type) {
 	case AttackType::MELEE: {
-		if (isValid(ScreenCoord(x, y), combat)) {
+		if (isValid(Vec2<int>(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();	
 		}
@@ -181,7 +189,7 @@ void Attack::renderValidTarget(int tile_width, int tile_height, const Combat& co
 		}
 	} break;
 	case AttackType::RANGED: {
-		if (isValid(ScreenCoord(x, y), combat)) {
+		if (isValid(Vec2<int>(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
 		}
@@ -191,13 +199,14 @@ void Attack::renderValidTarget(int tile_width, int tile_height, const Combat& co
 		}
 	} break;
 	case AttackType::PIERCE: {
-		if (isValid(ScreenCoord(x, y), combat)) {
+		if (isValid(Vec2<int>(x, y), combat)) {
 			targetValidSprite.setPos(x * tile_width, y * tile_height);
 			targetValidSprite.render();
-			validSprite.setPos((x + x - source->position.x()) * tile_width, (y + y - source->position.y()) * tile_height);
-			validSprite.render();
-			targetValidSprite.setPos((x + x - source->position.x()) * tile_width, (y + y - source->position.y()) * tile_height);
-			targetValidSprite.render();
+			Vec2<int> step = Vec2<int>(x, y) - source->position;
+			for (int i = 0; i < range; ++i) {
+				validSprite.setPos((x + step.x() * i) * tile_width, (y + step.y() * i) * tile_height);
+				validSprite.render();
+			}
 		}
 		else {
 			targetInvalidSprite.setPos(x * tile_width, y * tile_height);
@@ -298,14 +307,36 @@ void PushEffect::attack(ScreenCoord pos, Combat &combat, const Attack &attack) {
 	}
 }
 
-#include <iostream>
 // TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
 void MoveEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
 	if (combat.isPosEmpty(pos)) {
 		// This is really bad, do not do this in the future
 		Unit * unit = const_cast<Unit*>(attack.getSource());
 		if (!unit->move(combat, pos)) {
-			std::cout << "FAILED" << std::endl;
+			
+		}
+	}
+}
+
+// TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
+void BlinkEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
+	if (combat.isPosEmpty(pos)) {
+		// This is really bad, do not do this in the future
+		Unit * unit = const_cast<Unit*>(attack.getSource());
+		unit->position = pos;
+		unit->calculateScreenPosition();
+	}
+}
+
+// TODO: Have an attack allow an enemy to move an arbitrary number of units maybe? -> Not sure if good design choice
+void ResurrectEffect::attack(ScreenCoord pos, Combat & combat, const Attack & attack) {
+	if (combat.isPosEmpty(pos)) {
+		// This is really bad, do not do this in the future
+		Unit * unit = const_cast<Unit*>(attack.getSource());
+		if (unit->getState() == UnitState::DEAD) {
+			unit->health = 1;
+			unit->setState(UnitState::IDLE);
+			// TODO: Update animations
 		}
 	}
 }

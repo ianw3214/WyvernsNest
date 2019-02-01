@@ -3,7 +3,10 @@
 #include <iostream>
 #include <ctime>
 
-Cutscene::Cutscene(State * state, int scene_time, bool timed_scene) {
+Cutscene::Cutscene(State * state, int scene_time, bool timed_scene) :
+	cursor("res/assets/UI/cursor.png"),
+	cursorPress("res/assets/UI/cursorPress.png")
+{
 
 	m_scene_time = scene_time;
 	m_position = 0;
@@ -34,6 +37,14 @@ void Cutscene::handleEvent(const SDL_Event& e) {
 		if (m_position == m_sprites.size() - 1) changeState(m_state);
 		else m_position++;
 	}
+	// Update the mouse position/state
+	SDL_GetMouseState(&mouseX, &mouseY);
+	if (e.type == SDL_MOUSEBUTTONDOWN) {
+		mouseDown = true;
+	}
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		mouseDown = false;
+	}
 }
 
 void Cutscene::update(int delta) {
@@ -48,6 +59,15 @@ void Cutscene::update(int delta) {
 
 void Cutscene::render() {
 	m_sprites[m_position].render();
+
+	// Render the cursor
+	if (mouseDown) {
+		cursorPress.setPos(mouseX, mouseY);
+		cursorPress.render();
+	} else {
+		cursor.setPos(mouseX, mouseY);
+		cursor.render();
+	}
 }
 
 void Cutscene::addSprite(std::string path) {

@@ -73,3 +73,6 @@ ipch/
 *.ase
 *.aseprite
 *.psd
+
+# Build directory
+build/

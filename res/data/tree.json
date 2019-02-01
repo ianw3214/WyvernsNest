@@ -40,14 +40,14 @@
             "level": 2
         },{
             "id": 6,
-            "data": "CONSTITUTION BOOST",
+            "data": "INTELLIGENCE BOOST",
             "sprite_index": 5,
             "children": [9],
             "x_offset": 1,
             "level": 2
         },{
             "id": 7,
-            "data": "BASIC TELEPORT",
+            "data": "BLINK",
             "sprite_index": 6,
             "children": [10],
             "x_offset": 2,
@@ -75,21 +75,21 @@
             "level": 3
         },{
             "id": 11,
-            "data": "COUNTER (RETURN DMG PASSIVE)",
+            "data": "COUNTER (NOT IMPLEMENTED)",
             "sprite_index": 10,
             "children": [13, 14],
             "x_offset": -1,
             "level": 4
         },{
             "id": 12,
-            "data": "BURNING ATTACKS (PASSIVE)",
+            "data": "BURNING ATTACKS (NOT IMPLEMENTED)",
             "sprite_index": 11,
             "children": [14, 15],
             "x_offset": 1,
             "level": 4
         },{
             "id": 13,
-            "data": "DRAMATIC PULL W/ DAMAGE",
+            "data": "SUPER SPIN TO WIN",
             "sprite_index": 12,
             "children": [],
             "x_offset": -2,
@@ -103,7 +103,7 @@
             "level": 5
         },{
             "id": 15,
-            "data": "RAISE WALLS",
+            "data": "SUPER FIREBALL",
             "sprite_index": 14,
             "children": [],
             "x_offset": 2,
