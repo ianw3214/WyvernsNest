@@ -43,11 +43,12 @@ void Enemy::render()
 	sprite.setPos(screenPosition.x(), screenPosition.y());
 	sprite.render();
 
-	renderHealth();
+	if (state != UnitState::DEAD) {
+		renderHealth();
+	}
 }
 
 void Enemy::update(int delta) {
-	Unit::update(delta);
 	switch (state) {
 	case UnitState::IDLE: {
 		// Do nothing when idling

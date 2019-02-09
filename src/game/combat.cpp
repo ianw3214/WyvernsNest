@@ -120,9 +120,20 @@ Combat::~Combat() {
 
 void Combat::handleEvent(const SDL_Event& e) {
 
+	// If the combat state isn't paused, look for gameplay events
 	if (!pause) {
 		// Keep looking for win/lose conditions while the game hasn't ended
 		if (!game_over) {
+			#ifdef _DEBUG
+			// !! DEBUG ONLY !! - Add a way to circumvent the level
+			if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_9) {
+				for (Unit * u : units) {
+					if (u->getType() == UnitType::ENEMY) {
+						u->health = 0;
+					}
+				}
+			}
+			#endif
 			// Check for win condition if the player input triggers it
 			updateWinStatus();
 		}
@@ -170,7 +181,9 @@ void Combat::handleEvent(const SDL_Event& e) {
 		}
 		// Update entities after updating combat state because pause depends on player state
 		for (Entity * entity : entities) entity->handleEvent(e);
-	} else {
+	}
+	// Pause menu event handling
+	else {
 		if (e.type == SDL_MOUSEBUTTONUP) {
 			ScreenCoord mouse;
 			SDL_GetMouseState(&mouse.x(), &mouse.y());
@@ -427,7 +440,6 @@ void Combat::startGame() {
 	if (current->getType() == UnitType::ENEMY) {
 		dynamic_cast<Enemy*>(current)->takeTurn();
 	}
-	
 
 }
 
