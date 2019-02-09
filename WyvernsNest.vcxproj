@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\game\combat\enemies\babyGoombaEnemy.cpp" />
     <ClCompile Include="src\engine\animatedSprite.cpp" />
     <ClCompile Include="src\engine\engine.cpp" />
     <ClCompile Include="src\engine\entity.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\math\vec.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\game\combat\enemies\babyGoombaEnemy.hpp" />
     <ClInclude Include="src\engine\animatedSprite.hpp" />
     <ClInclude Include="src\engine\core.hpp" />
     <ClInclude Include="src\engine\engine.hpp" />
