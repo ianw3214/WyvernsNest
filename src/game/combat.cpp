@@ -10,6 +10,8 @@
 #include "combat/status.hpp"
 #include "combat/enemies/mageDudeEnemy.hpp"
 #include "combat/enemies/basicWarriorEnemy.hpp"
+#include "combat/enemies/babyGoombaEnemy.hpp"
+
 
 #include "menus/menu.hpp"
 #include "menus/creditsmenu.hpp"
@@ -61,7 +63,7 @@ Combat::Combat(const std::string & filePath, bool last_level) :
 			if (type == "BABY GOOMBA") {
 				int x = enemy["x"];
 				int y = enemy["y"];
-				Enemy * unit = new Enemy();
+				Enemy * unit = new BabyGoombaEnemy();
 				addEnemy(unit, x, y);
 			}
 			else if (type == "MAGE DUDE") {

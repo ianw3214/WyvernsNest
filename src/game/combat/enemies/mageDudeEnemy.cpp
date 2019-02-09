@@ -58,7 +58,7 @@ void MageDudeEnemy::takeDamageCallback(int damage) {
 	}
 }
 
-void MageDudeEnemy::handleMovement() {
+bool MageDudeEnemy::handleMovement() {
 	// TODO: Implement mage dude enemy movement AI
 	/*
 		- The mage dude enemy should walk away from the player in order to stay safe
@@ -132,8 +132,14 @@ void MageDudeEnemy::handleMovement() {
 
 	if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
 		// Use base enemies random movement if movement fails
-		Enemy::handleMovement();
+		bool success = Enemy::handleMovement();
+		if (!success) {
+		// If even the base random movement fails move to attacks
+			handleAttack();
+			return false;
+		}
 	}
+	return true;
 }
 
 void MageDudeEnemy::handleAttack() {

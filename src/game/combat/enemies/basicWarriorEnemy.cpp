@@ -63,7 +63,7 @@ int distance(Vec2<int> p1, Vec2<int> p2){
 	return static_cast<int>(sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2)));
 }	
 
-void WarriorEnemy::handleMovement() {
+bool WarriorEnemy::handleMovement() {
 
 	/*
 		- The warrior enemy should simply move towards the player every turn
@@ -125,8 +125,14 @@ void WarriorEnemy::handleMovement() {
 
 	if (!move(*combat,position_within_range)) {
 		// Use base enemies random movement if movement fails
-		Enemy::handleMovement();
+		int success = Enemy::handleMovement();
+		if (!success) {
+			// If even the base random movement fails move to attacks
+			handleAttack();
+			return false;
+		}
     }
+	return true;
 }
 
 void WarriorEnemy::handleAttack() {
