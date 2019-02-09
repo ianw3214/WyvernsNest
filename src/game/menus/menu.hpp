@@ -8,7 +8,7 @@
 #define FLASH_TIME	20
 
 // Use a hard coded define for the version for now, in the future use a config file
-#define VERSION "1.0.0 ALPHA"
+#define VERSION "1.0.1 ALPHA"
 
 // Hard coded button values
 #define NUM_BUTTONS 4
@@ -27,7 +27,7 @@ class Menu : public State {
 
 public:
 
-	Menu();
+	Menu(bool start_music = true);
 	~Menu();
 
 	void handleEvent(const SDL_Event& e);   // Handles incoming events

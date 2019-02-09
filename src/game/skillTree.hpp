@@ -54,6 +54,10 @@ private:
 	std::vector<int> selected;
 	std::vector<int> reachable;
 
+	// State variables
+	int mouseX, mouseY;
+	bool mouseDown;
+
 	void initSprites();
 	// Sprites used to render the customization state
 	Sprite base;
@@ -61,6 +65,8 @@ private:
 	Sprite sprite_empty;
 	Sprite sprite_reachable;
 	Sprite icons;
+	Sprite cursor;
+	Sprite cursorPress;
 
 	// Buttons
 	ButtonData backButton;

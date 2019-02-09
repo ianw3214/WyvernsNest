@@ -8,8 +8,13 @@
 #include "status.hpp"
 #include "../unitData.hpp"
 
-#define DEFAULT_SPRITE_WIDTH 300
-#define DEFAULT_SPRITE_HEIGHT 300
+#define DEFAULT_SPRITE_WIDTH	300
+#define DEFAULT_SPRITE_HEIGHT	300
+
+// The scale of the sprite in relation to the tile size
+#define DEFAULT_WIDTH_TO_TILE	1.f
+// The scale of the height of the sprite in relation to the width
+#define DEFAULT_SPRITE_RATIO	1.5f
 
 class Combat;
 
@@ -32,9 +37,8 @@ class Unit : public Entity {
 
 public:
 
-	Unit();
+	// Units should never be default constructed, a type needs to be specified
 	Unit(UnitType type);
-	Unit(UnitType type, Attack attack1, Attack attack2);
 
 	// The position of the unit in terms of grid coordinates
 	Vec2<int> position;
@@ -52,12 +56,20 @@ public:
 	UnitType getType() const { return type; }
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
+	// TODO: (Ian) Remove these functions, made redundant by getStat function
 	int getSTR() const;
 	int getDEX() const;
 	int getINT() const;
 	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
+	int getSpriteWidth() const { return sprite_width; }
+	int getSpriteHeight() const { return sprite_height; };
+	int getTileWidth() const { return tile_width; }
+	int getTileHeight() const { return tile_height; }
+
+	// Helper method to calculate the screen position based on grid position
+	void calculateScreenPosition();
 
 	// Setter methods
 	void setTileSize(int width, int height);
@@ -115,16 +127,17 @@ protected:
 	void calculateScreenPositionMovement();
 	void incrementMovement();
 
-	// Helper method to calculate the screen position based on grid position
-	void calculateScreenPosition();
-
 	// Helper methods/variables needed for proper sprite rendering
 	int sprite_width;
 	int sprite_height;
 	int tile_width, tile_height;
 	int top_margin;
+	// Width/height of the unit within the sprite
+	int unit_width;
+	int unit_height;
 
 	// Virtual functions that units can override to customize functionality
+	virtual void setTileSizeCallback(int width, int height);
 	virtual void takeDamageCallback(int damage);
 	virtual void selectCallback();
 

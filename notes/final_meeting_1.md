@@ -9,7 +9,6 @@
   - ~~Render chosen player attacks~~
   - ~~Need to store skill tree node id -> attacks **map**~~
   - ~~Ability to change player attack loadout~~
-    - See trello card for possible implementations
 
 ## Skill Tree state
 

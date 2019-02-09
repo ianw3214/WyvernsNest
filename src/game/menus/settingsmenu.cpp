@@ -34,10 +34,10 @@ void SettingsMenu::handleEvent(const SDL_Event &e) {
 			if (selected_option < 0) selected_option = 0;
 		}
 		if (e.key.keysym.sym == SDLK_RETURN || e.key.keysym.sym == SDLK_SPACE) {
-			if (selected_option == 2) changeState(new Menu());
+			if (selected_option == 2) changeState(new Menu(false));
 		}
 		if (e.key.keysym.sym == SDLK_ESCAPE) {
-			if (selected_option == 2) changeState(new Menu());
+			if (selected_option == 2) changeState(new Menu(false));
 			else selected_option = 2;
 		}
 	}
@@ -47,7 +47,7 @@ void SettingsMenu::handleEvent(const SDL_Event &e) {
 	if (e.type == SDL_MOUSEBUTTONUP) {
 		mouseDown = false;
 		// TODO: figure this shit out
-		if (selected_option == 2) changeState(new Menu());
+		if (selected_option == 2) changeState(new Menu(false));
 	}
 }
 

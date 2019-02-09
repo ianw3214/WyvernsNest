@@ -20,7 +20,8 @@ enum class AttackType {
 
 // Enumeration for particle target types
 enum class ParticlePosition {
-	TARGET
+	TARGET,
+	SELF
 };
 
 // Struct to keep track of particles

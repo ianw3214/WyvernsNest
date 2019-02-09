@@ -73,10 +73,10 @@ private:
 
 // Utility functions to interact with the particle loader more easily
 namespace Particles {
-	inline Emitter * get(const std::string& name, int x = 0, int y = 0) {
+	inline Emitter * get(const std::string& name, int x, int y) {
 		return ParticleLoader::get_instance().get(name, x , y);
 	}
-	inline Emitter * get(const std::string& name, int x = 0, int y = 0, int angle = 0) {
+	inline Emitter * get(const std::string& name, int angle, int x, int y) {
 		return ParticleLoader::get_instance().get(name, x, y, angle);
 	}
 }
