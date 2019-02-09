@@ -46,9 +46,11 @@ You should be able to build and run the project now.
 ### Mac setup
 
 On mac, use [homebrew](https://brew.sh/) to get the needed library files.  
-Run the following commands to get SDL and GLEW setup on your local machine.
+Run the following commands to get SDL, GLEW, and FreeType setup on your local machine.
 
-> brew install sdl2  
+> brew install sdl2 
+> brew install sdl2_mixer
+> brew install freetype 
 > brew install glew
 
 Once they are installed, the project should be able to compile just by typing **make** from the root directory of the project. You would still need to download the zip file containing the *libs* folder from the Windows step, since it contains the *stb_image* header.
