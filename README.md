@@ -37,7 +37,7 @@ Clone the repository onto your machine.
 
 Download [this zip file](https://drive.google.com/open?id=1Bl_tMIT3d_DK8HydmD-6zahEXXGmK_XR) and extract the lib folder into the same directory as your solution (*The libs folder should be at the same level as the .sln file*)
 
-Finally, move the two **dll** files from the libs folder into the root folder. (*The root folder should contain the .sln file, the libs folder, SDL2.dll and glew32.dll*)
+Finally, move all of the **dll** files from the libs folder into the root folder. (*The root folder is the one that contains the .sln file*)
 
 Ensure Visual Studio's build configuration is set to x86(32-bit) by selecting Build->Configuration Manager...->Active solution platform:->x86.
 
