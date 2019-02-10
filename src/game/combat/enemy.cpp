@@ -26,8 +26,8 @@ void Enemy::render()
 	}
 }
 
-//void Enemy::update(int delta) {
-	/*
+void Enemy::update(int delta) {
+	
 	switch (state) {
 	case UnitState::IDLE: {
 		// Do nothing when idling
@@ -62,8 +62,8 @@ void Enemy::render()
 		// do nothing
 	} break;
 	}
-	*/
-//}
+	
+}
 
 void Enemy::takeTurn() {
 	// First, handle enemy movement once it enters its turn
@@ -83,6 +83,12 @@ bool Enemy::handleMovement() {
 		}
 		tries--;
 	}
+	if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
+		return false;
+	}
+	return true;
+}
 
-	return (tries > 0);
+void Enemy::handleAttack() 
+{
 }

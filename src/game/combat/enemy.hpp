@@ -19,7 +19,7 @@ public:
 	~Enemy();
 
 	virtual void render() override;
-	//virtual void update(int delta);
+	virtual void update(int delta);
 
 	void takeTurn();
 
@@ -27,6 +27,7 @@ protected:
 	
 	// Helper method to handle the movement portion of an enemy turn
 	virtual bool handleMovement();
+	virtual void handleAttack();
 
 	// Enemy sprite
 	AnimatedSprite sprite;
