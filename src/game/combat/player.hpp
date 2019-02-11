@@ -47,9 +47,6 @@ enum class PlayerAnim {
 class Player : public Unit {
 
 public:
-
-	Player();
-	Player(int x, int y);
 	Player(int x, int y, const nlohmann::json& data);
 
 	~Player();

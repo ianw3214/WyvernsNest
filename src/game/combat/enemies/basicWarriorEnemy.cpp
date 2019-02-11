@@ -81,10 +81,12 @@ bool WarriorEnemy::handleMovement() {
 	Player * target_player = NULL;
 	std::vector<Player*> players = combat->getPlayers();
 	for (Player *& p : players){	
-		if(p->getType() == UnitType::PLAYER){
-			if(distance(position,p->position)<min_distance){
-				target_player = p;
-				min_distance=distance(position,p->position);
+		if (p->getType() == UnitType::PLAYER) {
+			if (!(p->getState() == UnitState::DEAD)) {
+				if (distance(position, p->position) < min_distance) {
+					target_player = p;
+					min_distance = distance(position, p->position);
+				}
 			}
 		}
 	}
@@ -152,37 +154,51 @@ void WarriorEnemy::handleAttack() {
 			position or something. Creative freedom is up to you!
 	*/
 	// If there is a player adjacent to the enemy, attack the player
-    if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
-        hit.attack(position - Vec2<int>(1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	Unit *targ_unit;
+
+	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
-        hit.attack(position - Vec2<int>(0, 1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, 1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
-        hit.attack(position - Vec2<int>(-1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(-1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
-        hit.attack(position - Vec2<int>(0, -1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, -1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
     // If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;

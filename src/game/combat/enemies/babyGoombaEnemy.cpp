@@ -77,35 +77,43 @@ void BabyGoombaEnemy::handleAttack()
 
 	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
 	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
-		// do the action here
-		bite.attack(position - Vec2<int>(1, 0), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			// do the action here
+			bite.attack(position - Vec2<int>(1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
 	}
 	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
 	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
-		// do the action here
-		bite.attack(position - Vec2<int>(0, 1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			// do the action here
+			bite.attack(position - Vec2<int>(0, 1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
 	}
 	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
 	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
-		// do the action here
-		bite.attack(position - Vec2<int>(-1, 0), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			// do the action here
+			bite.attack(position - Vec2<int>(-1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
 	}
 	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
 	if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
-		// do the action here
-		bite.attack(position - Vec2<int>(0, -1), *combat);
-		state = UnitState::ATTACK;
-		startCounter();
-		return;
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			// do the action here
+			bite.attack(position - Vec2<int>(0, -1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			return;
+		}
 	}
 	// If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;
