@@ -427,15 +427,7 @@ void Combat::startGame() {
 	// Keeping track of turn order
 	unitIndex = 0;
 
-	// BUBBLE SORT BECAUSE I'M LAZY
-	// TODO: MAKE THIS MORE EFFICIENT
-	for (unsigned int i = 0; i < units.size() - 1; ++i) {
-		for (unsigned int j = 0; j < units.size() - i - 1; ++j) {
-			if (units[j]->getDEX() < units[j + 1]->getDEX()) {
-				std::swap(units[j], units[j + 1]);
-			}
-		}
-	}
+	std::sort(units.begin(), units.end());
 
 	selectUnit(units[unitIndex]);
 	// If the first unit is an enemy, take its turn
