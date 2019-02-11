@@ -31,4 +31,5 @@ protected:
 
 	// Enemy sprite
 	AnimatedSprite sprite;
+
 };

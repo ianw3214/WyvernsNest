@@ -36,6 +36,10 @@ enum class UnitState {
 class Unit : public Entity {
 
 public:
+	// Overload < operator. Comparing two units is based on dexterity
+	bool operator< (const Unit &other) const {
+		return getStat(Stat::DEX) < other.getStat(Stat::DEX);
+	}
 
 	// Units should never be default constructed, a type needs to be specified
 	Unit(UnitType type);
@@ -57,10 +61,6 @@ public:
 	// Unit attribute getter methods
 	int getStat(Stat stat) const;
 	// TODO: (Ian) Remove these functions, made redundant by getStat function
-	int getSTR() const;
-	int getDEX() const;
-	int getINT() const;
-	int getCON() const;
 	int getMoveSpeed() const { return move_speed; }
 	int getMaxHealth() const { return maxHealth; }
 	int getSpriteWidth() const { return sprite_width; }
@@ -93,6 +93,10 @@ public:
 
 	// Utility references to the combat state to access needed data
 	Combat * combat;
+
+	// The status effects of the unit
+	std::vector<Status*> statusList;
+
 protected:
 
 	void setData(UnitData data) { 
@@ -153,8 +157,11 @@ private:
 	UnitData data;
 	void generateDefaultUnitData();
 
-	public:
-	// The status effects of the unit
-	std::vector<Status*> statusList;
+	// Helper functions for stats
+	int getSTR() const;
+	int getDEX() const;
+	int getINT() const;
+	int getCON() const;
 
 };
+
