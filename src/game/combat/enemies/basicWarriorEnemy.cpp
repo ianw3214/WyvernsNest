@@ -63,7 +63,7 @@ int distance(Vec2<int> p1, Vec2<int> p2){
 	return static_cast<int>(sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2)));
 }	
 
-void WarriorEnemy::handleMovement() {
+bool WarriorEnemy::handleMovement() {
 
 	/*
 		- The warrior enemy should simply move towards the player every turn
@@ -81,10 +81,12 @@ void WarriorEnemy::handleMovement() {
 	Player * target_player = NULL;
 	std::vector<Player*> players = combat->getPlayers();
 	for (Player *& p : players){	
-		if(p->getType() == UnitType::PLAYER){
-			if(distance(position,p->position)<min_distance){
-				target_player = p;
-				min_distance=distance(position,p->position);
+		if (p->getType() == UnitType::PLAYER) {
+			if (!(p->getState() == UnitState::DEAD)) {
+				if (distance(position, p->position) < min_distance) {
+					target_player = p;
+					min_distance = distance(position, p->position);
+				}
 			}
 		}
 	}
@@ -125,8 +127,14 @@ void WarriorEnemy::handleMovement() {
 
 	if (!move(*combat,position_within_range)) {
 		// Use base enemies random movement if movement fails
-		Enemy::handleMovement();
+		int success = Enemy::handleMovement();
+		if (!success) {
+			// If even the base random movement fails move to attacks
+			handleAttack();
+			return false;
+		}
     }
+	return true;
 }
 
 void WarriorEnemy::handleAttack() {
@@ -146,37 +154,51 @@ void WarriorEnemy::handleAttack() {
 			position or something. Creative freedom is up to you!
 	*/
 	// If there is a player adjacent to the enemy, attack the player
-    if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
-        hit.attack(position - Vec2<int>(1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	Unit *targ_unit;
+
+	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
-        hit.attack(position - Vec2<int>(0, 1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, 1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
-        hit.attack(position - Vec2<int>(-1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(-1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
-        hit.attack(position - Vec2<int>(0, -1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, -1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
     // If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;

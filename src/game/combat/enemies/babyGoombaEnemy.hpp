@@ -2,16 +2,15 @@
 
 #include "../enemy.hpp"
 
-// TODO: Put this data in a file w/ metadata
-#define WARRIOR_WIDTH_IN_SOURCE				66.f
-#define WARRIOR_HEIGHT_IN_SOURCE			72.f
+#define ENEMY_WIDTH_IN_SOURCE			33.f
+#define ENEMY_HEIGHT_IN_SOURCE			33.f
 
-class WarriorEnemy : public Enemy {
 
+class BabyGoombaEnemy : public Enemy
+{
 public:
-
-	WarriorEnemy();
-	~WarriorEnemy();
+	BabyGoombaEnemy();
+	~BabyGoombaEnemy();
 
 protected:
 
@@ -21,14 +20,11 @@ protected:
 
 private:
 
-	// TODO: Add attacks to class variables 
-
 	// Helper method to handle the movement portion of an enemy turn
 	virtual bool handleMovement();
 	// Helper method to handle the attack portion of an enemy turn
 	virtual void handleAttack();
 
-	Attack hit;
-	Attack block;
-
+	Attack bite; // Bite attack for Goomba
 };
+

@@ -58,7 +58,7 @@ void MageDudeEnemy::takeDamageCallback(int damage) {
 	}
 }
 
-void MageDudeEnemy::handleMovement() {
+bool MageDudeEnemy::handleMovement() {
 	// TODO: Implement mage dude enemy movement AI
 	/*
 		- The mage dude enemy should walk away from the player in order to stay safe
@@ -132,8 +132,14 @@ void MageDudeEnemy::handleMovement() {
 
 	if (!move(*combat, position - Vec2<int>(x_offset, y_offset))) {
 		// Use base enemies random movement if movement fails
-		Enemy::handleMovement();
+		bool success = Enemy::handleMovement();
+		if (!success) {
+		// If even the base random movement fails move to attacks
+			handleAttack();
+			return false;
+		}
 	}
+	return true;
 }
 
 void MageDudeEnemy::handleAttack() {
@@ -147,31 +153,37 @@ void MageDudeEnemy::handleAttack() {
 				if (i == -2 || i == 2) {
 					curr_unit = combat->getUnitAt(position - Vec2<int>(i, j));
 					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
-						fireball.attack(position - Vec2<int>(i, j), *combat);
-						state = UnitState::ATTACK;
-						startCounter();
-						sprite.playAnimation(3);
-						sprite.queueAnimation(0);
-						return;
+						if (!(curr_unit->getState() == UnitState::DEAD)) {
+							fireball.attack(position - Vec2<int>(i, j), *combat);
+							state = UnitState::ATTACK;
+							startCounter();
+							sprite.playAnimation(3);
+							sprite.queueAnimation(0);
+							return;
+						}
 					}
 				} else {
 					curr_unit = combat->getUnitAt(position - Vec2<int>(i, -2));
 					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
-						fireball.attack(position - Vec2<int>(i, -2), *combat);
-						state = UnitState::ATTACK;
-						startCounter();
-						sprite.playAnimation(3);
-						sprite.queueAnimation(0);
-						return;
+						if (!(curr_unit->getState() == UnitState::DEAD)) {
+							fireball.attack(position - Vec2<int>(i, -2), *combat);
+							state = UnitState::ATTACK;
+							startCounter();
+							sprite.playAnimation(3);
+							sprite.queueAnimation(0);
+							return;
+						}
 					}
 					curr_unit = combat->getUnitAt(position - Vec2<int>(i, 2));
 					if (curr_unit && curr_unit->getType() == UnitType::PLAYER) {
-						fireball.attack(position - Vec2<int>(i, 2), *combat);
-						state = UnitState::ATTACK;
-						startCounter();
-						sprite.playAnimation(3);
-						sprite.queueAnimation(0);
-						return;
+						if (!(curr_unit->getState() == UnitState::DEAD)) {
+							fireball.attack(position - Vec2<int>(i, 2), *combat);
+							state = UnitState::ATTACK;
+							startCounter();
+							sprite.playAnimation(3);
+							sprite.queueAnimation(0);
+							return;
+						}
 					}
 				}
 			}
@@ -180,39 +192,47 @@ void MageDudeEnemy::handleAttack() {
 		// Find an ally beside and buff 'em
 		curr_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
 		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
-			dragons_rage.attack(position - Vec2<int>(0, 1), *combat);
-			state = UnitState::ATTACK;
-			startCounter();
-			sprite.playAnimation(2);
-			sprite.queueAnimation(0);
-			return;
+			if (!(curr_unit->getState() == UnitState::DEAD)) {
+				dragons_rage.attack(position - Vec2<int>(0, 1), *combat);
+				state = UnitState::ATTACK;
+				startCounter();
+				sprite.playAnimation(2);
+				sprite.queueAnimation(0);
+				return;
+			}
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
 		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
-			dragons_rage.attack(position - Vec2<int>(0, -1), *combat);
-			state = UnitState::ATTACK;
-			startCounter();
-			sprite.playAnimation(2);
-			sprite.queueAnimation(0);
-			return;
+			if (!(curr_unit->getState() == UnitState::DEAD)) {
+				dragons_rage.attack(position - Vec2<int>(0, -1), *combat);
+				state = UnitState::ATTACK;
+				startCounter();
+				sprite.playAnimation(2);
+				sprite.queueAnimation(0);
+				return;
+			}
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
 		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
-			dragons_rage.attack(position - Vec2<int>(1, 0), *combat);
-			state = UnitState::ATTACK;
-			startCounter();
-			sprite.playAnimation(2);
-			sprite.queueAnimation(0);
-			return;
+			if (!(curr_unit->getState() == UnitState::DEAD)) {
+				dragons_rage.attack(position - Vec2<int>(1, 0), *combat);
+				state = UnitState::ATTACK;
+				startCounter();
+				sprite.playAnimation(2);
+				sprite.queueAnimation(0);
+				return;
+			}
 		}
 		curr_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
 		if (curr_unit && curr_unit->getType() == UnitType::ENEMY) {
-			dragons_rage.attack(position - Vec2<int>(-1, 0), *combat);
-			state = UnitState::ATTACK;
-			startCounter();
-			sprite.playAnimation(2);
-			sprite.queueAnimation(0);
-			return;
+			if (!(curr_unit->getState() == UnitState::DEAD)) {
+				dragons_rage.attack(position - Vec2<int>(-1, 0), *combat);
+				state = UnitState::ATTACK;
+				startCounter();
+				sprite.playAnimation(2);
+				sprite.queueAnimation(0);
+				return;
+			}
 		}
 	}
 	state = UnitState::DONE;

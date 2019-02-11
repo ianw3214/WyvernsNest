@@ -237,12 +237,12 @@ void Unit::deselect() {
 
 void Unit::takeDamage(int damage) {
 	// Call the virtualized callback function for subclasses to customize
-	takeDamageCallback(damage);
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
+	takeDamageCallback(damage);
 }
 
 void Unit::heal(int health) {
@@ -336,28 +336,22 @@ void Unit::renderHealth() {
 	if (pos.y() < 0) pos.y() = 10;
 	int healthBarWidth = tile_width;
 	int tick = lerp(0, healthBarWidth, static_cast<float>(health) / static_cast<float>(maxHealth));
-	// TODO: Use rectangle rendering (implement in engine)
-	for (int i = 0; i < 10; ++i) {
-		if (pos.y() > 0) {
-			Core::Renderer::drawLine(pos + ScreenCoord(0, i), pos + ScreenCoord(tick, i), Colour(0.0f, 1.0f, 0.0f));
-			Core::Renderer::drawLine(pos + ScreenCoord(tick, i), pos + ScreenCoord(healthBarWidth, i), Colour(1.0f, 0.0f, 0.0f));
-		}
-		else {
-			Core::Renderer::drawLine(pos + ScreenCoord(0, -i), pos + ScreenCoord(tick, -i), Colour(0.0f, 1.0f, 0.0f));
-			Core::Renderer::drawLine(pos + ScreenCoord(tick, -i), pos + ScreenCoord(healthBarWidth, -i), Colour(1.0f, 0.0f, 0.0f));
-		}
-	}
-	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
-	if (pos.y() <= 0) {
-		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, -10), Colour(0.0f, 0.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(0, -10), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
-	}
-	else {
-		Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-		Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
-	}
+
+	Core::Renderer::drawRect(pos, tick, 10, Colour(0.0f, 1.0f, 0.0f));
+	Core::Renderer::drawRect(pos + ScreenCoord(tick, 0), healthBarWidth - tick, 10, Colour(1.0f, 0.0f, 0.0f));
+
+	// This draws a black outline around health bars
+	// Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(healthBarWidth, 0), Colour(0.0f, 0.0f, 0.0f));
+	// if (pos.y() <= 0) {
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, -10), Colour(0.0f, 0.0f, 0.0f));
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(0, -10), pos + ScreenCoord(healthBarWidth, -10), Colour(0.0f, 0.0f, 0.0f));
+	// }
+	// else {
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(0, 0), pos + ScreenCoord(0, 10), Colour(0.0f, 0.0f, 0.0f));
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(healthBarWidth, 0), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	// 	Core::Renderer::drawLine(pos + ScreenCoord(0, 10), pos + ScreenCoord(healthBarWidth, 10), Colour(0.0f, 0.0f, 0.0f));
+	// }
 }
 
 void Unit::loadPropertiesFromUnitData(bool resetHealth) {
