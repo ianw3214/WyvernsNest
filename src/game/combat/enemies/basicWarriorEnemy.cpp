@@ -5,6 +5,8 @@
 #include "../../util/attackloader.hpp"
 #include "../player.hpp"
 
+#include <fstream>
+#include <iostream>
 
 WarriorEnemy::WarriorEnemy() : 
 	// Init class vars
@@ -18,13 +20,33 @@ WarriorEnemy::WarriorEnemy() :
 	sprite.addAnimation(2, 2);			// DEAD
 	sprite.addAnimation(10, 21);		// ATTACK
 
-	// Randomize enemy stats
-	UnitData data;
-	data.strength = rand() % 15 + 10;
-	data.dexterity = rand() % 15 + 10;
-	data.intelligence = rand() % 10 + 10;
-	data.constitution = rand() % 20 + 20;
-	setData(data);
+	int STR = 0;
+	int DEX = 0;
+	int INT = 0;
+	int CON = 0;
+	// Load enemy data from file
+	const std::string filePath = "res/data/enemies/warrior.json";
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
+
+		json stats = data["BASIC WARRIOR"];
+		STR = stats["STR"];
+		DEX = stats["DEX"];
+		INT = stats["INT"];
+		CON = stats["CON"];
+	}
+	else {
+		std::cerr << "ERROR: load BASIC WARRIOR. All stats default to 0.\n";
+	}
+
+	UnitData udata;
+	udata.strength = STR;
+	udata.dexterity = DEX;
+	udata.intelligence = INT;
+	udata.constitution = CON;
+	setData(udata);
 }
 
 WarriorEnemy::~WarriorEnemy() {
