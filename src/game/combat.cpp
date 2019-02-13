@@ -427,7 +427,7 @@ void Combat::startGame() {
 	// Keeping track of turn order
 	unitIndex = 0;
 
-	std::sort(units.begin(), units.end());
+	std::sort(units.begin(), units.end(), greater_than_DEX());
 
 	selectUnit(units[unitIndex]);
 	// If the first unit is an enemy, take its turn
