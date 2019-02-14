@@ -5,9 +5,11 @@
 #include <fstream>
 #include <sstream>
 
-Shader::Shader(const std::string& vertex, const std::string& fragment)
-	: vertexSource(vertex), fragmentSource(fragment), rendererID(0)
+Shader::Shader(const std::string& vertexPath, const std::string& fragmentPath)
+	: rendererID(0)
 {
+	std::string vertex = getShaderSrc(vertexPath);
+	std::string fragment = getShaderSrc(fragmentPath);
 	rendererID = createShaderProgram(vertex, fragment);
 }
 
@@ -75,6 +77,20 @@ GLuint Shader::compileShader(GLenum type, const std::string& source) {
 	}
 
 	return id;
+}
+
+std::string Shader::getShaderSrc(const std::string& filePath) {
+	std::string shaderSrc;
+    std::ifstream fileSrc;
+    fileSrc.open(filePath);
+    if (fileSrc.is_open()) {
+        std::string line;
+        while (std::getline(fileSrc, line)) shaderSrc += "\n" + line;
+        fileSrc.close();
+    } else {
+        std::cout << "Could not read shader: " << filePath << std::endl;
+    }
+	return shaderSrc;
 }
 
 GLuint Shader::createShaderProgram(const std::string& vertexSource, const std::string& fragmentSource) {
