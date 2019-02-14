@@ -5,42 +5,14 @@
 #include "engine.hpp"
 #include "sprite.hpp"
 
-const char * BASIC_VERTEX_SHADER =
-	"#version 330 core\n"
-	"layout(location = 0) in vec2 position;"
-	"layout(location = 1) in vec2 texCoord;"
-	"out vec2 vTexCoord;"
-	"void main() {"
-		"vec4 pos = vec4(position, 0.0f, 1.0f);"
-		"gl_Position = pos;"
-		"vTexCoord = texCoord;"
-	"}";
-
-const char * BASIC_COLOUR_SHADER =
-	"#version 330 core\n"
-	"out vec4 colour;"
-	"uniform vec4 u_Colour;"
-	"void main() {"
-		"colour = u_Colour;"
-	"}";
-
-const char * BASIC_TEXTURE_SHADER =
-	"#version 330 core\n"
-	"in vec2 vTexCoord;"
-	"out vec4 colour;"
-	"uniform sampler2D u_Texture;"
-	"void main() {"
-		"vec4 texColour = texture(u_Texture, vTexCoord);"
-		"colour = texColour;"
-	"}";
 
 // Index orders for different shapes
 const unsigned int LINE_INDICES[2] = { 0, 1 };
 const unsigned int SQUARE_INDICES[6] = { 0, 1, 3, 0, 2, 3 };
 
 Renderer::Renderer() : 
-	basicShader(BASIC_VERTEX_SHADER, BASIC_COLOUR_SHADER),
-	textureShader(BASIC_VERTEX_SHADER, BASIC_TEXTURE_SHADER) 
+	basicShader("res/shaders/basic_vertex.glsl", "res/shaders/basic_fragment.glsl"),
+	textureShader("res/shaders/basic_vertex.glsl", "res/shaders/basic_texture.glsl") 
 {
 
 }
