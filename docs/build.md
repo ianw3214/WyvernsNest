@@ -46,3 +46,5 @@ Alternatively, you can use the included script files to generate the cmake build
 ## Working with the project
 
 The project should be all set up now. On windows, simply open the .vcxproj file to open the project in Visual Studio.
+
+**IMPORTANT NOTE**: In order to run the game from within the build folder, you need to copy the res folder from the root folder to the build folder. This step is done automatically if the previous *setup.bat* script was used to generate the build.
