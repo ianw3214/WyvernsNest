@@ -1,29 +1,8 @@
 #include "textRenderer.hpp"
 #include <algorithm>
 
-const char* text_vertex =
-    "#version 330 core\n"
-	"layout(location = 0) in vec4 position; /* vec2 position, vec2 texCoord */"
-    "out vec2 texCoord;"
-    "mat4 ortho(float left, float right, float bottom, float top) {"
-    "return mat4(vec4(2.0 / (right - left), 0, 0, 0), vec4(0, 2.0 / top - bottom, 0, 0), vec4(0, 0, -1, 0), vec4(-(right + left) / (right - left), -(top + bottom) / (top - bottom), 0, 1));}"
-	"void main() {"
-		"gl_Position = ortho(0, 1280, 0, 720) * vec4(position.xy, 0, 1);"
-        "texCoord = position.zw;"
-	"}";
-
-const char* text_fragment =
-    "#version 330 core\n"
-    "in vec2 texCoord;"
-	"out vec4 colour;"
-    "uniform sampler2D textTexture;"
-    "uniform vec3 textColour;"
-	"void main() {"
-		"colour = vec4(textColour, 1.0) * vec4(1.0, 1.0, 1.0, texture(textTexture, texCoord).r);"
-	"}";
-
 TextRenderer::TextRenderer(const std::string& fontPath, int size, Vec2<int> windowSize) :
-    m_shader(text_vertex, text_fragment), m_fontSize(size), m_windowSize(windowSize){
+    m_shader("res/shaders/text_vertex.glsl", "res/shaders/text_fragment.glsl"), m_fontSize(size), m_windowSize(windowSize){
     Font font(fontPath, size);
 
 	m_text.resize(128);
