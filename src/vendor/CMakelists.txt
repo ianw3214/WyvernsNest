@@ -1,0 +1,2 @@
+add_subdirectory(nlohmann)
+add_subdirectory(stb_image)

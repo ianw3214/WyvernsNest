@@ -1,0 +1,25 @@
+target_sources(Game PRIVATE
+    animatedSprite.cpp
+    engine.cpp
+    entity.cpp
+    mixer.cpp
+    particleSystem.cpp
+    renderer.cpp
+    sprite.cpp
+    state.cpp
+    textureManager.cpp)
+
+target_sources(Game PRIVATE
+    animatedSprite.hpp
+    core.hpp
+    engine.hpp
+    entity.hpp
+    mixer.hpp
+    particleSystem.hpp
+    renderer.hpp
+    sprite.hpp
+    state.hpp
+    textureManager.hpp)
+
+add_subdirectory(opengl)
+add_subdirectory(text)

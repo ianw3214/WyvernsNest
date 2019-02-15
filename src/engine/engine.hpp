@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define DEFAULT_TICK_RATE	30	// per second
 
