@@ -1,0 +1,18 @@
+target_sources(Game PRIVATE
+    attack.cpp
+    enemy.cpp
+    grid.cpp
+    player.cpp
+    status.cpp
+    unit.cpp)
+
+target_sources(Game PRIVATE
+    attack.hpp
+    attackEffects.hpp
+    enemy.hpp
+    grid.hpp
+    player.hpp
+    status.hpp
+    unit.hpp)
+
+add_subdirectory(enemies)

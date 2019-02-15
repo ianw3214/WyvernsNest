@@ -3,6 +3,9 @@
 #include "../../combat.hpp"
 #include "../../util/attackloader.hpp"
 
+#include <fstream>
+#include <iostream>
+
 BabyGoombaEnemy::BabyGoombaEnemy() :
 	Enemy(UnitType::ENEMY, "res/assets/enemies/babygoomba.png", 64, 64),
 	bite(Attacks::get("PUNCH", this))
@@ -15,13 +18,33 @@ BabyGoombaEnemy::BabyGoombaEnemy() :
 	sprite.addAnimation(10, 17);		// DYING
 	sprite.addAnimation(18, 18);		// DEAD
 
-	// Randomize enemy stats
-	UnitData data;
-	data.strength = rand() % 10 + 1;
-	data.dexterity = rand() % 10 + 1;
-	data.intelligence = rand() % 10 + 1;
-	data.constitution = rand() % 10 + 1;
-	setData(data);
+	int STR = 0;
+	int DEX = 0;
+	int INT = 0;
+	int CON = 0;
+	// Load enemy data from file
+	const std::string filePath = "res/data/enemies/goomba.json";
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
+
+		json stats = data["BABY GOOMBA"];
+		STR = stats["STR"];
+		DEX = stats["DEX"];
+		INT = stats["INT"];
+		CON = stats["CON"];
+	}
+	else {
+		std::cerr << "ERROR: load BABY GOOMBA. All stats default to 0.\n";
+	}
+
+	UnitData udata;
+	udata.strength = STR;
+	udata.dexterity = DEX;
+	udata.intelligence = INT;
+	udata.constitution = CON;
+	setData(udata);
 }
 
 

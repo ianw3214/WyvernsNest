@@ -1,0 +1,14 @@
+target_sources(Game PRIVATE
+    combat.cpp
+    customization.cpp
+    skillTree.cpp)
+
+target_sources(Game PRIVATE
+    combat.hpp
+    customization.hpp
+    skillTree.hpp
+    unitData.hpp)
+
+add_subdirectory(combat)
+add_subdirectory(menus)
+add_subdirectory(util)

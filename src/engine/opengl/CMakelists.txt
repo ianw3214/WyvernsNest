@@ -1,0 +1,15 @@
+target_sources(Game PRIVATE
+    indexBuffer.cpp
+    shader.cpp
+    texture.cpp
+    vertexArray.cpp
+    vertexBuffer.cpp)
+
+target_sources(Game PRIVATE
+    glwrappers.hpp
+    indexBuffer.hpp
+    shader.hpp
+    texture.hpp
+    vertexArray.hpp
+    vertexBuffer.hpp
+    vertexBufferLayout.hpp)

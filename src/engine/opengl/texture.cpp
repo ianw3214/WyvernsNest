@@ -1,7 +1,7 @@
 #include "texture.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include <stb_image/stb_image.h>
 
 Texture::Texture(const std::string & path)
 	: textureID(0), filePath(path), localBuffer(nullptr),

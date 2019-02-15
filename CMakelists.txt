@@ -1,0 +1,139 @@
+cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+project(Game)
+
+set (Game_VERSION_MAJOR 1)
+set (Game_VERSION_MINOR 0)
+
+add_executable(Game)
+
+target_link_libraries(Game Opengl32.lib)
+target_compile_definitions(Game PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLEW)
+target_compile_definitions(Game PRIVATE _USE_MATH_DEFINES)
+
+add_subdirectory(src)
+
+source_group("Header Files\\vendor" FILES
+    src/vendor/nlohmann/json.hpp
+    src/vendor/stb_image/stb_image.h)
+
+source_group("Header Files\\math" FILES
+    src/math/math.hpp
+    src/math/util.hpp
+    src/math/vec.hpp)
+
+source_group("Source Files\\math" FILES
+    src/math/vec.cpp)
+
+source_group("Header Files\\game" FILES
+    src/game/combat.hpp
+    src/game/customization.hpp
+    src/game/skillTree.hpp
+    src/game/unitData.hpp)
+
+source_group("Source Files\\game" FILES
+    src/game/combat.cpp
+    src/game/customization.cpp
+    src/game/skillTree.cpp)
+
+source_group("Header Files\\game\\combat" FILES
+    src/game/combat/attack.hpp
+    src/game/combat/attackEffects.hpp
+    src/game/combat/enemy.hpp
+    src/game/combat/grid.hpp
+    src/game/combat/player.hpp
+    src/game/combat/status.hpp
+    src/game/combat/unit.hpp)
+
+source_group("Source Files\\game\\combat" FILES
+    src/game/combat/attack.cpp
+    src/game/combat/enemy.cpp
+    src/game/combat/grid.cpp
+    src/game/combat/player.cpp
+    src/game/combat/status.cpp
+    src/game/combat/unit.cpp)
+
+source_group("Header Files\\game\\combat\\enemies" FILES
+    src/game/combat/enemies/babyGoombaEnemy.hpp
+    src/game/combat/enemies/basicWarriorEnemy.hpp
+    src/game/combat/enemies/mageDudeEnemy.hpp)
+
+source_group("Source Files\\game\\combat\\enemies" FILES
+    src/game/combat/enemies/babyGoombaEnemy.cpp
+    src/game/combat/enemies/basicWarriorEnemy.cpp
+    src/game/combat/enemies/mageDudeEnemy.cpp)
+
+source_group("Header Files\\game\\menu" FILES
+    src/game/menus/creditsmenu.hpp
+    src/game/menus/cutscene.hpp
+    src/game/menus/menu.hpp
+    src/game/menus/settingsmenu.hpp)
+
+source_group("Source Files\\game\\menu" FILES
+    src/game/menus/creditsmenu.cpp
+    src/game/menus/cutscene.cpp
+    src/game/menus/menu.cpp
+    src/game/menus/settingsmenu.cpp)
+
+source_group("Header Files\\game\\util" FILES
+    src/game/util/attackloader.hpp
+    src/game/util/button.hpp
+    src/game/util/particleloader.hpp
+    src/game/util/util.hpp)    
+
+source_group("Source Files\\game\\util" FILES
+    src/game/util/attackloader.cpp
+    src/game/util/button.cpp
+    src/game/util/particleloader.cpp)
+
+source_group("Header Files\\engine" FILES
+    src/engine/animatedSprite.hpp
+    src/engine/core.hpp
+    src/engine/engine.hpp
+    src/engine/entity.hpp
+    src/engine/mixer.hpp
+    src/engine/particleSystem.hpp
+    src/engine/renderer.hpp
+    src/engine/sprite.hpp
+    src/engine/state.hpp
+    src/engine/textureManager.hpp)
+
+source_group("Source Files\\engine" FILES
+    src/engine/animatedSprite.cpp
+    src/engine/engine.cpp
+    src/engine/entity.cpp
+    src/engine/mixer.cpp
+    src/engine/particleSystem.cpp
+    src/engine/renderer.cpp
+    src/engine/sprite.cpp
+    src/engine/state.cpp
+    src/engine/textureManager.cpp)
+
+source_group("Header Files\\engine\\opengl" FILES
+    src/engine/opengl/glwrappers.hpp
+    src/engine/opengl/indexBuffer.hpp
+    src/engine/opengl/shader.hpp
+    src/engine/opengl/texture.hpp
+    src/engine/opengl/vertexArray.hpp
+    src/engine/opengl/vertexBuffer.hpp
+    src/engine/opengl/vertexBufferLayout.hpp)
+
+source_group("Source Files\\engine\\opengl" FILES
+    src/engine/opengl/indexBuffer.cpp
+    src/engine/opengl/shader.cpp
+    src/engine/opengl/texture.cpp
+    src/engine/opengl/vertexArray.cpp
+    src/engine/opengl/vertexBuffer.cpp)
+
+source_group("Header Files\\engine\\text" FILES
+    src/engine/text/font.hpp
+    src/engine/text/textRenderer.hpp)
+
+source_group("Source Files\\engine\\text" FILES
+    src/engine/text/font.cpp
+    src/engine/text/textRenderer.cpp)
+
+if(WIN32)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:Console")
+endif()

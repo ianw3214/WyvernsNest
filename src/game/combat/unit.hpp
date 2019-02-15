@@ -36,11 +36,6 @@ enum class UnitState {
 class Unit : public Entity {
 
 public:
-	// Overload < operator. Comparing two units is based on dexterity
-	bool operator< (const Unit &other) const {
-		return getStat(Stat::DEX) < other.getStat(Stat::DEX);
-	}
-
 	// Units should never be default constructed, a type needs to be specified
 	Unit(UnitType type);
 
@@ -164,4 +159,13 @@ private:
 	int getCON() const;
 
 };
+
+struct greater_than_DEX
+{
+	inline bool operator() (const Unit* u1, const Unit* u2)
+	{
+		return (u1->getStat(Stat::DEX) > u2->getStat(Stat::DEX));
+	}
+};
+
 

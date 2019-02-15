@@ -3,6 +3,9 @@
 #include "../../combat.hpp"
 #include "../../util/attackloader.hpp"
 
+#include <fstream>
+#include <iostream>
+
 MageDudeEnemy::MageDudeEnemy() :
 	// Init class vars
 	Enemy(UnitType::ENEMY, "res/assets/enemies/mage.png", 128, 128),
@@ -17,13 +20,33 @@ MageDudeEnemy::MageDudeEnemy() :
 	sprite.addAnimation(50, 58);		// DYING
 	sprite.addAnimation(58, 58);		// DEAD
 
-	// Randomize enemy stats
-	UnitData data;
-	data.strength = rand() % 10 + 10;
-	data.dexterity = rand() % 10 + 10;
-	data.intelligence = rand() % 10 + 10;
-	data.constitution = rand() % 10 + 10;
-	setData(data);
+	int STR = 0;
+	int DEX = 0;
+	int INT = 0;
+	int CON = 0;
+	// Load enemy data from file
+	const std::string filePath = "res/data/enemies/mage.json";
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
+
+		json stats = data["MAGE DUDE"];
+		STR = stats["STR"];
+		DEX = stats["DEX"];
+		INT = stats["INT"];
+		CON = stats["CON"];
+	}
+	else {
+		std::cerr << "ERROR: load Mage Dude. All stats default to 0.\n";
+	}
+
+	UnitData udata;
+	udata.strength = STR;
+	udata.dexterity = DEX;
+	udata.intelligence = INT;
+	udata.constitution = CON;
+	setData(udata);
 }
 
 MageDudeEnemy::~MageDudeEnemy() {
