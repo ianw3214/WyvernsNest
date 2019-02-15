@@ -18,10 +18,10 @@ Hook up user wide integration via the following command:
 
 Then, install the necessary libraries using the following commands:
 
-> .\vcpkg install sdl2
-> .\vcpkg install sdl2-mixer
-> .\vcpkg install glew
-> .\vcpkg install freetype
+> .\vcpkg install sdl2  
+> .\vcpkg install sdl2-mixer  
+> .\vcpkg install glew  
+> .\vcpkg install freetype  
 
 ### Mac
 
