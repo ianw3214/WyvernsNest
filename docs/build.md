@@ -33,6 +33,7 @@ Run the following commands to get SDL, GLEW, and FreeType setup on your local ma
 > brew install sdl2_mixer  
 > brew install glew  
 > brew install freetype  
+> brew install imgui  
 
 ## Running cmake
 
