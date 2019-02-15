@@ -110,6 +110,14 @@ source_group("Source Files\\engine" FILES
     src/engine/state.cpp
     src/engine/textureManager.cpp)
 
+source_group("Header Files\\engine\\imgui" FILES
+    src/engine/imgui/imgui_impl_opengl3.h
+    src/engine/imgui/imgui_wrapper.hpp)
+
+source_group("Source Files\\engine\\imgui" FILES
+    src/engine/imgui/imgui_impl_opengl3.cpp
+    src/engine/imgui/imgui_wrapper.cpp)
+
 source_group("Header Files\\engine\\opengl" FILES
     src/engine/opengl/glwrappers.hpp
     src/engine/opengl/indexBuffer.hpp

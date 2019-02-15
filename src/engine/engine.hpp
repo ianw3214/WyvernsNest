@@ -31,6 +31,7 @@ public:
 	void update();
 
 	// Getter functions to make life easier
+	SDL_Window * getWindow() const;
 	int getWindowWidth() const;
 	int getWindowHeight() const;
 	Renderer * getRenderer();
