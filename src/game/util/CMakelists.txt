@@ -1,0 +1,10 @@
+target_sources(Game PRIVATE
+    attackloader.cpp
+    button.cpp
+    particleloader.cpp)
+
+target_sources(Game PRIVATE
+    attackloader.hpp
+    button.hpp
+    particleloader.hpp
+    util.hpp)    

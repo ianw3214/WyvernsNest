@@ -1,0 +1,9 @@
+target_sources(Game PRIVATE
+    babyGoombaEnemy.cpp
+    basicWarriorEnemy.cpp
+    mageDudeEnemy.cpp)
+
+target_sources(Game PRIVATE
+    babyGoombaEnemy.hpp
+    basicWarriorEnemy.hpp
+    mageDudeEnemy.hpp)

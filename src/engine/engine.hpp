@@ -1,6 +1,6 @@
 #pragma once
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 #define DEFAULT_TICK_RATE	30	// per second
 
@@ -31,6 +31,7 @@ public:
 	void update();
 
 	// Getter functions to make life easier
+	SDL_Window * getWindow() const;
 	int getWindowWidth() const;
 	int getWindowHeight() const;
 	Renderer * getRenderer();
