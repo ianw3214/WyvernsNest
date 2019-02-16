@@ -461,7 +461,7 @@ void Player::setTileSizeCallback(int width, int height) {
 void Player::takeDamageCallback(int damage) {
 	player_sprite.playAnimation(static_cast<unsigned int>(PlayerAnim::TAKE_DAMAGE));
 	// Decide what the next animation is based on whether the player is still alive or not
-	if (health <= 0) player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::DEAD));
+	if (getState() == UnitState::DEAD) player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::DEAD));
 	else player_sprite.queueAnimation(static_cast<unsigned int>(PlayerAnim::IDLE));
 }
 

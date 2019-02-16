@@ -3,8 +3,8 @@
 #include <unordered_map>
 #include <string>
 
-#include <SDL.h>
-#include <SDL_mixer.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 /**
  *  Chunk is used for short sounds (less than 10 seconds)

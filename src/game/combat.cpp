@@ -10,6 +10,8 @@
 #include "combat/status.hpp"
 #include "combat/enemies/mageDudeEnemy.hpp"
 #include "combat/enemies/basicWarriorEnemy.hpp"
+#include "combat/enemies/babyGoombaEnemy.hpp"
+
 
 #include "menus/menu.hpp"
 #include "menus/creditsmenu.hpp"
@@ -25,6 +27,10 @@ Combat::Combat(const std::string & filePath, bool last_level) :
 	pauseBase("res/assets/UI/pauseBase.png"),
 	cursor("res/assets/UI/cursor.png"),
 	cursorPress("res/assets/UI/cursorPress.png"),
+	pause(false),
+	render_game_over(false),
+	game_over(false),
+	game_win(false),
 	last_level(last_level)
 {
 	initSprites();
@@ -61,7 +67,7 @@ Combat::Combat(const std::string & filePath, bool last_level) :
 			if (type == "BABY GOOMBA") {
 				int x = enemy["x"];
 				int y = enemy["y"];
-				Enemy * unit = new Enemy();
+				Enemy * unit = new BabyGoombaEnemy();
 				addEnemy(unit, x, y);
 			}
 			else if (type == "MAGE DUDE") {
@@ -425,15 +431,7 @@ void Combat::startGame() {
 	// Keeping track of turn order
 	unitIndex = 0;
 
-	// BUBBLE SORT BECAUSE I'M LAZY
-	// TODO: MAKE THIS MORE EFFICIENT
-	for (unsigned int i = 0; i < units.size() - 1; ++i) {
-		for (unsigned int j = 0; j < units.size() - i - 1; ++j) {
-			if (units[j]->getDEX() < units[j + 1]->getDEX()) {
-				std::swap(units[j], units[j + 1]);
-			}
-		}
-	}
+	std::sort(units.begin(), units.end(), greater_than_DEX());
 
 	selectUnit(units[unitIndex]);
 	// If the first unit is an enemy, take its turn

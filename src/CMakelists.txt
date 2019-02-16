@@ -1,0 +1,11 @@
+target_include_directories(Game PRIVATE engine)
+target_include_directories(Game PRIVATE game)
+target_include_directories(Game PRIVATE math)
+target_include_directories(Game PRIVATE vendor)
+
+add_subdirectory(engine)
+add_subdirectory(game)
+add_subdirectory(math)
+add_subdirectory(vendor)
+
+target_sources(Game PRIVATE main.cpp)

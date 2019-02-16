@@ -5,6 +5,8 @@
 #include "../../util/attackloader.hpp"
 #include "../player.hpp"
 
+#include <fstream>
+#include <iostream>
 
 WarriorEnemy::WarriorEnemy() : 
 	// Init class vars
@@ -18,13 +20,33 @@ WarriorEnemy::WarriorEnemy() :
 	sprite.addAnimation(2, 2);			// DEAD
 	sprite.addAnimation(10, 21);		// ATTACK
 
-	// Randomize enemy stats
-	UnitData data;
-	data.strength = rand() % 15 + 10;
-	data.dexterity = rand() % 15 + 10;
-	data.intelligence = rand() % 10 + 10;
-	data.constitution = rand() % 20 + 20;
-	setData(data);
+	int STR = 0;
+	int DEX = 0;
+	int INT = 0;
+	int CON = 0;
+	// Load enemy data from file
+	const std::string filePath = "res/data/enemies/warrior.json";
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
+
+		json stats = data["BASIC WARRIOR"];
+		STR = stats["STR"];
+		DEX = stats["DEX"];
+		INT = stats["INT"];
+		CON = stats["CON"];
+	}
+	else {
+		std::cerr << "ERROR: load BASIC WARRIOR. All stats default to 0.\n";
+	}
+
+	UnitData udata;
+	udata.strength = STR;
+	udata.dexterity = DEX;
+	udata.intelligence = INT;
+	udata.constitution = CON;
+	setData(udata);
 }
 
 WarriorEnemy::~WarriorEnemy() {
@@ -63,7 +85,7 @@ int distance(Vec2<int> p1, Vec2<int> p2){
 	return static_cast<int>(sqrt(pow(p1[0]-p2[0],2)-pow(p1[1]-p2[1],2)));
 }	
 
-void WarriorEnemy::handleMovement() {
+bool WarriorEnemy::handleMovement() {
 
 	/*
 		- The warrior enemy should simply move towards the player every turn
@@ -81,10 +103,12 @@ void WarriorEnemy::handleMovement() {
 	Player * target_player = NULL;
 	std::vector<Player*> players = combat->getPlayers();
 	for (Player *& p : players){	
-		if(p->getType() == UnitType::PLAYER){
-			if(distance(position,p->position)<min_distance){
-				target_player = p;
-				min_distance=distance(position,p->position);
+		if (p->getType() == UnitType::PLAYER) {
+			if (!(p->getState() == UnitState::DEAD)) {
+				if (distance(position, p->position) < min_distance) {
+					target_player = p;
+					min_distance = distance(position, p->position);
+				}
 			}
 		}
 	}
@@ -125,8 +149,14 @@ void WarriorEnemy::handleMovement() {
 
 	if (!move(*combat,position_within_range)) {
 		// Use base enemies random movement if movement fails
-		Enemy::handleMovement();
+		int success = Enemy::handleMovement();
+		if (!success) {
+			// If even the base random movement fails move to attacks
+			handleAttack();
+			return false;
+		}
     }
+	return true;
 }
 
 void WarriorEnemy::handleAttack() {
@@ -146,37 +176,51 @@ void WarriorEnemy::handleAttack() {
 			position or something. Creative freedom is up to you!
 	*/
 	// If there is a player adjacent to the enemy, attack the player
-    if (combat->getUnitAt(position - Vec2<int>(1, 0))) {
-        hit.attack(position - Vec2<int>(1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	Unit *targ_unit;
+
+	targ_unit = combat->getUnitAt(position - Vec2<int>(1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, 1))) {
-        hit.attack(position - Vec2<int>(0, 1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, 1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, 1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(-1, 0))) {
-        hit.attack(position - Vec2<int>(-1, 0), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(-1, 0));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(-1, 0), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
-    if (combat->getUnitAt(position - Vec2<int>(0, -1))) {
-        hit.attack(position - Vec2<int>(0, -1), *combat);
-        state = UnitState::ATTACK;
-        startCounter();
-		sprite.playAnimation(3);
-		sprite.queueAnimation(0);
-        return;
+	targ_unit = combat->getUnitAt(position - Vec2<int>(0, -1));
+    if (targ_unit && targ_unit->getType() == UnitType::PLAYER) {
+		if (!(targ_unit->getState() == UnitState::DEAD)) {
+			hit.attack(position - Vec2<int>(0, -1), *combat);
+			state = UnitState::ATTACK;
+			startCounter();
+			sprite.playAnimation(3);
+			sprite.queueAnimation(0);
+			return;
+		}
     }
     // If no attacks could be done, set the unit to be at done state
 	state = UnitState::DONE;

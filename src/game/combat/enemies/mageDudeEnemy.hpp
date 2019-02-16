@@ -20,10 +20,8 @@ protected:
 
 private:
 
-	// TODO: Add attacks to class variables
-
 	// Helper method to handle the movement portion of an enemy turn
-	virtual void handleMovement();
+	virtual bool handleMovement();
 	// Helper method to handle the attack portion of an enemy turn
 	virtual void handleAttack();
 
