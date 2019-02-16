@@ -152,7 +152,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Hub("res/assets/logo/logo.png"));
+							changeState(new Hub("res/logo/logo.png"));
 						}
 					}
 				}
@@ -166,7 +166,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Customization());
+							changeState(new Hub("res/logo/logo.png"));
 						}
 					} else {
 						changeState(new Menu());

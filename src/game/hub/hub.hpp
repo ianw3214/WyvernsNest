@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../engine/core.hpp"
+#include "hubPlayer.hpp"
+
 #include <nlohmann/json.hpp>
 
 class Hub : public State
@@ -20,5 +22,7 @@ public:
 private:
 	// Backdrop
 	Sprite backdrop;
-};
 
+	// The hub player
+	HubPlayer player;
+};
