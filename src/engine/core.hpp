@@ -29,6 +29,10 @@ namespace Core {
 		Engine::get_instance().update();
 	}
 
+	inline SDL_Window * getWindow() {
+		return Engine::get_instance().getWindow();
+	}
+
 	inline int windowWidth() {
 		return Engine::get_instance().getWindowWidth();
 	}

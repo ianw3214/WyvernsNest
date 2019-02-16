@@ -2,7 +2,7 @@
 
 // Library includes
 #include <GL/glew.h>
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 
 // Std library includes
 #include <iostream>
@@ -123,6 +123,10 @@ void Engine::update() {
 		getTextRenderer()->render("FPS: " + std::to_string(round(1000.0 / m_delta)), ScreenCoord(0, 0));
 	}
 	SDL_GL_SwapWindow(m_window);
+}
+
+SDL_Window * Engine::getWindow() const {
+	return m_window;
 }
 
 int Engine::getWindowWidth() const {

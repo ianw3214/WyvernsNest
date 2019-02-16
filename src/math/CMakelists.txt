@@ -1,0 +1,7 @@
+target_sources(Game PRIVATE
+    vec.cpp)
+
+target_sources(Game PRIVATE
+    math.hpp
+    util.hpp
+    vec.hpp)

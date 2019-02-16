@@ -237,12 +237,12 @@ void Unit::deselect() {
 
 void Unit::takeDamage(int damage) {
 	// Call the virtualized callback function for subclasses to customize
-	takeDamageCallback(damage);
 	health -= damage;
 	if (health <= 0) {
 		health = 0;
 		state = UnitState::DEAD;
 	}
+	takeDamageCallback(damage);
 }
 
 void Unit::heal(int health) {
