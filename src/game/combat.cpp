@@ -27,6 +27,10 @@ Combat::Combat(const std::string & filePath, bool last_level) :
 	pauseBase("res/assets/UI/pauseBase.png"),
 	cursor("res/assets/UI/cursor.png"),
 	cursorPress("res/assets/UI/cursorPress.png"),
+	pause(false),
+	render_game_over(false),
+	game_over(false),
+	game_win(false),
 	last_level(last_level)
 {
 	initSprites();
