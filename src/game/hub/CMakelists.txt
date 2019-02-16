@@ -1,0 +1,7 @@
+target_sources(Game PRIVATE
+    hub.cpp
+    hubPlayer.cpp)
+
+target_sources(Game PRIVATE
+    hub.hpp
+    hubPlayer.hpp)
