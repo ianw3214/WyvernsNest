@@ -12,3 +12,4 @@ target_sources(Game PRIVATE
 add_subdirectory(combat)
 add_subdirectory(menus)
 add_subdirectory(util)
+add_subdirectory(hub)

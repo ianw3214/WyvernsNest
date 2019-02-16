@@ -12,10 +12,10 @@
 #include "combat/enemies/basicWarriorEnemy.hpp"
 #include "combat/enemies/babyGoombaEnemy.hpp"
 
-
 #include "menus/menu.hpp"
 #include "menus/creditsmenu.hpp"
 #include "customization.hpp"
+#include "hub/hub.hpp"
 
 #include <utility>
 #include <fstream>
@@ -148,7 +148,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Customization());
+							changeState(new Hub("res/assets/logo/logo.png"));
 						}
 					}
 				}
