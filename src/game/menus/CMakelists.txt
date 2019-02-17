@@ -1,10 +1,12 @@
 target_sources(Game PRIVATE
+    pausemenu.cpp
     creditsmenu.cpp
     cutscene.cpp
     menu.cpp
     settingsmenu.cpp)
 
 target_sources(Game PRIVATE
+    pausemenu.hpp
     creditsmenu.hpp
     cutscene.hpp
     menu.hpp

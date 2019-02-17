@@ -2,6 +2,9 @@
 
 #include "../engine/core.hpp"
 #include "hubPlayer.hpp"
+#include "util/button.hpp"
+#include "menus/pausemenu.hpp"
+#include "util/cursor.hpp"
 
 #include <nlohmann/json.hpp>
 
@@ -25,4 +28,10 @@ private:
 
 	// The hub player
 	HubPlayer player;
+
+	// Pause state
+	PauseMenu pauseMenu;
+
+	// Mouse cursor
+	Cursor cursor;
 };

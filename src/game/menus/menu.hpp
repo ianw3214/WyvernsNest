@@ -2,6 +2,8 @@
 
 #include "../engine/core.hpp"
 
+#include "util/cursor.hpp"
+
 #include <vector>
 #include <string>
 
@@ -38,13 +40,12 @@ private:
 	// Sprites
 	Sprite background;
 	Sprite highlight;
-	Sprite cursor;
-	Sprite cursorPress;
+
+	// Mouse cursor
+	Cursor cursor;
 
 	// Menu state
 	int selected_option;
-	int mouseX, mouseY;
-	bool mouseDown;
 
 	// Counter for flashing text
 	int counter;

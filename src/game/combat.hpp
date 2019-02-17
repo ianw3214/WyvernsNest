@@ -7,6 +7,8 @@
 #include "../engine/particleSystem.hpp"
 #include "util/button.hpp"
 #include "unitData.hpp"
+#include "menus/pausemenu.hpp"
+#include "util/cursor.hpp"
 
 #include <vector>
 
@@ -60,14 +62,11 @@ public:
 private:
 
 	// Combat state variables
-	bool pause;
 	bool render_game_over;
 	bool game_over;
 	bool game_win;
 	Unit * current;
 	std::vector<GameOverData> gameOverData;
-	int mouseX, mouseY;
-	bool mouseDown;
 	bool last_level;
 
 	// Counter variable for showing the game over screen after the player wins
@@ -79,15 +78,9 @@ private:
 	// Sprites to display the game over menu
 	void initSprites();
 	Sprite gameOverBase;
-	Sprite pauseBase;
-	Sprite cursor;
-	Sprite cursorPress;
 
 	// Buttons
 	ButtonData continueButton;
-	ButtonData resumeButton;
-	ButtonData menuButton;
-	ButtonData quitButton;
 
 	// Store a reference to all the units in the combat state
 	std::vector<Unit*> units;
@@ -107,5 +100,9 @@ private:
 	// Other helper functions
 	void updateWinStatus();
 
+	// Pause menu state
+	PauseMenu pauseMenu;
 
+	// Mouse cursor
+	Cursor cursor;
 };
