@@ -1,9 +1,11 @@
 target_sources(Game PRIVATE
+    cursor.cpp
     attackloader.cpp
     button.cpp
     particleloader.cpp)
 
 target_sources(Game PRIVATE
+    cursor.hpp
     attackloader.hpp
     button.hpp
     particleloader.hpp

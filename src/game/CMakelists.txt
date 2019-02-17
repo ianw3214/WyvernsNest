@@ -1,10 +1,12 @@
 target_sources(Game PRIVATE
     combat.cpp
+    tile.cpp
     customization.cpp
     skillTree.cpp)
 
 target_sources(Game PRIVATE
     combat.hpp
+    tile.hpp
     customization.hpp
     skillTree.hpp
     unitData.hpp)
