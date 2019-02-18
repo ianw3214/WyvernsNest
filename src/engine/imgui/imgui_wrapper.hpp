@@ -1,6 +1,6 @@
 #pragma once
 
-#include "imgui.h"
+#include "../../vendor/imgui/imgui.h"
 #include <SDL2/SDL.h>
 
 class ImGuiWrapper {

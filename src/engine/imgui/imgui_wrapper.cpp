@@ -2,7 +2,7 @@
 
 #include "core.hpp"
 
-#include "imgui.h"
+#include "../../vendor/imgui/imgui.h"
 #include "imgui_impl_opengl3.h"
 
 #include <iostream>

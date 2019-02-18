@@ -126,7 +126,7 @@ namespace Core {
 			Engine::get_instance().getMixer()->fadeOutAllMusic(ms);
 		}
 
-		inline void fadeInAllMusic(const std::string &filePath, int ms, int loops = 0) {
+		inline void fadeInAllMusic(const std::string &filePath, int ms, int loops = -1) {
 			Engine::get_instance().getMixer()->fadeInMusic(filePath, ms, loops);
 		}
 		
