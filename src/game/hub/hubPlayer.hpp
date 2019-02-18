@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../engine/core.hpp"
+#include "staticHubObject.hpp"
 
 #define PLAYER_VEL 10
 #define PLAYER_WIDTH 5
@@ -10,7 +11,8 @@
 class HubPlayer : public Entity
 {
 public:
-	HubPlayer(const std::string &filePath, int x, int y);
+	HubPlayer(const std::string &filePath);
+	HubPlayer(const std::string &filePath, int x, int y, std::vector<StaticHubObject *> obj);
 	~HubPlayer();
 
 	// override entity functions
@@ -18,10 +20,18 @@ public:
 	void update(int delta) override;
 	void render() override;
 
+	// getter for player position
+	int getPosX();
+	int getPosY();
+
+	// Flag for player's position in the transition area
+	bool isPlayerTransition();
+
+private:
 	// Helper function for player position
 	void move(int xlim, int ylim);
 
-private:
+	// The player sprite
 	Sprite playerSprite;
 
 	// Player position
@@ -29,4 +39,10 @@ private:
 
 	// Player velocity
 	int xVel, yVel;
+
+	// List of static objects
+	std::vector<StaticHubObject *> statObjList;
+
+	// Player collision box
+	SDL_Rect mCollision;
 };

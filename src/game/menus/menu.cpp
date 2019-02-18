@@ -42,6 +42,13 @@ Menu::~Menu() {
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
+	cursor.handleEvent(e);
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		if (getButtonIndexAtPos(ScreenCoord(cursor.getMouseX(), cursor.getMouseY())) >= 0) {
+			switchToCurrentState();
+		}
+	}
+
 	if (e.type == SDL_KEYDOWN) {
 		// Change the selected option on up/down key presses
 		if (e.key.keysym.sym == SDLK_DOWN) {
@@ -58,12 +65,6 @@ void Menu::handleEvent(const SDL_Event & e) {
 		if (e.key.keysym.sym == SDLK_ESCAPE) {
 			if (selected_option == NUM_BUTTONS - 1) exit(0);
 			else selected_option = NUM_BUTTONS - 1;
-		}
-	}
-	cursor.handleEvent(e);
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		if (getButtonIndexAtPos(ScreenCoord(cursor.getMouseX(), cursor.getMouseY())) >= 0) {
-			switchToCurrentState();
 		}
 	}
 }
