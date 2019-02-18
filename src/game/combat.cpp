@@ -25,9 +25,9 @@ using json = nlohmann::json;
 Combat::Combat(const std::string & filePath, bool last_level) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
-	render_game_over(true),
-	game_over(true),
-	game_win(true),
+	render_game_over(false),
+	game_over(false),
+	game_win(false),
 	last_level(last_level),
 	pauseMenu(),
 	cursor()
