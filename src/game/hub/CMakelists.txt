@@ -1,7 +1,9 @@
 target_sources(Game PRIVATE
+    staticHubObject.cpp
     hub.cpp
     hubPlayer.cpp)
 
 target_sources(Game PRIVATE
+    staticHubObject.hpp
     hub.hpp
     hubPlayer.hpp)

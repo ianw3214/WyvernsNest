@@ -5,6 +5,9 @@
 #include "util/button.hpp"
 #include "menus/pausemenu.hpp"
 #include "util/cursor.hpp"
+#include "staticHubObject.hpp"
+
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -19,10 +22,16 @@ public:
 	void update(int delta) override;
 	void render() override;
 
+	// getter for static objects
+	std::vector<StaticHubObject *> getStaticObjects();
+
+private:
 	// Init Sprites
 	void initSprites();
 
-private:
+	// Init static objects
+	void initStaticObjects();
+
 	// Backdrop
 	Sprite backdrop;
 
@@ -34,4 +43,11 @@ private:
 
 	// Mouse cursor
 	Cursor cursor;
+
+	// List of static objects
+	std::vector<StaticHubObject *> statObjlist;
+
+	// Warning box sprite
+	Sprite warningSprite;
+
 };
