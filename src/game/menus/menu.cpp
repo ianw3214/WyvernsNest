@@ -35,7 +35,7 @@ Menu::Menu(bool start_music) :
 	// Play menu music
 	if (start_music) {
 		Core::Mixer::loadAudio("res/music/track1.wav", AudioType::Music);
-		Core::Mixer::playAudio("res/music/track1.wav", 10, 0.8f);
+		Core::Mixer::playAudio("res/music/track1.wav", -1, 0.8f);
 	}
 }
 
