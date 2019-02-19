@@ -20,6 +20,7 @@ public:
 	void setUniform2i(const std::string & name, int v0, int v1);
 	void setUniform3f(const std::string& name, float v0, float v1, float v2);
 	void setUniform4f(const std::string& name, float v0, float v1, float v2, float v3);
+	void setUniformMat4(const std::string& name, float* m);
 private:
 	std::string vertexSource, fragmentSource;
 	GLuint rendererID;
