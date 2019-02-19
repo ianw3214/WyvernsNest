@@ -11,9 +11,7 @@ using json = nlohmann::json;
 
 Menu::Menu(bool start_music) :
 	background("res/assets/menu/background.png"),
-	highlight("res/assets/menu/blur.png"),
-	cursor("res/assets/UI/cursor.png"),
-	cursorPress("res/assets/UI/cursorPress.png")
+	highlight("res/assets/menu/blur.png")
 {
 	background.setSize(Core::windowWidth(), Core::windowHeight());
 	highlight.setSize(Core::windowWidth() / 2, 200);
@@ -44,6 +42,13 @@ Menu::~Menu() {
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
+	cursor.handleEvent(e);
+	if (e.type == SDL_MOUSEBUTTONUP) {
+		if (getButtonIndexAtPos(ScreenCoord(cursor.getMouseX(), cursor.getMouseY())) >= 0) {
+			switchToCurrentState();
+		}
+	}
+
 	if (e.type == SDL_KEYDOWN) {
 		// Change the selected option on up/down key presses
 		if (e.key.keysym.sym == SDLK_DOWN) {
@@ -62,22 +67,14 @@ void Menu::handleEvent(const SDL_Event & e) {
 			else selected_option = NUM_BUTTONS - 1;
 		}
 	}
-	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		mouseDown = true;
-	}
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		mouseDown = false;
-		if (getButtonIndexAtPos(ScreenCoord(mouseX, mouseY)) >= 0) {
-			switchToCurrentState();
-		}
-	}
 }
 
 void Menu::update(int delta) {
 	counter++;
 	if (counter % 20 == 0) render_text = !render_text;
 	// Update the currently selected if the mouse is hovering over it
-	SDL_GetMouseState(&mouseX, &mouseY);
+	int mouseX = cursor.getMouseX();
+	int mouseY = cursor.getMouseY();
 	if (getButtonIndexAtPos(ScreenCoord(mouseX, mouseY)) >= 0) selected_option = getButtonIndexAtPos(ScreenCoord(mouseX, mouseY));
 }
 
@@ -113,13 +110,7 @@ void Menu::render() {
 	}
 
 	// Render the cursor
-	if (mouseDown) {
-		cursorPress.setPos(mouseX, mouseY);
-		cursorPress.render();
-	} else {
-		cursor.setPos(mouseX, mouseY);
-		cursor.render();
-	}
+	cursor.render();
 }
 
 void Menu::switchToCurrentState() {
@@ -232,6 +223,9 @@ void Menu::initializeSaveFile() {
 }
 
 int Menu::getButtonIndexAtPos(ScreenCoord coord) {
+	int mouseX = cursor.getMouseX();
+	int mouseY = cursor.getMouseY();
+
 	for (int i = 0; i < NUM_BUTTONS; ++i) {
 		int left = buttonCoords[i].x() - SubDiv::hSize(5, 2);
 		int right = buttonCoords[i].x();
