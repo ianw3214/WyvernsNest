@@ -1,6 +1,7 @@
 #include "renderer.hpp"
 
 #include <algorithm>
+#include <array>
 
 #include "engine.hpp"
 #include "sprite.hpp"
@@ -81,26 +82,11 @@ void Renderer::drawRect_fast(ScreenCoord v, int width, int height, Colour colour
 
 void Renderer::drawSprite_fast(const Sprite & sprite) {
 	textureShader.bind();
-	float matrix[16] = {
-		static_cast<float>(sprite.w), 0.f, 0.f, static_cast<float>(sprite.x),
-		0.f, static_cast<float>(-sprite.h), 0.f, static_cast<float>(Engine::get_instance().getWindowHeight()) - static_cast<float>(sprite.y),
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	};
 
-	float texMatrix[16] = {
-		static_cast<float>(sprite.src_w)/static_cast<float>(sprite.original_w), 0.f, 0.f, static_cast<float>(sprite.src_x)/static_cast<float>(sprite.original_w),
-		0.f, -static_cast<float>(sprite.src_h)/static_cast<float>(sprite.original_h), 0.f, static_cast<float>(sprite.src_y + sprite.src_h)/static_cast<float>(sprite.original_h),
-		0.f, 0.f, 1.f, 0.f,
-		0.f, 0.f, 0.f, 1.f
-	};
-
-	textureShader.setUniformMat4("u_Model", matrix);
-	textureShader.setUniformMat4("u_texMap", texMatrix);
+	textureShader.setUniformMat4("u_Model", sprite.getModelMatrix().data());
+	textureShader.setUniformMat4("u_texMap", sprite.getTexMatrix().data());
 
 	sprite.getTexture().bind();
-
-	// just to show the camera moves
 
 	glBindVertexArray(rectangleVAO_);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
