@@ -11,7 +11,6 @@ class Renderer {
 
 public:
 	Renderer();
-
 	void clear() const;
 	void drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour);
 	void drawRect(ScreenCoord v, int width, int height, Colour colour);
@@ -22,8 +21,7 @@ private:
 	void drawTriangles(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 	void drawLines(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 	void drawLineStrip(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
-	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, GLenum type) const;
-
+	void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader, GLenum type) const; 
 	// static shaders for sprite and solid fill drawing
 	Shader basicShader;
 	Shader textureShader;
