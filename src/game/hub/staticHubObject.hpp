@@ -5,7 +5,7 @@
 class StaticHubObject : public Entity
 {
 public:
-	StaticHubObject(const std::string filePath, int x, int y, int width, int height);
+	StaticHubObject(const std::string filePath, int x, int y);
 	~StaticHubObject();
 
 	// Override entity functions

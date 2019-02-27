@@ -18,6 +18,7 @@ public:
 	void drawTexture(ScreenCoord v, int width, int height, const Texture& texture);
 	void drawSprite(const Sprite& sprite);
 	void setAlpha(float a);
+	void setRectAlpha(float a) { rect_alpha = a; }
 private:
 	void drawTriangles(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 	void drawLines(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
@@ -28,5 +29,6 @@ private:
 	Shader basicShader;
 	Shader textureShader;
 
+	float rect_alpha = 1;
 	float alpha = 1;
 };

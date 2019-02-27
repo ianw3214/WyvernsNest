@@ -6,10 +6,12 @@
 #include "menus/pausemenu.hpp"
 #include "util/cursor.hpp"
 #include "staticHubObject.hpp"
+#include "customization.hpp"
 
 #include <vector>
 
 #include <nlohmann/json.hpp>
+
 
 class Hub : public State
 {
@@ -30,7 +32,10 @@ private:
 	void initSprites();
 
 	// Init static objects
-	void initStaticObjects();
+	void initStaticObjects(const std::string & filePath);
+
+	// Combat state transition
+	void switchToCombatState();
 
 	// Backdrop
 	Sprite backdrop;
@@ -48,6 +53,7 @@ private:
 	std::vector<StaticHubObject *> statObjlist;
 
 	// Warning box sprite
-	Sprite warningSprite;
-
+	Sprite warningContinueSprite;
+	Sprite warningShopSprite;
+	Sprite warningCustomSprite;
 };

@@ -4,6 +4,8 @@
 
 #include "util/button.hpp"
 #include "unitData.hpp"
+#include "util/cursor.hpp"
+#include "hub/hub.hpp"
 
 #include <vector>
 #include <string>
@@ -13,6 +15,8 @@
 #define DEFAULT_ATTACK_FILE		"res/data/attacks.json"
 
 #define DEFAULT_MAX_EXP			500.f
+
+class Hub;
 
 class SkillTreeLinkButton : public ButtonData {
 public:
@@ -37,9 +41,11 @@ private:
 	// the available moves to each unit
 	std::vector<std::vector<std::string>> attacks;
 
+	// Mouse cursor
+	Cursor cursor;
+
 	// State properties
 	int mouseX, mouseY;
-	bool mouseDown;
 
 	void displayUnitData(const UnitData& data);
 	void renderUnit(int x, int y, UnitData unit);
@@ -58,8 +64,6 @@ private:
 	// Sprites used to render the customization state
 	Sprite base;
 	Sprite empty;
-	Sprite cursor;
-	Sprite cursorPress;
 
 	// Helper functions
 	void saveData();
