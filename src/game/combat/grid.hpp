@@ -2,6 +2,7 @@
 
 #include "../../engine/core.hpp"
 #include "../../math/vec.hpp"
+#include "tile.hpp"
 
 #define SOURCE_TILE_WIDTH 32
 

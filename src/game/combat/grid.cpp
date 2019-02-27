@@ -1,4 +1,5 @@
 #include "grid.hpp"
+#include "tile.hpp"
 
 #include <cmath> 
 #include <set>
@@ -36,6 +37,7 @@ Grid::Grid(std::string file) : tilesheet("INVALID") {
 
 	std::set<int> colIndices = { 2, 4, 6 };
 	for (int tile : data["tilemap"]) {
+		//tilemap.push_back(Tile("res/logo/logo.png", tile));
 		tilemap.push_back(tile);
 		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);
 	}
@@ -78,7 +80,9 @@ bool Grid::isPosEmpty(Vec2<int> pos) const {
 bool Grid::isPosValid(Vec2<int> pos) const {
 	if (pos.x() < 0 || pos.x() >= map_width) return false;
 	if (pos.y() < 0 || pos.y() >= map_height) return false;
+//	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())].getTileType() != 21;
 	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
+
 }
 
 // TODO: Add option to vary source tile width/height
@@ -108,6 +112,7 @@ void Grid::render()
 {
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
+			//int index = tilemap[TILE_INDEX(x, y)].getTileType();
 			int index = tilemap[TILE_INDEX(x, y)];
 			tilesheet.setSourcePos(indexToX(index) * source_tile_size, indexToY(index) * source_tile_size);
 			tilesheet.setPos(tile_width * x, tile_height * y);

@@ -12,11 +12,12 @@
 #include "combat/enemies/basicWarriorEnemy.hpp"
 #include "combat/enemies/babyGoombaEnemy.hpp"
 
-
 #include "menus/menu.hpp"
 #include "menus/creditsmenu.hpp"
 #include "customization.hpp"
+#include "hub/hub.hpp"
 
+#include <iostream>
 #include <utility>
 #include <fstream>
 using json = nlohmann::json;
@@ -24,13 +25,14 @@ using json = nlohmann::json;
 Combat::Combat(const std::string & filePath, bool last_level) :
 	current(nullptr),
 	gameOverBase("res/assets/UI/game_over/base.png"),
-	pauseBase("res/assets/UI/pauseBase.png"),
-	cursor("res/assets/UI/cursor.png"),
-	cursorPress("res/assets/UI/cursorPress.png"),
-	last_level(last_level)
+	render_game_over(false),
+	game_over(false),
+	game_win(false),
+	last_level(last_level),
+	pauseMenu(),
+	cursor()
 {
 	initSprites();
-
 	// Load grid and enemy data from the file path
 	std::ifstream file(filePath);
 	if (file.is_open()) {
@@ -121,9 +123,12 @@ Combat::~Combat() {
 }
 
 void Combat::handleEvent(const SDL_Event& e) {
+	// Handle mouse events
+	cursor.handleEvent(e);
+
 
 	// If the combat state isn't paused, look for gameplay events
-	if (!pause) {
+	if (!pauseMenu.getIsShown()) {
 		// Keep looking for win/lose conditions while the game hasn't ended
 		if (!game_over) {
 			#ifdef _DEBUG
@@ -148,7 +153,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Customization());
+							changeState(new Hub("res/logo/logo.png"));
 						}
 					}
 				}
@@ -162,7 +167,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Customization());
+							changeState(new Hub("res/logo/logo.png"));
 						}
 					} else {
 						changeState(new Menu());
@@ -172,49 +177,34 @@ void Combat::handleEvent(const SDL_Event& e) {
 		}
 		// Pause the game if escape key is pressed
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-			pause = true;
-			// If the player wasn't in the middle of attacking, show the pause menu
-			if (current->getType() == UnitType::PLAYER) {
-				Player * player = dynamic_cast<Player*>(current);
-				if (player->player_state == PlayerState::ATTACKING) {
-					pause = false;
+			// Unpause the game if it is already paused
+			if (pauseMenu.getIsShown()) {
+				pauseMenu.setIsShown(false);
+			}
+			else {
+				pauseMenu.setIsShown(true);
+				// If the player wasn't in the middle of attacking, show the pause menu
+				if (current->getType() == UnitType::PLAYER) {
+					Player * player = dynamic_cast<Player*>(current);
+					if (player->player_state == PlayerState::ATTACKING) {
+						pauseMenu.setIsShown(false);
+					}
 				}
 			}
 		}
 		// Update entities after updating combat state because pause depends on player state
 		for (Entity * entity : entities) entity->handleEvent(e);
 	}
-	// Pause menu event handling
-	else {
-		if (e.type == SDL_MOUSEBUTTONUP) {
-			ScreenCoord mouse;
-			SDL_GetMouseState(&mouse.x(), &mouse.y());
-			if (resumeButton.colliding(mouse)) {
-				pause = false;
-			}
-			if (menuButton.colliding(mouse)) {
-				changeState(new Menu());
-			}
-			if (quitButton.colliding(mouse)) {
-				exit(0);
-			}
+
+	if (!game_over) {
+		if (pauseMenu.getIsShown()) {
+			pauseMenu.handleEvent(e);
 		}
-		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-			exit(0);
-		}
-	}
-	// Update the mouse position/state
-	SDL_GetMouseState(&mouseX, &mouseY);
-	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		mouseDown = true;
-	}
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		mouseDown = false;
 	}
 }
 
 void Combat::update(int delta) {
-	if (!pause) {
+	if (!pauseMenu.getIsShown()) {
 		grid.update();
 		ps.update();
 		for (Entity * e : entities) e->update(delta);
@@ -240,6 +230,7 @@ void Combat::update(int delta) {
 			}
 		}
 	}
+	pauseMenu.update(delta);
 }
 
 void Combat::render() {
@@ -311,29 +302,9 @@ void Combat::render() {
 	ps.render();
 
 	// If the game is paused, render the pause menu
-	if (pause) {
-		pauseBase.render();
-		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::bottom);
-		Core::Text_Renderer::setColour(Colour(.4f, .2f, .1f));
-		Core::Text_Renderer::render("PAUSE", ScreenCoord(SubDiv::hCenter(), SubDiv::vPos(10, 3)), 2.5f);
-		Core::Text_Renderer::setColour(Colour(0.f, 0.f, 0.f));
-		Core::Text_Renderer::setAlignment(TextRenderer::hAlign::centre, TextRenderer::vAlign::middle);
-		resumeButton.render();
-		Core::Text_Renderer::render("RESUME", resumeButton.position + Vec2<int>(120, 32), 1.8f);
-		menuButton.render();
-		Core::Text_Renderer::render("MAIN MENU", menuButton.position + Vec2<int>(120, 32), 1.8f);
-		quitButton.render();
-		Core::Text_Renderer::render("QUIT", quitButton.position + Vec2<int>(120, 32), 1.8f);
-	}
-
-	// Render the cursor
-	if (mouseDown) {
-		cursorPress.setPos(mouseX, mouseY);
-		cursorPress.render();
-	} else {
-		cursor.setPos(mouseX, mouseY);
-		cursor.render();
-	}
+	pauseMenu.render();
+	
+	cursor.render();
 }
 
 // Returns the unit occupying the specified grid coordinate
@@ -379,15 +350,8 @@ void Combat::initSprites() {
 	int width = gameOverBase.getTexture().getWidth();
 	int height = gameOverBase.getTexture().getHeight();
 	gameOverBase.setPos((Core::windowWidth() - width) / 2, (Core::windowHeight() - height) / 2);
-	// Calculate pause menu sprite position
-	width = pauseBase.getTexture().getWidth();
-	height = pauseBase.getTexture().getHeight();
-	pauseBase.setPos((Core::windowWidth() - width) / 2, (Core::windowHeight() - height) / 2);
 
 	continueButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vPos(40, 27)));
-	resumeButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter() - 100), 240);
-	menuButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter()), 240);
-	quitButton = ButtonData(ScreenCoord(SubDiv::hCenter() - 120, SubDiv::vCenter() + 100), 240);
 }
 
 // Choose the next unit in combat to take a turn
@@ -437,6 +401,7 @@ void Combat::startGame() {
 
 }
 
+#include <iostream>
 void Combat::updateWinStatus() {
 	bool win = true;
 	bool lose = true;
@@ -471,12 +436,15 @@ void Combat::updateWinStatus() {
 				int currentExp = unit["experience"];
 				int newExp = static_cast<int>(currentExp + expPerPlayer);
 				if (newExp >= DEFAULT_MAX_EXP) {
-					unit["level"] += 1;
+					if (unit["level"].is_array()) std::cout << "SHIT" << std::endl;
+					if (unit["level"].is_number()) std::cout << "WTF?" << std::endl;
+					if (unit["level"].is_string()) std::cout << "FUUUUU" << std::endl;
 					unit["experience"] = newExp - DEFAULT_MAX_EXP;
-					unit["STR"] += 2;
-					unit["DEX"] += 2;
-					unit["INT"] += 2;
-					unit["CON"] += 2;
+					unit["STR"] = unit["STR"] + 2;
+					unit["DEX"] = unit["DEX"] + 2;
+					unit["INT"] = unit["INT"] + 2;
+					unit["CON"] = unit["CON"] + 2;
+					unit["level"] = unit["level"] + 1;
 					level_up = true;
 				} else {
 					unit["experience"] = newExp;

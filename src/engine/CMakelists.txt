@@ -21,5 +21,6 @@ target_sources(Game PRIVATE
     state.hpp
     textureManager.hpp)
 
+add_subdirectory(imgui)
 add_subdirectory(opengl)
 add_subdirectory(text)

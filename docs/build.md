@@ -18,10 +18,11 @@ Hook up user wide integration via the following command:
 
 Then, install the necessary libraries using the following commands:
 
-> .\vcpkg install sdl2
-> .\vcpkg install sdl2-mixer
-> .\vcpkg install glew
-> .\vcpkg install freetype
+> .\vcpkg install sdl2  
+> .\vcpkg install sdl2-mixer  
+> .\vcpkg install glew  
+> .\vcpkg install freetype  
+> .\vcpkg install imgui
 
 ### Mac
 
@@ -32,6 +33,7 @@ Run the following commands to get SDL, GLEW, and FreeType setup on your local ma
 > brew install sdl2_mixer  
 > brew install glew  
 > brew install freetype  
+> brew install imgui  
 
 ## Running cmake
 

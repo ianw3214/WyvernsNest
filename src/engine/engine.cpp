@@ -125,6 +125,10 @@ void Engine::update() {
 	SDL_GL_SwapWindow(m_window);
 }
 
+SDL_Window * Engine::getWindow() const {
+	return m_window;
+}
+
 int Engine::getWindowWidth() const {
 	return m_windowWidth;
 }
