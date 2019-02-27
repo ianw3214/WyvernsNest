@@ -401,6 +401,7 @@ void Combat::startGame() {
 
 }
 
+#include <iostream>
 void Combat::updateWinStatus() {
 	bool win = true;
 	bool lose = true;
@@ -435,12 +436,15 @@ void Combat::updateWinStatus() {
 				int currentExp = unit["experience"];
 				int newExp = static_cast<int>(currentExp + expPerPlayer);
 				if (newExp >= DEFAULT_MAX_EXP) {
-					unit["level"] += 1;
+					if (unit["level"].is_array()) std::cout << "SHIT" << std::endl;
+					if (unit["level"].is_number()) std::cout << "WTF?" << std::endl;
+					if (unit["level"].is_string()) std::cout << "FUUUUU" << std::endl;
 					unit["experience"] = newExp - DEFAULT_MAX_EXP;
-					unit["STR"] += 2;
-					unit["DEX"] += 2;
-					unit["INT"] += 2;
-					unit["CON"] += 2;
+					unit["STR"] = unit["STR"] + 2;
+					unit["DEX"] = unit["DEX"] + 2;
+					unit["INT"] = unit["INT"] + 2;
+					unit["CON"] = unit["CON"] + 2;
+					unit["level"] = unit["level"] + 1;
 					level_up = true;
 				} else {
 					unit["experience"] = newExp;
