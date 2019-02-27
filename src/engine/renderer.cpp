@@ -62,7 +62,7 @@ void Renderer::drawRect(ScreenCoord v, int width, int height, Colour colour) {
 	va.addBuffer(vb, layout);
 
 	// Issue the actual draw call
-	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), alpha);
+	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), rect_alpha);
 	drawTriangles(va, ib, basicShader);
 }
 

@@ -1,0 +1,29 @@
+{
+    "statobj": [
+        {
+            "path": "hub/tree.png",
+            "x": 500,
+            "y": 500
+        },{
+            "path": "hub/tree.png",
+            "x": 300,
+            "y": 260
+        },{
+            "path": "hub/tree.png",
+            "x": 200,
+            "y": 660
+        },{
+            "path": "hub/tree.png",
+            "x": 400,
+            "y": 460
+        },{
+            "path": "hub/tree.png",
+            "x": 100,
+            "y": 50
+        },{
+            "path": "hub/tree.png",
+            "x": 120,
+            "y": 260
+        }
+    ]
+}

@@ -12,6 +12,7 @@
 #include "game/combat.hpp"
 #include "game/customization.hpp"
 #include "game/skillTree.hpp"
+#include "hub/hub.hpp"
 
 int main(int argc, char* argv[]) {
 

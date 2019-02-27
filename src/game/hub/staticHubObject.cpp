@@ -1,15 +1,15 @@
 #include "staticHubObject.hpp"
 
 
-StaticHubObject::StaticHubObject(const std::string filePath, int x, int y, int width, 
-								int height) :
+StaticHubObject::StaticHubObject(const std::string filePath, int x, int y) :
 	objSprite(filePath)
 {
+	// Set the collision box
+	mBox.w = objSprite.getTexture().getWidth(); 
+	mBox.h = objSprite.getTexture().getHeight();
+
 	// Set the offsets
 	mBox.x = x; mBox.y = y;
-
-	// Set the collision box
-	mBox.w = width; mBox.h = height;
 
 	objSprite.setPos(mBox.x, mBox.y);
 }

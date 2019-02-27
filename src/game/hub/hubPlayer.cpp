@@ -19,8 +19,8 @@ HubPlayer::HubPlayer(const std::string &filePath, int x, int y,
 	playerSprite.setPos(xPos, yPos);
 
 	// Set collision box dimensions
-	mCollision.w = PLAYER_WIDTH;
-	mCollision.h = PLAYER_HEIGHT;
+	mCollision.w = playerSprite.getTexture().getWidth();
+	mCollision.h = playerSprite.getTexture().getHeight();
 }
 
 // Helper function to check player collision
@@ -102,7 +102,7 @@ void HubPlayer::move(int xlim, int ylim) {
 	mCollision.x = xPos;
 
 	// Enforce boundary conditions
-	if ((xPos < 0) || (xPos + PLAYER_WIDTH > xlim)) {
+	if ((xPos < 0) || (xPos + mCollision.w > xlim)) {
 		xPos -= xVel;
 		mCollision.x = xPos;
 	}
@@ -121,7 +121,7 @@ void HubPlayer::move(int xlim, int ylim) {
 	mCollision.y = yPos;
 
 	// Enforce boundary conditions
-	if ((yPos < 0) || (yPos + PLAYER_HEIGHT > ylim)) {
+	if ((yPos < 0) || (yPos + mCollision.h > ylim)) {
 		yPos -= yVel;
 		mCollision.y = yPos;
 	}
@@ -153,11 +153,35 @@ int HubPlayer::getPosY() {
 	return yPos;
 }
 
-bool HubPlayer::isPlayerTransition() {
+bool HubPlayer::isPlayerTransitionContinue() {
 	int leftBorder = Core::windowWidth() - 100;
 	int rightBorder = Core::windowWidth();
 	int topBorder = Core::windowHeight() / 2 - 100;
 	int bottomBorder = Core::windowHeight() / 2 + 100;
+
+	if (xPos >= leftBorder && xPos <= rightBorder && yPos <= bottomBorder && yPos >= topBorder) {
+		return true;
+	}
+	return false;
+}
+
+bool HubPlayer::isPlayerTransitionCustom() {
+	int leftBorder = 50;
+	int rightBorder = Core::windowWidth() / 2 - 100;
+	int topBorder = Core::windowHeight() / 2 - 50;
+	int bottomBorder = Core::windowHeight() / 2 + 50;
+
+	if (xPos >= leftBorder && xPos <= rightBorder && yPos <= bottomBorder && yPos >= topBorder) {
+		return true;
+	}
+	return false;	
+}
+
+bool HubPlayer::isPlayerTransitionShop() {
+	int leftBorder = Core::windowWidth() / 2 - 50;
+	int rightBorder = Core::windowWidth() / 2 + 50;
+	int topBorder = Core::windowHeight() / 2 - 100;
+	int bottomBorder = Core::windowHeight() / 2 - 50;
 
 	if (xPos >= leftBorder && xPos <= rightBorder && yPos <= bottomBorder && yPos >= topBorder) {
 		return true;
