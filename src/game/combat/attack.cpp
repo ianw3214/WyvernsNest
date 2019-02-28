@@ -99,7 +99,7 @@ void Attack::attack(ScreenCoord pos, Combat& combat) {
 			if (pos.y() > source->position.y()) angle = 180;
 			if (pos.x() < source->position.x()) angle = 270;
 			if (pos.x() > source->position.x()) angle = 90;
-			combat.addEmitter(Particles::get(particle.name, angle, x, y));
+			combat.addEmitter(Particles::get(particle.name, 45, x, y));
 		}
 		if (particle.position == ParticlePosition::SELF) {
 			combat.addEmitter(Particles::get(

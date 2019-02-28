@@ -19,7 +19,8 @@
 // TODO: unify these variable locations somewhere, perhaps in a config file
 #define USER_SAVE_LOCATION		"res/data/save.json"
 #define MASTER_LEVEL_LOCATION	"res/data/levels/master.json"
-
+#define CUSTSCENE_LEVEL_LOCATION "res/assets/cutscenes/"
+#define LEVEL_DATA_LOCATION		"res/data/levels/"
 #define DEFAULT_PLAYER_ATTACK_1	"PUNCH"
 #define DEFAULT_PLAYER_ATTACK_2	"THROW ROCK"
 #define DEFAULT_PLAYER_ATTACK_3	"DASH"

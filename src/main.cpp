@@ -6,6 +6,7 @@
 
 #include "engine/core.hpp"
 #include "game/menus/menu.hpp"
+#include "game/menus/cutscene.hpp"
 #include "game/combat.hpp"
 
 #include "engine/mixer.hpp"

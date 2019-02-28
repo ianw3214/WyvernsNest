@@ -38,7 +38,7 @@ Menu::Menu(bool start_music) :
 }
 
 Menu::~Menu() {
-	
+
 }
 
 void Menu::handleEvent(const SDL_Event & e) {
@@ -103,7 +103,8 @@ void Menu::render() {
 	for (int i = 0; i < NUM_BUTTONS; ++i) {
 		if (i == selected_option) {
 			Core::Text_Renderer::setColour(Colour(1.f, 1.f, 1.f));
-		} else {
+		}
+		else {
 			Core::Text_Renderer::setColour(Colour(.6f, 1.f, 1.f));
 		}
 		Core::Text_Renderer::render(buttons[i], buttonCoords[i], 2.f);
@@ -135,7 +136,7 @@ void Menu::switchToCurrentState() {
 
 void Menu::changeToCombatState() {
 	// Stop playing menu music
-	Core::Mixer::fadeOutAllMusic(500);
+	Core::Mixer::fadeOutAllMusic(1000);
 
 	int level_id = 1;
 	std::ifstream save_file(USER_SAVE_LOCATION);
@@ -155,29 +156,44 @@ void Menu::changeToCombatState() {
 		if (!valid) {
 			save_file.close();
 			initializeSaveFile();
-			}
+		}
 		else level_id = inputData["level"];
 	}
 	// Change the state based on the level file
-	bool has_cutscene = false;
-	std::string combatLevelLocation;
+
+	std::string combatLevelLocation, beep;
+
 	std::ifstream masterFile(MASTER_LEVEL_LOCATION);
+
 	json masterData;
+
 	masterFile >> masterData;
+
 	for (const json& level : masterData["levels"]) {
+
 		if (level["id"] == level_id) {
+
 			// TOOD: not sure if this swap is necessary, but I think the code breaks otherwise
+			//std::string  cutsceneFile;
+
 			std::string name = level["file"];
-			combatLevelLocation = std::string("res/data/levels/") + name;
+			
+			std::string cutsceneLevel =  level["cutscene"];
+
+			combatLevelLocation = LEVEL_DATA_LOCATION + name;
+
+			std::string cutLocation = CUSTSCENE_LEVEL_LOCATION + cutsceneLevel;
+
 			// If a cutscene is found, switch to it
 			if (level.find("cutscene") != level.end()) {
-				has_cutscene = true;
-				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation));
-				for (std::string img : level["cutscene"]["images"]) {
-					cutscene->addSprite(img);
-				}
+
+				Cutscene * cutscene = new Cutscene(new Combat(combatLevelLocation), cutLocation);
+				//for (std::string img : level["cutscene"]["images"]) {
+				//	cutscene->addSprite(img);
+				//}
 				changeState(cutscene);
-			} else {
+			}
+			else {
 				changeState(new Combat(combatLevelLocation));
 			}
 		}

@@ -36,7 +36,7 @@ void Renderer::drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
 	VertexBufferLayout layout;
 	layout.pushFloat(2);
 	va.addBuffer(vb, layout);
-
+	
 	// Set the uniform to draw the right colour
 	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), alpha);
 	drawLines(va, ib, basicShader);
