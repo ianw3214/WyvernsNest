@@ -76,3 +76,7 @@ ipch/
 
 # Build directory
 build/
+
+# Utiltiy files
+build.bat
+run.bat

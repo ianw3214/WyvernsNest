@@ -1,0 +1,6 @@
+# OUTPUT BUILD DIRECTORY
+build/
+
+# UTILITY SHELL FILES
+*.bat
+*.sh

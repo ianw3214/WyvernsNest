@@ -1,0 +1,10 @@
+target_sources(Map PRIVATE
+    opengl.hpp
+    glwrappers.hpp
+    imgui_impl_opengl3.h
+    shader.hpp)
+
+target_sources(Map PRIVATE
+    glwrappers.cpp
+    imgui_impl_opengl3.cpp
+    shader.cpp)
