@@ -1,13 +1,13 @@
 target_sources(Game PRIVATE
-    pausemenu.cpp
-    creditsmenu.cpp
-    cutscene.cpp
-    menu.cpp
-    settingsmenu.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/pausemenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/creditsmenu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/cutscene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/menu.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/settingsmenu.cpp)
 
 target_sources(Game PRIVATE
-    pausemenu.hpp
-    creditsmenu.hpp
-    cutscene.hpp
-    menu.hpp
-    settingsmenu.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/pausemenu.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/creditsmenu.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/cutscene.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/menu.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/settingsmenu.hpp)

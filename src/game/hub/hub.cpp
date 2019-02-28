@@ -3,24 +3,40 @@
 #include "util/util.hpp"
 #include "../combat.hpp"
 #include "../customization.hpp"
+#include "../menus/menu.hpp"
+#include "../menus/creditsmenu.hpp"
 
 #include <utility>
 #include <fstream>
 using json = nlohmann::json;
 
-Hub::Hub(const std::string& filePath) :
-	backdrop(filePath),
-	pauseMenu(),
-	cursor(),
-	player("res/assets/shadow.png"),
-	warningContinueSprite("res/assets/UI/BackButton.png"),
-	warningCustomSprite("res/assets/UI/Continue.png"),
-	warningShopSprite("res/assets/UI/skill_icons/root.png")
+Hub::Hub() : backdrop("res/assets/UI/BackButton.png"),
+			 pauseMenu(),
+			 cursor(),
+			 player("res/assets/hub/mcBase.png"),
+			 warningContinueSprite("res/assets/UI/BackButton.png"),
+			 warningCustomSprite("res/assets/UI/Continue.png"),
+			 warningShopSprite("res/assets/UI/skill_icons/root.png")
 {
-	initSprites();
-	initStaticObjects("res/data/hub/hub1.json");
+	// Read the save file to see which hub to load
+	std::ifstream old_save(USER_SAVE_LOCATION);
+	json inputData;
+	old_save >> inputData;
+	bool valid = true;
+	if (inputData.find("players") == inputData.end()) valid = false;
+	if (inputData.find("level") == inputData.end()) valid = false;
+	if (inputData.find("hub") == inputData.end()) valid = false;
+	if (valid) {
+		hub_state = inputData["hub"];
+	}
+	old_save.close();
 
-	player = HubPlayer("res/assets/shadow.png", Core::windowWidth() / 2, 
+	const std::string &hubFilePath = "res/data/hub/hub" + hub_state + ".json";
+
+	initSprites(hubFilePath);
+	initStaticObjects(hubFilePath);	
+
+	player = HubPlayer("res/assets/hub/mcBase.png", Core::windowWidth() / 2, 
 						Core::windowHeight() / 2, statObjlist);
 }
 
@@ -29,7 +45,16 @@ Hub::~Hub()
 {
 }
 
-void Hub::initSprites() {
+void Hub::initSprites(const std::string& filePath) {
+	// load the backdrop
+	std::ifstream file(filePath);
+	if (file.is_open()) {
+		json data;
+		file >> data;
+		last_level = data["lastLevel"];
+		backdrop = Sprite(data["backdropPath"]);
+	}
+
 	// resize sprites
 	backdrop.setSize(Core::windowWidth(), Core::windowHeight());
 
@@ -77,7 +102,11 @@ void Hub::handleEvent(const SDL_Event& e) {
 	// Handle continue trigger
 	if (player.isPlayerTransitionContinue()) {
 		if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_x) {
-			switchToCombatState();
+			if (last_level) {
+				changeState(new CreditsMenu());
+			}
+			else 
+				switchToCombatState();
 		}
 	}
 

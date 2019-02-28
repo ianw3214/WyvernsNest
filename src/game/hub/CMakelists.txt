@@ -1,9 +1,9 @@
 target_sources(Game PRIVATE
-    staticHubObject.cpp
-    hub.cpp
-    hubPlayer.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/staticHubObject.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hub.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hubPlayer.cpp)
 
 target_sources(Game PRIVATE
-    staticHubObject.hpp
-    hub.hpp
-    hubPlayer.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/staticHubObject.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hub.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hubPlayer.hpp)

@@ -16,7 +16,7 @@
 class Hub : public State
 {
 public:
-	Hub(const std::string& filePath);
+	Hub();
 	~Hub();
 
 	// State functions unchanged
@@ -28,8 +28,14 @@ public:
 	std::vector<StaticHubObject *> getStaticObjects();
 
 private:
+	// last level flag
+	bool last_level = false;
+
+	// hub state counter
+	std::string hub_state = "1";
+
 	// Init Sprites
-	void initSprites();
+	void initSprites(const std::string& filePath);
 
 	// Init static objects
 	void initStaticObjects(const std::string & filePath);

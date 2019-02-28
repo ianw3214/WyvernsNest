@@ -135,7 +135,7 @@ void Customization::handleEvent(const SDL_Event& e) {
 			saveData();
 			changeState(new SkillTree(3));
 		}
-		if (continueButton.colliding(mousePos)) changeState(new Hub("res/assets/hub/farmhousebg.png")); // changeState(new Combat("res/data/levels/level1.json"));
+		if (continueButton.colliding(mousePos)) changeState(new Hub());
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		// Render skill cycle buttons
@@ -179,7 +179,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	int margin = 10;
 
 	//draw unit sprite
-	Sprite unitSprite("res/assets/players/MaleBase.png");
+	Sprite unitSprite("res/assets/players/mcBase.png");
 	unitSprite.setSize(SubDiv::hSize(6, 1), SubDiv::vSize(3, 1));
 	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
 	unitSprite.render();

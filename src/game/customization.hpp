@@ -27,7 +27,6 @@ public:
 class Customization : public State {
 
 public:
-
 	Customization(const std::string& file = DEFAULT_PLAYER_FILE);
 	~Customization();
 
@@ -36,7 +35,6 @@ public:
 	void render() override;
 
 private:
-
 	std::vector<UnitData> units;
 	// the available moves to each unit
 	std::vector<std::vector<std::string>> attacks;

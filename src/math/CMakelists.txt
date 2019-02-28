@@ -1,7 +1,7 @@
 target_sources(Game PRIVATE
-    vec.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/vec.cpp)
 
 target_sources(Game PRIVATE
-    math.hpp
-    util.hpp
-    vec.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/math.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/util.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/vec.hpp)

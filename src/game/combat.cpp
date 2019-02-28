@@ -153,7 +153,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Hub("res/logo/logo.png"));
+							changeState(new Hub());
 						}
 					}
 				}
@@ -167,7 +167,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Hub("res/logo/logo.png"));
+							changeState(new Hub());
 						}
 					} else {
 						changeState(new Menu());
@@ -423,6 +423,8 @@ void Combat::updateWinStatus() {
 		if (!valid) {
 			// TODO: something here, save is no good
 		} else {
+			// TODO: Update the hub level
+
 			int playerCount = 0;
 			for (const json& unit : inputData["players"]) {
 				playerCount += 1;
@@ -436,9 +438,6 @@ void Combat::updateWinStatus() {
 				int currentExp = unit["experience"];
 				int newExp = static_cast<int>(currentExp + expPerPlayer);
 				if (newExp >= DEFAULT_MAX_EXP) {
-					if (unit["level"].is_array()) std::cout << "SHIT" << std::endl;
-					if (unit["level"].is_number()) std::cout << "WTF?" << std::endl;
-					if (unit["level"].is_string()) std::cout << "FUUUUU" << std::endl;
 					unit["experience"] = newExp - DEFAULT_MAX_EXP;
 					unit["STR"] = unit["STR"] + 2;
 					unit["DEX"] = unit["DEX"] + 2;
@@ -451,26 +450,6 @@ void Combat::updateWinStatus() {
 				}
 				updatedPlayers.push_back(unit);
 				gameOverData.push_back(GameOverData{ name, static_cast<int>(expPerPlayer), level_up });
-			}
-			// Add the new units to the updated players
-			for (UnitData unit : unitRewards) {
-				json res;
-				res["name"] = unit.name;
-				res["STR"] = unit.strength;
-				res["DEX"] = unit.dexterity;
-				res["INT"] = unit.intelligence;
-				res["CON"] = unit.constitution;
-				res["attack1"] = unit.attack1;
-				res["attack2"] = unit.attack2;
-				res["attack3"] = unit.attack3;
-				res["attack4"] = unit.attack4;
-				res["level"] = unit.level;
-				res["experience"] = unit.experience;
-				// Initialize the skill tree to default (root)
-				std::vector<int> selected;
-				selected.push_back(1);
-				res["selected"] = selected;
-				updatedPlayers.push_back(res);
 			}
 			old_save.close();
 			json outputData;
