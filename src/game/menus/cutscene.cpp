@@ -90,6 +90,10 @@ void Cutscene::getData() {
 
 	jsonFile >> data;
 
+	//Get json data from the file.
+	//Add a textbox with a corresponding message from the file.
+	//Add a sprite to the sprite vector (array list).
+
 	for (const nlohmann::json& slide : data["slides"])
 	{
 
@@ -102,9 +106,8 @@ void Cutscene::getData() {
 
 void Cutscene::addTextbox(std::string message) {
 
-
-	textboxVector.push_back(Textbox(message, Cutscene::textBoxX,  Cutscene::textBoxY));
-
+	//Add textbox to the arraylist.
+	textboxVector.push_back(Textbox(message, Cutscene::textBoxX, Cutscene::textBoxY));
 }
 
 Cutscene::Textbox::Textbox(std::string s, int x, int y)
@@ -112,50 +115,61 @@ Cutscene::Textbox::Textbox(std::string s, int x, int y)
 	myString = s;
 	xPos = x;
 	yPos = y;
+	
+	//debug only
 	//std::cout << "Hello, my name is " << this << ", and I am a textbox :)" << "\n";	
+	
 	rowParser();
 }
 
 Cutscene::Textbox::~Textbox()
 {
+	//Debug only
 	//std::cout << "A textbox named " << this << " was destroyed :(" << "\n";
 }
 
 void Cutscene::Textbox::drawRect()
 {
+	//Render rectanlge using core api
 	Core::Renderer::drawRect(ScreenCoord(xPos, yPos), Textbox::boxWidth, Textbox::boxHeight, Colour(.0f, .0f, .0f));
 }
 
 void Cutscene::Textbox::renderText()
 {
+	//Aesthetics
 	Core::Text_Renderer::setColour(Colour(255.0f, .0f, .0f));
+	
 	Core::Text_Renderer::setAlignment(TextRenderer::hAlign::left, TextRenderer::vAlign::top);
+	
 	int i = 0;
-	
-	
-		for (; i < rows; i++) {
-			Core::Text_Renderer::render(myString.substr(Textbox::CHARACTERS_PER_ROW*i, CHARACTERS_PER_ROW), ScreenCoord(xPos + Textbox::xOffset, yPos + Textbox::assumedHeight*i), 1.0f);
-		}
-
+	//Rendering each line of the textbox
+	for (; i < rows; i++) {
+		Core::Text_Renderer::render(myString.substr(Textbox::CHARACTERS_PER_ROW*i, CHARACTERS_PER_ROW), ScreenCoord(xPos + Textbox::xOffset, yPos + Textbox::assumedHeight*i), 1.0f);
+	}
 
 	//std::cout << Textbox::CHARACTERS_PER_ROW*i << " "<< Textbox::CHARACTERS_PER_ROW*(i + 1) << " " << myString.substr(Textbox::CHARACTERS_PER_ROW*i, Textbox::CHARACTERS_PER_ROW) << "\n";
 	//Core::Text_Renderer::render(myString.substr(Textbox::CHARACTERS_PER_ROW*i, Textbox::CHARACTERS_PER_ROW), ScreenCoord(xPos + Textbox::xOffset, yPos + Textbox::assumedHeight*i), 1.0f);
-
+	//Resetting colour
 	Core::Text_Renderer::setColour(Colour(.0f, .0f, .0f));
 }
 
 void Cutscene::Textbox::rowParser()
 {
+	//Calculating the number of rows for the textbox by dividing the message by the maximum character per row.
 	rows = ceil(Textbox::myString.length() / Textbox::CHARACTERS_PER_ROW) + 1;
 
-	 boxWidth = (rows > 1) ? Textbox::CHARACTERS_PER_ROW * Textbox::assumedWidth : Textbox::assumedWidth * Textbox::myString.length();
+	//Calculating the width of the box multiplying maximum number of character by the width of each character
+	//If only one row is in the textbox then we just multiply the character width by the  number of characters in the message string.
+	boxWidth = (rows > 1) ? Textbox::CHARACTERS_PER_ROW * Textbox::assumedWidth : Textbox::assumedWidth * Textbox::myString.length();
 
+	//Calculating box height
 	boxHeight = Textbox::rows * Textbox::assumedHeight;
 
 }
 
 void Cutscene::Textbox::render()
 {
+	//Draw the background rectangle and then render the text on top of it.
 	drawRect();
 	renderText();
 }
