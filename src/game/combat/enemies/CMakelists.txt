@@ -1,9 +1,11 @@
 target_sources(Game PRIVATE
-    babyGoombaEnemy.cpp
-    basicWarriorEnemy.cpp
-    mageDudeEnemy.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/evilBrusselSprout.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/babyGoombaEnemy.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/basicWarriorEnemy.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mageDudeEnemy.cpp)
 
 target_sources(Game PRIVATE
-    babyGoombaEnemy.hpp
-    basicWarriorEnemy.hpp
-    mageDudeEnemy.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/evilBrusselSprout.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/babyGoombaEnemy.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/basicWarriorEnemy.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mageDudeEnemy.hpp)

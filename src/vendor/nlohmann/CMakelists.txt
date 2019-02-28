@@ -1,1 +1,1 @@
-target_sources(Game PRIVATE json.hpp)
+target_sources(Game PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/json.hpp)

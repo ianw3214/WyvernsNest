@@ -1,12 +1,12 @@
 target_sources(Game PRIVATE
-    cursor.cpp
-    attackloader.cpp
-    button.cpp
-    particleloader.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/cursor.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/attackloader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/button.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/particleloader.cpp)
 
 target_sources(Game PRIVATE
-    cursor.hpp
-    attackloader.hpp
-    button.hpp
-    particleloader.hpp
-    util.hpp)    
+    ${CMAKE_CURRENT_SOURCE_DIR}/cursor.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/attackloader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/button.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/particleloader.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/util.hpp)    

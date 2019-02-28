@@ -1,15 +1,15 @@
 target_sources(Game PRIVATE
-    combat.cpp
-    tile.cpp
-    customization.cpp
-    skillTree.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/combat.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tile.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/customization.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/skillTree.cpp)
 
 target_sources(Game PRIVATE
-    combat.hpp
-    tile.hpp
-    customization.hpp
-    skillTree.hpp
-    unitData.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/combat.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tile.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/customization.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/skillTree.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/unitData.hpp)
 
 add_subdirectory(combat)
 add_subdirectory(menus)

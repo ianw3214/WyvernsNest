@@ -1,4 +1,6 @@
 {
+    "lastLevel": true,
+    "backdropPath": "res/assets/hub/farmhousebg.png",
     "statobj": [
         {
             "path": "hub/tree.png",

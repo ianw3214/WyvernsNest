@@ -218,6 +218,7 @@ void Menu::initializeSaveFile() {
 	// Construct the actual save file data
 	outputData["players"] = initialPlayers;
 	outputData["level"] = 1;
+	outputData["hub"] = "1";
 	// Write the initial data to the save file
 	new_save << outputData.dump(4);
 }
