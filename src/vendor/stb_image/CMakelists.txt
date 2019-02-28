@@ -1,2 +1,2 @@
 target_sources(Game PRIVATE
-    stb_image.h)
+    ${CMAKE_CURRENT_SOURCE_DIR}/stb_image.h)

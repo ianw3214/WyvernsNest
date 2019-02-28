@@ -2,6 +2,7 @@
 #include "skillTree.hpp"
 #include "combat.hpp"
 #include "util/util.hpp"
+//#include "hub/hub.cpp"
 
 #include <fstream>
 #include <nlohmann/json.hpp>
@@ -11,9 +12,7 @@ using json = nlohmann::json;
 
 Customization::Customization(const std::string& file) :
 	base("res/assets/UI/UnitBase.png"),
-	empty("res/assets/UI/EmptyUnit.png"),
-	cursor("res/assets/UI/cursor.png"),
-	cursorPress("res/assets/UI/cursorPress.png")
+	empty("res/assets/UI/EmptyUnit.png")
 {
 	std::ifstream player_file(file);
 	if (player_file.is_open()) {
@@ -115,8 +114,10 @@ void Customization::initSprites() {
 }
 
 void Customization::handleEvent(const SDL_Event& e) {
+	cursor.handleEvent(e);
 	Vec2<int> mousePos;
-	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+	mousePos.x() = cursor.getMouseX();
+	mousePos.y() = cursor.getMouseY();
 	if (e.type == SDL_MOUSEBUTTONUP) {
 		if (units.size() > 0 && button1.colliding(mousePos)) {
 			saveData();
@@ -134,7 +135,7 @@ void Customization::handleEvent(const SDL_Event& e) {
 			saveData();
 			changeState(new SkillTree(3));
 		}
-		if (continueButton.colliding(mousePos)) switchToCombatState();
+		if (continueButton.colliding(mousePos)) changeState(new Hub());
 	}
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
 		// Render skill cycle buttons
@@ -163,14 +164,6 @@ void Customization::handleEvent(const SDL_Event& e) {
 			exit(0);
 		}
 	}
-	// Update the mouse position/state
-	SDL_GetMouseState(&mouseX, &mouseY);
-	if (e.type == SDL_MOUSEBUTTONDOWN) {
-		mouseDown = true;
-	}
-	if (e.type == SDL_MOUSEBUTTONUP) {
-		mouseDown = false;
-	}
 }
 
 void Customization::update(int delta) {
@@ -186,7 +179,7 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	int margin = 10;
 
 	//draw unit sprite
-	Sprite unitSprite("res/assets/players/MaleBase.png");
+	Sprite unitSprite("res/assets/players/mcBase.png");
 	unitSprite.setSize(SubDiv::hSize(6, 1), SubDiv::vSize(3, 1));
 	unitSprite.setPos(x+margin+(margin/2), y+margin+(margin/2));
 	unitSprite.render();
@@ -209,9 +202,8 @@ void Customization::renderUnit(int x, int y, UnitData unit){
 	Core::Text_Renderer::render(unit.attack3, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 72), 1.f);
 	Core::Text_Renderer::render(unit.attack4, ScreenCoord(x + SubDiv::hPos(5, 1), y + SubDiv::vPos(5, 1) + 108), 1.f);
 
-	// if mouse button clicked
-	Vec2<int> mousePos;
-	SDL_GetMouseState(&mousePos.x(), &mousePos.y());
+	mouseX = cursor.getMouseX();
+	mouseY = cursor.getMouseY();
 
 	// EXP BAR
 	// NOTE: assumes that just half the screen height and half the screen width is being used as dimensions
@@ -262,14 +254,7 @@ void Customization::render() {
 	
 	continueButton.render();
 
-	// Render the cursor
-	if (mouseDown) {
-		cursorPress.setPos(mouseX, mouseY);
-		cursorPress.render();
-	} else {
-		cursor.setPos(mouseX, mouseY);
-		cursor.render();
-	}
+	cursor.render();
 }
 
 void Customization::displayUnitData(const UnitData & data) {

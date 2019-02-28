@@ -7,6 +7,7 @@
 using json = nlohmann::json;
 
 #include "customization.hpp"
+#include "hub/hub.hpp"
 
 //creates a new node
 Node::Node(std::string n_data, int n_id, int n_sprite_index,

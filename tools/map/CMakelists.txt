@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+project(Map_Editor)
+
+set (Map_VERSION_MAJOR 1)
+set (Map_VERSION_MINOR 0)
+
+if(APPLE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -framework OpenGL -w -lGLEW -lSDL2 -lSDL2_mixer -lfreetype -L/usr/local/Cellar/sdl2/2.0.9/lib/ -L/usr/local/Cellar/glew/2.1.0/lib/ -L/usr/local/Cellar/freetype/2.9.1/lib/ -L/usr/local/Cellar/sdl2_mixer/2.0.4/lib -I/usr/local/Cellar/sdl2/2.0.9/include/SDL2/ -Isrc/vendor -I/usr/local/Cellar/glew/2.1.0/include/ -Ilibs/stb_image/ -I/usr/local/Cellar/freetype/2.9.1/include/freetype2/ -I/usr/local/Cellar/sdl2_mixer/2.0.4/include/SDL2 -D_DEBUG")
+endif()
+
+add_executable(Map)
+
+if(WIN32)
+target_link_libraries(Map Opengl32.lib)
+endif()
+target_compile_definitions(Map PRIVATE IMGUI_IMPL_OPENGL_LOADER_GLEW)
+target_compile_definitions(Map PRIVATE _USE_MATH_DEFINES)
+
+add_subdirectory(src)
+
+if(WIN32)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:Console")
+endif()

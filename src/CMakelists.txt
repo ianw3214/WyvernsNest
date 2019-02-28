@@ -8,4 +8,4 @@ add_subdirectory(game)
 add_subdirectory(math)
 add_subdirectory(vendor)
 
-target_sources(Game PRIVATE main.cpp)
+target_sources(Game PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)

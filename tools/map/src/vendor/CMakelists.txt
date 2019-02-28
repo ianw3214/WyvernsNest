@@ -1,0 +1,1 @@
+target_sources(Map PRIVATE stb_image.h)

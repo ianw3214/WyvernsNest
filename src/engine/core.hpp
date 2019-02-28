@@ -79,6 +79,14 @@ namespace Core {
 		inline void setAlpha(float a) {
 			Engine::get_instance().getRenderer()->setAlpha(a);
 		}
+<<<<<<< HEAD
+=======
+
+		inline void setRectAlpha(float a) {
+			Engine::get_instance().getRenderer()->setRectAlpha(a);
+		}
+
+>>>>>>> 9a81c511c2697c677aaa28d3bb7f622b33500205
 	}
 
 	// Wrappers around text renderer functionalities

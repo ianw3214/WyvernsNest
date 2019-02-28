@@ -6,15 +6,17 @@
 #include "menus/pausemenu.hpp"
 #include "util/cursor.hpp"
 #include "staticHubObject.hpp"
+#include "customization.hpp"
 
 #include <vector>
 
 #include <nlohmann/json.hpp>
 
+
 class Hub : public State
 {
 public:
-	Hub(const std::string& filePath);
+	Hub();
 	~Hub();
 
 	// State functions unchanged
@@ -26,11 +28,20 @@ public:
 	std::vector<StaticHubObject *> getStaticObjects();
 
 private:
+	// last level flag
+	bool last_level = false;
+
+	// hub state counter
+	std::string hub_state = "1";
+
 	// Init Sprites
-	void initSprites();
+	void initSprites(const std::string& filePath);
 
 	// Init static objects
-	void initStaticObjects();
+	void initStaticObjects(const std::string & filePath);
+
+	// Combat state transition
+	void switchToCombatState();
 
 	// Backdrop
 	Sprite backdrop;
@@ -48,6 +59,7 @@ private:
 	std::vector<StaticHubObject *> statObjlist;
 
 	// Warning box sprite
-	Sprite warningSprite;
-
+	Sprite warningContinueSprite;
+	Sprite warningShopSprite;
+	Sprite warningCustomSprite;
 };

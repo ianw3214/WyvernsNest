@@ -1,7 +1,7 @@
 target_sources(Game PRIVATE
-    font.cpp
-    textRenderer.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/font.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/textRenderer.cpp)
 
 target_sourceS(Game PRIVATE
-    font.hpp
-    textRenderer.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/font.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/textRenderer.hpp)

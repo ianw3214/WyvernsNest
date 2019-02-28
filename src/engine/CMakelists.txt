@@ -1,25 +1,25 @@
 target_sources(Game PRIVATE
-    animatedSprite.cpp
-    engine.cpp
-    entity.cpp
-    mixer.cpp
-    particleSystem.cpp
-    renderer.cpp
-    sprite.cpp
-    state.cpp
-    textureManager.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/animatedSprite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/engine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mixer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/particleSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/renderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sprite.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/state.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/textureManager.cpp)
 
 target_sources(Game PRIVATE
-    animatedSprite.hpp
-    core.hpp
-    engine.hpp
-    entity.hpp
-    mixer.hpp
-    particleSystem.hpp
-    renderer.hpp
-    sprite.hpp
-    state.hpp
-    textureManager.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/animatedSprite.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/core.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/engine.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/entity.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mixer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/particleSystem.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/renderer.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/sprite.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/state.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/textureManager.hpp)
 
 add_subdirectory(imgui)
 add_subdirectory(opengl)

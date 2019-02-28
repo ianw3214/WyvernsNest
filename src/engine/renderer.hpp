@@ -22,8 +22,12 @@ public:
 	void drawSprite_fast(const Sprite& sprite);
 	void drawSprite(const Sprite& sprite);
 	void setAlpha(float a);
+<<<<<<< HEAD
 	Camera camera;
 
+=======
+	void setRectAlpha(float a) { rect_alpha = a; }
+>>>>>>> 9a81c511c2697c677aaa28d3bb7f622b33500205
 private:
 	void drawTriangles(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 	void drawLines(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
@@ -34,6 +38,7 @@ private:
 	Shader basicShader;
 	Shader textureShader;
 
+	float rect_alpha = 1;
 	float alpha = 1;
 
 

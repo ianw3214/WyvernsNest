@@ -4,9 +4,6 @@
 #include "staticHubObject.hpp"
 
 #define PLAYER_VEL 10
-#define PLAYER_WIDTH 5
-#define PLAYER_HEIGHT 5
-
 
 class HubPlayer : public Entity
 {
@@ -23,9 +20,16 @@ public:
 	// getter for player position
 	int getPosX();
 	int getPosY();
+	SDL_Rect getBox() { return mCollision; }
 
-	// Flag for player's position in the transition area
-	bool isPlayerTransition();
+	// Flag for player's position in the continue transition area
+	bool isPlayerTransitionContinue();
+
+	// Flag for player's position in the skill tree transition area
+	bool isPlayerTransitionCustom();
+
+	// Flag for player's position in the shop transition area
+	bool isPlayerTransitionShop();
 
 private:
 	// Helper function for player position

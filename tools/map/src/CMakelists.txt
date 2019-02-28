@@ -1,0 +1,6 @@
+target_sources(Map PRIVATE main.cpp)
+
+add_subdirectory(platform)
+add_subdirectory(vendor)
+
+target_include_directories(Map PRIVATE vendor)
