@@ -8,8 +8,8 @@ Camera::Camera()
 
 void Camera::update() {
     viewMatrix = {
-        position[2], 0.f, 0.f, -position[0],
-        0.f, position[2], 0.f, -position[1],
+        position[2], 0.f, 0.f, position[2] * (-position[0]),
+        0.f, position[2], 0.f, position[2] * (-position[1]),
         0.f, 0.f, 1.f, 0,
         0.f, 0.f, 0.f, 1.f
     };

@@ -5,6 +5,7 @@
 
 #include "engine.hpp"
 #include "sprite.hpp"
+#include "core.hpp"
 
 // Index orders for different shapes
 const unsigned int LINE_INDICES[2] = { 0, 1 };
@@ -52,25 +53,10 @@ void Renderer::drawRect_fast(ScreenCoord v, int width, int height, Colour colour
 		0.f, 0.f, 1.f, 0.f,
 		0.f, 0.f, 0.f, 1.f
 	};
-<<<<<<< HEAD
 
 	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), alpha);
 	basicShader.setUniformMat4("u_Model", matrix);
 	basicShader.setUniformMat4("u_View", camera.getViewMatrix().data());
-=======
-	VertexArray		va;
-	VertexBuffer	vb(positions, sizeof(float) * 16);
-	IndexBuffer		ib(SQUARE_INDICES, 6);
-	// Specify the layout of the buffer data
-	VertexBufferLayout layout;
-	layout.pushFloat(2);
-	va.addBuffer(vb, layout);
-
-	// Issue the actual draw call
-	basicShader.setUniform4f("u_Colour", colour.r(), colour.g(), colour.b(), rect_alpha);
-	drawTriangles(va, ib, basicShader);
-}
->>>>>>> 9a81c511c2697c677aaa28d3bb7f622b33500205
 
 	glBindVertexArray(rectangleVAO_);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -80,6 +66,7 @@ void Renderer::drawRect_fast(ScreenCoord v, int width, int height, Colour colour
 void Renderer::drawSprite_fast(const Sprite & sprite) {
 	textureShader.bind();
 
+	textureShader.setUniform2f("screenDimensions", Core::windowWidth(), Core::windowHeight());
 	textureShader.setUniformMat4("u_Model", sprite.getModelMatrix().data());
 	textureShader.setUniformMat4("u_View", camera.getViewMatrix().data());
 	textureShader.setUniformMat4("u_texMap", sprite.getTexMatrix().data());
