@@ -4,7 +4,8 @@ target_sources(Game PRIVATE
     grid.cpp
     player.cpp
     status.cpp
-    unit.cpp)
+    unit.cpp
+    camera.cpp)
 
 target_sources(Game PRIVATE
     attack.hpp
@@ -13,6 +14,7 @@ target_sources(Game PRIVATE
     grid.hpp
     player.hpp
     status.hpp
-    unit.hpp)
+    unit.hpp
+    camera.hpp)
 
 add_subdirectory(enemies)

@@ -74,14 +74,11 @@ namespace Core {
 
 		inline void clear() {
 			Engine::get_instance().getRenderer()->clear();
-
 		}
 
 		inline void setAlpha(float a) {
 			Engine::get_instance().getRenderer()->setAlpha(a);
-
 		}
-
 	}
 
 	// Wrappers around text renderer functionalities

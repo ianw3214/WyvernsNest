@@ -4,6 +4,7 @@
 
 #include "opengl/glwrappers.hpp"
 #include "../math/math.hpp"
+#include "../game/combat/camera.hpp"
 
 class Sprite;
 
@@ -21,6 +22,7 @@ public:
 	void drawSprite_fast(const Sprite& sprite);
 	void drawSprite(const Sprite& sprite);
 	void setAlpha(float a);
+	Camera camera;
 
 private:
 	void drawTriangles(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
@@ -33,6 +35,7 @@ private:
 	Shader textureShader;
 
 	float alpha = 1;
+
 
 	void initRectangleData();
 	void initLineData();
