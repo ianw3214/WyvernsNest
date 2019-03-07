@@ -23,6 +23,6 @@ void main() {
         vec4(screenDimensions.x / 2.0, screenDimensions.y / 2.0, 0, 1)
     );
 
-    gl_Position =  ortho(0, 1280, 0, 720) * translate * u_View * u_Model * vec4(position, 0.0f, 1.0f);
+    gl_Position =  ortho(0, screenDimensions.x, 0, screenDimensions.y) * translate * u_View * u_Model * vec4(position, 0.0f, 1.0f);
     vTexCoord = vec2(u_texMap * vec4(texCoord, 0.0, 1.0));
 }
