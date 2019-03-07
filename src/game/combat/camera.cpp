@@ -2,7 +2,7 @@
 
 Camera::Camera()
 : viewMatrix{ 1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f, 0.f, 0.f, 0.f, 0.f, 1.f }
-, position{ 0.f, 0.f, 1.f } { 
+, position{ 640.f, 360.f, 1.f } { 
     update();
 }
 
