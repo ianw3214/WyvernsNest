@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "opengl/glwrappers.hpp"
 
 class Sprite {
@@ -32,8 +34,15 @@ public:
 	void setSourcePos(int x, int y);
 	void setSourceSize(int w, int h);
 
-private:
+	std::array<float, 16> getModelMatrix() const;
+	std::array<float, 16> getTexMatrix() const;
 
+private:
 	std::string texture;
 
+	std::array<float, 16> modelMatrix;
+	std::array<float, 16> texMatrix;
+
+	void updateModelMatrix();
+	void updateTexMatrix();
 };

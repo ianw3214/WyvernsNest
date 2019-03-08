@@ -4,7 +4,8 @@ target_sources(Game PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/grid.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/player.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/status.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/unit.cpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/unit.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/camera.cpp)
 
 target_sources(Game PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/attack.hpp
@@ -13,6 +14,7 @@ target_sources(Game PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/grid.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/player.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/status.hpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/unit.hpp)
+    ${CMAKE_CURRENT_SOURCE_DIR}/unit.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/camera.hpp)
 
 add_subdirectory(enemies)

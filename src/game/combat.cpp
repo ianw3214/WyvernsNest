@@ -439,11 +439,11 @@ void Combat::updateWinStatus() {
 				int newExp = static_cast<int>(currentExp + expPerPlayer);
 				if (newExp >= DEFAULT_MAX_EXP) {
 					unit["experience"] = newExp - DEFAULT_MAX_EXP;
-					unit["STR"] = unit["STR"] + 2;
-					unit["DEX"] = unit["DEX"] + 2;
-					unit["INT"] = unit["INT"] + 2;
-					unit["CON"] = unit["CON"] + 2;
-					unit["level"] = unit["level"] + 1;
+					unit["STR"] += 2;
+					unit["DEX"] += 2;
+					unit["INT"] += 2;
+					unit["CON"] += 2;
+					unit["level"] += 1;
 					level_up = true;
 				} else {
 					unit["experience"] = newExp;

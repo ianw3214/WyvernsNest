@@ -61,29 +61,23 @@ namespace Core {
 	namespace Renderer {
 
 		inline void drawLine(ScreenCoord v1, ScreenCoord v2, Colour colour) {
-			Engine::get_instance().getRenderer()->drawLine(v1, v2, colour);
+			Engine::get_instance().getRenderer()->drawLine_fast(v1, v2, colour);
 		}
 
 		inline void drawRect(ScreenCoord v, int width, int height, Colour colour) {
-			Engine::get_instance().getRenderer()->drawRect(v, width, height, colour);
-		}
-
-		inline void drawTexture(ScreenCoord v, int width, int height, const Texture& texture) {
-			Engine::get_instance().getRenderer()->drawTexture(v, width, height, texture);
+			Engine::get_instance().getRenderer()->drawRect_fast(v, width, height, colour);
 		}
 
 		inline void drawSprite(const Sprite& sprite) {
-			Engine::get_instance().getRenderer()->drawSprite(sprite);
+			Engine::get_instance().getRenderer()->drawSprite_fast(sprite);
 		}
 
 		inline void clear() {
 			Engine::get_instance().getRenderer()->clear();
-
 		}
 
 		inline void setAlpha(float a) {
 			Engine::get_instance().getRenderer()->setAlpha(a);
-
 		}
 
 		inline void setRectAlpha(float a) {
