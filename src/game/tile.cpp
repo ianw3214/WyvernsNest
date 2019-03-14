@@ -20,24 +20,31 @@ void Tile::debufApply() {
 	else if (mtileType == 1) { // POND
  		mdebufDEX = 1;
 	}
-}
+}	
 
 void Tile::handleEvent(const SDL_Event& e) {
 	// TODO
 }
 
 void Tile::update(int delta) {
-	// TODO
 }
 
 void Tile::render() {
-	// TODO
+	mtileSprite.render();
+}
+
+void Tile::setTilePosition(int x, int y) {
+	mtileSprite.setPos(x, y);
+}
+
+void Tile::setTileSize(int width, int height) {
+	mtileSprite.setSize(width, height);
 }
 
 int Tile::getDebufDEX() {
 	return mdebufDEX;
 }
 
-int Tile::getTileType() {
+int Tile::getTileType() const {
 	return mtileType;
 }

@@ -46,8 +46,9 @@ public:
 	bool isPosValid(Vec2<int> pos) const;
 
 	// The actual tilemap data of the grid for rendering purposes
-	std::vector<int> tilemap;
+	std::vector<Tile> tilemap;
 	std::vector<int> collisionmap;
+	std::vector<int> fakeTileMap;
 
 	// Grid properties
 	int tile_width;
@@ -76,8 +77,5 @@ private:
 	void init(int source_tile_width);
 	int indexToX(int index) const;
 	int indexToY(int index) const;
-
-	// Grid sprites
-	Sprite tilesheet;
 
 };

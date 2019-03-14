@@ -10,35 +10,41 @@
 using json = nlohmann::json;
 
 Grid::Grid() :
-	tilemap(DEFAULT_TILEMAP),
+	fakeTileMap(DEFAULT_TILEMAP),
 	collisionmap(DEFAULT_COLLISIONMAP),
 	map_width(DEFAULT_MAP_WIDTH),
-	map_height(DEFAULT_MAP_HEIGHT),
-	tilesheet("res/assets/tiles/tilesheet1.png")
+	map_height(DEFAULT_MAP_HEIGHT)
 {
+	for (size_t i=0; i<fakeTileMap.size(); i++) {
+		tilemap.push_back(Tile("res/logo/logo.png", fakeTileMap[i]));
+	}
 	init(SOURCE_TILE_WIDTH);
 }
 
 // Constructor to load the grid from file data
 // TODO: Add collision map loading in file data
-Grid::Grid(std::string file) : tilesheet("INVALID") {
+Grid::Grid(std::string file) {
 	std::ifstream inp(file);
+	std::ifstream inp_tile("res/data/maps/tiles.json");
 	// Use the provided overloaded operators to lead the json data
 	json data;
 	inp >> data;
 
+	json tileData;
+	inp_tile >> tileData;
+
 	// Get the map width and height
 	map_width  = data["width"];
 	map_height = data["height"];
-	// Load the tilesheet data
-	tilesheet = Sprite(data["tilesheet"]);
 	source_width = data["tilesheet_width"];
 	source_height = data["tilesheet_height"];
 
 	std::set<int> colIndices = { 2, 4, 6 };
 	for (int tile : data["tilemap"]) {
-		//tilemap.push_back(Tile("res/logo/logo.png", tile));
-		tilemap.push_back(tile);
+		Tile temp = Tile(tileData["tilefile"][tile], tile);
+		//Tile temp = Tile(tileData["tilefile"][tile], tile);
+		temp.setTileSize(tile_width, tile_height);
+		tilemap.push_back(temp);
 		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);
 	}
 
@@ -80,9 +86,7 @@ bool Grid::isPosEmpty(Vec2<int> pos) const {
 bool Grid::isPosValid(Vec2<int> pos) const {
 	if (pos.x() < 0 || pos.x() >= map_width) return false;
 	if (pos.y() < 0 || pos.y() >= map_height) return false;
-//	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())].getTileType() != 21;
-	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())] != 21;
-
+	return isPosEmpty(pos) && tilemap[TILE_INDEX(pos.x(), pos.y())].getTileType() != 21;
 }
 
 // TODO: Add option to vary source tile width/height
@@ -92,10 +96,14 @@ void Grid::init(int source_tile_width) {
 	tile_width = Core::windowWidth() / map_width;
 	tile_height = (Core::windowHeight() / map_height) + 1;
 	// Initialize the tile sprites to the tile width/height
-	tilesheet.setSourceSize(source_tile_width, source_tile_width);
-	tilesheet.setSize(tile_width, tile_height);
 	source_tile_size = source_tile_width;
-
+	
+	for (int y = 0; y < map_height; y++) {
+		for (int x = 0; x < map_width; x++) {
+			tilemap[TILE_INDEX(x, y)].setTilePosition(tile_width * x, tile_height * y);
+			tilemap[TILE_INDEX(x, y)].setTileSize(tile_width, tile_height);
+		}
+	}
 	// Debugging code
 	renderOutline = true;
 }
@@ -112,11 +120,7 @@ void Grid::render()
 {
 	for (int y = 0; y < map_height; y++) {
 		for (int x = 0; x < map_width; x++) {
-			//int index = tilemap[TILE_INDEX(x, y)].getTileType();
-			int index = tilemap[TILE_INDEX(x, y)];
-			tilesheet.setSourcePos(indexToX(index) * source_tile_size, indexToY(index) * source_tile_size);
-			tilesheet.setPos(tile_width * x, tile_height * y);
-			tilesheet.render();
+			tilemap[TILE_INDEX(x, y)].render();
 		}
 	}
 
