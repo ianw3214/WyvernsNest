@@ -1,0 +1,9 @@
+{
+    "tilefile" : [
+        "res/assets/tiles/invalid_circle.png",
+        "res/assets/tiles/valid_circle.png",
+        "res/assets/tiles/valid_move.png",
+        "res/assets/tiles/valid.png",
+        "res/assets/tiles/particles.png"
+    ]
+}
