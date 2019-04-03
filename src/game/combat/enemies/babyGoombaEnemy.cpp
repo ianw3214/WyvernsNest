@@ -7,7 +7,7 @@
 #include <iostream>
 
 BabyGoombaEnemy::BabyGoombaEnemy() :
-	Enemy(UnitType::ENEMY, "res/assets/enemies/babygoomba.png", 64, 64),
+	Enemy(UnitType::ENEMY, "res/assets/enemies/brussel_sprout_anim.png", 64, 64),
 	bite(Attacks::get("PUNCH", this))
 {
 	sprite.setSize(sprite_width, sprite_height);
@@ -15,8 +15,8 @@ BabyGoombaEnemy::BabyGoombaEnemy() :
 
 	sprite.addAnimation(0, 0);			// IDLE
 	sprite.addAnimation(1, 1);			// DAMAGE
-	sprite.addAnimation(10, 17);		// DYING
-	sprite.addAnimation(18, 18);		// DEAD
+	sprite.addAnimation(6, 10);		// DYING
+	sprite.addAnimation(11, 11);		// DEAD
 
 	int STR = 0;
 	int DEX = 0;

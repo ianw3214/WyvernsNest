@@ -45,7 +45,6 @@ Grid::Grid(std::string file) {
 	std::set<int> colIndices = { 2, 4, 6 };
 	for (int tile : data["tilemap"]) {
 		Tile temp = Tile(tileData["tilefile"][tile], tile);
-		//Tile temp = Tile(tileData["tilefile"][tile], tile);
 		temp.setTileSize(tile_width, tile_height);
 		tilemap.push_back(temp);
 		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);

@@ -25,7 +25,11 @@
         },{
             "path": "hub/tree.png",
             "x": 120,
-            "y": 260
+            "y": 200
+        },{
+            "path": "hub/house.png",
+            "x": 550,
+            "y": 50
         }
     ]
 }

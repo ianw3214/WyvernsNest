@@ -1,9 +1,7 @@
 {
     "tilefile" : [
-        "res/assets/tiles/dirt.png",
-        "res/assets/tiles/valid_circle.png",
-        "res/assets/tiles/valid_move.png",
-        "res/assets/tiles/valid.png",
-        "res/assets/tiles/particles.png"
+        "res/assets/tiles/grass.png",
+        "res/assets/tiles/turnip.png",
+        "res/assets/tiles/water.png"
     ]
 }
