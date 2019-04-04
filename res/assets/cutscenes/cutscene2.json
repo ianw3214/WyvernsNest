@@ -1,0 +1,28 @@
+{
+  "slides": {
+
+    "numberOfImages": 4,
+
+    "slide1": {
+
+      "textBoxMessages": {
+        "msg": "This is the text for the first slide",
+        "msg2": "This is the second message"
+      },
+
+      "spritePath": "res/assets/cutscenes/cutscene2/1"
+
+    },
+
+    "slide2": {
+
+      "textBoxMessages": {
+        "msg": "This is the text for the first slide"
+      },
+
+      "spritePath": "res/assets/cutscenes/cutscene2/2"
+
+    }
+  }
+
+}

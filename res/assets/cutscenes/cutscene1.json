@@ -1,0 +1,45 @@
+{
+
+  "slides": {
+
+
+    "slide1": {
+
+      "textBoxMessages": "This is the text for the 1st slide.",
+
+      "spritePath": "res/assets/cutscenes/cutscene1/1.png"
+
+    },
+
+    "slide2": {
+
+      "textBoxMessages": "This is the text for the 2nd slide. Example of a very long string that is split into multiple rows inside the textbox.",
+
+      "spritePath": "res/assets/cutscenes/cutscene1/2.png"
+
+    },
+
+    "slide3": {
+
+      "textBoxMessages": "This is the text for the 3rd slide.",
+
+      "spritePath": "res/assets/cutscenes/cutscene1/3.png"
+
+    },
+
+    "slide4": {
+
+      "textBoxMessages": "This is the text for the 4th slide.",
+
+      "spritePath": "res/assets/cutscenes/cutscene1/4.png"
+
+    }
+
+  }
+
+
+
+
+
+
+}
