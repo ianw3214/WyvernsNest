@@ -14,9 +14,9 @@ Hub::Hub() : backdrop("res/assets/UI/BackButton.png"),
 			 pauseMenu(),
 			 cursor(),
 			 player("res/assets/hub/mcBase.png"),
-			 warningContinueSprite("res/assets/UI/BackButton.png"),
-			 warningCustomSprite("res/assets/UI/Continue.png"),
-			 warningShopSprite("res/assets/UI/skill_icons/root.png")
+			 warningContinueSprite("res/assets/UI/continue_hub.png"),
+			 warningCustomSprite("res/assets/UI/customize_hub.png"),
+			 warningShopSprite("res/assets/UI/shop_hub.png")
 {
 	// Read the save file to see which hub to load
 	std::ifstream old_save(USER_SAVE_LOCATION);
@@ -171,15 +171,15 @@ void Hub::render() {
 	pauseMenu.render();
 	
 	// Render player hitbox
-	Core::Renderer::setRectAlpha(0.5);
-	Core::Renderer::drawRect(Vec2<int>(player.getBox().x, player.getBox().y),
-		player.getBox().w, player.getBox().h, Vec3<float>(255, 0, 0));
+	// Core::Renderer::setRectAlpha(0.5);
+	// Core::Renderer::drawRect(Vec2<int>(player.getBox().x, player.getBox().y),
+	// 	player.getBox().w, player.getBox().h, Vec3<float>(255, 0, 0));
 
 	// Render all the static objects
 	for (StaticHubObject * statObj : statObjlist) {
 		statObj->render();
-		Core::Renderer::drawRect(Vec2<int>(statObj->getBox().x, statObj->getBox().y),
-			statObj->getBox().w, statObj->getBox().h, Vec3<float>(255, 0, 0));
+		// Core::Renderer::drawRect(Vec2<int>(statObj->getBox().x, statObj->getBox().y),
+		// 	statObj->getBox().w, statObj->getBox().h, Vec3<float>(255, 0, 0));
 	}
 
 	// Render an info box to prompt the user to move to the next level

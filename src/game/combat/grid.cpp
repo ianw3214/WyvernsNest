@@ -39,10 +39,12 @@ Grid::Grid(std::string file) {
 	source_width = data["tilesheet_width"];
 	source_height = data["tilesheet_height"];
 
+	tile_width = Core::windowWidth() / map_width;
+	tile_height = (Core::windowHeight() / map_height) + 1;
+
 	std::set<int> colIndices = { 2, 4, 6 };
 	for (int tile : data["tilemap"]) {
 		Tile temp = Tile(tileData["tilefile"][tile], tile);
-		//Tile temp = Tile(tileData["tilefile"][tile], tile);
 		temp.setTileSize(tile_width, tile_height);
 		tilemap.push_back(temp);
 		collisionmap.push_back(colIndices.find(tile) == colIndices.end() ? 0 : 1);
@@ -93,8 +95,6 @@ bool Grid::isPosValid(Vec2<int> pos) const {
 // TODO: Add option to load collision map through file
 void Grid::init(int source_tile_width) {
 	// Calculate the tile size based on the screen size
-	tile_width = Core::windowWidth() / map_width;
-	tile_height = (Core::windowHeight() / map_height) + 1;
 	// Initialize the tile sprites to the tile width/height
 	source_tile_size = source_tile_width;
 	

@@ -153,7 +153,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Hub());
+							changeToHubState();
 						}
 					}
 				}
@@ -167,7 +167,7 @@ void Combat::handleEvent(const SDL_Event& e) {
 						if (last_level) {
 							changeState(new CreditsMenu());
 						} else {
-							changeState(new Hub());
+							changeToHubState();
 						}
 					} else {
 						changeState(new Menu());
@@ -201,6 +201,17 @@ void Combat::handleEvent(const SDL_Event& e) {
 			pauseMenu.handleEvent(e);
 		}
 	}
+}
+
+void Combat::changeToHubState() {
+	// Stop playing music
+	Core::Mixer::fadeOutAllMusic(500);
+
+	// Load up Hub music
+	Core::Mixer::loadAudio("res/music/w.wav", AudioType::Music);
+	Core::Mixer::fadeInAllMusic("res/music/w.wav", 1500);
+
+	changeState(new Hub());
 }
 
 void Combat::update(int delta) {

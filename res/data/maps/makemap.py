@@ -1,7 +1,7 @@
 import json
 
 OUTPUT_FILE = "map2.json"
-MAP_WIDTH = 10
+MAP_WIDTH = int(10 * 1.8)
 MAP_HEIGHT = 10
 TILE_SHEET = "res/assets/tiles/tilesheet2.png"
 TILE_WIDTH = 64

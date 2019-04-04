@@ -97,6 +97,8 @@ private:
 	float experienceReward;
 	std::vector<UnitData> unitRewards;
 
+	void changeToHubState();
+
 	// Other helper functions
 	void updateWinStatus();
 
