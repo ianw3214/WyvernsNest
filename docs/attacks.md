@@ -50,11 +50,11 @@ The [attacks.json file](../res/data/attacks.json) stores an array of JSON object
 }
 ```
 
-Since the attack types and effects are incomplete, there is no documentation for what string corresponds to what in the game. Thus, the best solution for now is to look at the source code for the [**Attack Loader**](https://github.com/ianw3214/WyvernsNest/blob/master/src/game/util/attackloader.cpp) and see which strings will result in what outputs.
+Since the attack types and effects are incomplete, the current implementation can be found in [**Attack Loader**](https://github.com/ianw3214/WyvernsNest/blob/master/src/game/util/attackloader.cpp)
 
-Also, although *effects* are stored as an array in the JSON file, only one effect is stored in the attack in the game currently, so only the first effect in the array of effects will have an effect in game.
+No more then one *effect* is supported at the current time.
 
-The *modifiers* however is fully implemented in the game, so adding any amount of modifiers in the JSON file will reflect in game.
+An infinite amount of *modifiers* are supported.
 
 ## Implementing effects
 

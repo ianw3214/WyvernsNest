@@ -2,7 +2,7 @@
 
 ## Setup
 
-Currently, each enemy will be represented by different classes that override a base *Enemy* classes' behaviour. The interface for the base enemy class looks like this:
+Each enemy is represented by a different class that override a base *Enemy* classes' behaviour. The interface for the base enemy class looks like this:
 
 ```c++
 class Enemy : public Unit {
@@ -35,7 +35,7 @@ private:
 };
 ```
 
-To create a custom enemy, the **sprite** needs to be changed to the desired enemy sprite, and the **handleMovement** and **handleAttack** functions need to be overriden to achieve desired functionality.
+To create a custom enemy, the **sprite** needs to be changed to the desired enemy sprite, and the **handleMovement** and **handleAttack** functions need to be overridden to achieve desired functionality.
 
 ***
 
@@ -66,7 +66,7 @@ std::vector<ScreenCoord> getPath(ScreenCoord to);
 
 ## Customizing Enemy attacks
 
-First, to add enemy attacks, they need to be stored in the enemy class somewhere. They can simply be added as a class property like so:
+To add enemy attacks, they need to be stored in the enemy class somewhere. They can be added as a class property like so:
 
 ```c++
 class Enemy : public Unit {
@@ -100,7 +100,7 @@ If the attack coordinates need to be calculated according to some sort of the co
 
 ## EXAMPLE AI
 
-Below is an example of an implementation of enemy AI containing logic for a basic enemy with random movement and a basic melee attack. I have included the constructor as well as the handleMovement and handleAttack methods since those are realistically the only functions that need to be changed for new enemy AIs.
+Below is an example of an implementation of enemy AI containing logic for a basic enemy with random movement and a basic melee attack using the handleMovement and handleAttack functions.
 
 ```c++
 // Example enemy constructor

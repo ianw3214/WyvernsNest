@@ -2,7 +2,7 @@
 
 ## States and Entities
 
-The **State** class is the high level state logic should be handled. Every game state should inherit the base State class, and the initial State of the game is passed to the Engine upon initialization. Below is an example of a game state:
+The **State** class deals with the high level state logic. Every game state should inherit this base class, and the initial State is passed to the Engine upon startup. Below is an example of a game state:
 
 ```c++
 class Combat : public State {
@@ -21,7 +21,7 @@ private:
 };
 ```
 
-The base State class also stores a list of **Entities**. The **handleEvent**, **update**, and **render** functions will all call their corresponding functions over each if not overriden. Below is the interface for the entity class:
+The base State class stores a list of **Entities**. The **handleEvent**, **update**, and **render** functions will all call their corresponding functions over each if not overridden. Below is the interface for the entity class:
 
 ```c++
 class Entity {
@@ -42,7 +42,7 @@ public:
 
 ## Sprites and Rendering
 
-The **Sprite** class represents an image file to be rendered as a Sprite. The interface should explain most of how the sprite class works:
+The **Sprite** class represents an image file to be rendered as a Sprite. This interface  explains how the sprite class functions:
 
 ```c++
 class Sprite {
@@ -67,7 +67,7 @@ public:
 };
 ```
 
-There are also primitive functions defined in the Renderer class. Most of the functions that are needed to make the game work have been wrapped by a function in the **Core** namespace, which includes accessors to the renderer. For example, a draw call to render a line might look like this:
+The primitive functions for rendering are found in the Renderer with access granted through the **Core** namespace. For example, a draw call to render a line might look like this:
 
 ```c++
 #include "engine/core.hpp"
@@ -80,7 +80,7 @@ Other available function calls can be found in the [core.hpp header file](https:
 
 ## Handling Events
 
-There is no real wrapper around the SDL events, so the SDL event interface will be used to handle user events. The documentation for SDL events can be found [here](https://wiki.libsdl.org/SDL_Event). Below is an example of handling a key input event:
+The SDL event interface will be used to handle user events. The documentation for SDL events can be found [here](https://wiki.libsdl.org/SDL_Event). Below is an example of handling a key input event:
 
 ```c++
 void State::update(const SDL_Event& event) {
